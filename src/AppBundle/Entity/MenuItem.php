@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MenuItemRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class MenuItem
 {
@@ -88,6 +89,19 @@ class MenuItem
         return $this->url;
     }
 
+    /**
+     * @ORM\PostLoad
+     *
+     * @return void
+     * @author Mykola Martynov
+     **/
+    public function transformLoadedData()
+    {
+        if (is_resource($this->url) && get_resource_type($this->url) == 'stream') {
+            $this->url = stream_get_contents($this->url, -1, 0);
+        }
+    }
+    
     /**
      * Set title
      *

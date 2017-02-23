@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Menu Information | Admin{% endblock %}
+
+{% block body %}
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ menu.name }}</dd>
+
+        <dt>Header</dt>
+        <dd>{{ menu.header }}</dd>
+
+        <dt>Links</dt>
+        {% for menu_item in menu.items %}
+            <dd>{{ menu_item.url }}</dd>
+        {% endfor %}
+    </dl>
+
+    <div class="actions">
+        <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Back</a>
+        <a href="{{ path("admin_menu_edit", {"id": menu.id}) }}" class="btn btn-default">Edit</a>
+        <a href="{{ path("admin_menu_delete", {"id": menu.id}) }}" class="btn btn-danger">Delete</a>
+    </div>
+{% endblock %}
