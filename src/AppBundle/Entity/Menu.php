@@ -107,28 +107,29 @@ class Menu
     }
 
     /**
-     * Add items
+     * Add item
      *
-     * @param MenuItem $items
+     * @param MenuItem $item
      * @return Menu
      */
-    public function addItem(MenuItem $items)
+    public function addItem(MenuItem $item)
     {
-        $this->items[] = $items;
+        $item->setMenu($this);
+        $this->items[] = $item;
 
         return $this;
     }
 
     /**
-     * Remove items
+     * Remove item
      *
-     * @param MenuItem $items
+     * @param MenuItem $item
      */
-    public function removeItem(MenuItem $items)
+    public function removeItem(MenuItem $item)
     {
-        $this->items->removeElement($items);
+        $this->items->removeElement($item);
     }
-
+    
     /**
      * Get items
      *
