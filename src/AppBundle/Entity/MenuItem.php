@@ -28,21 +28,21 @@ class MenuItem
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="blob")
+     * @ORM\Column(name="url", type="blob", nullable=false)
      */
     private $url;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer")
+     * @ORM\Column(name="position", type="integer", nullable=false)
      */
     private $position;
 

@@ -25,14 +25,14 @@ class Menu
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=30)
+     * @ORM\Column(name="name", type="string", length=30, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="header", type="string", length=255)
+     * @ORM\Column(name="header", type="string", length=255, nullable=false)
      */
     private $header;
 
