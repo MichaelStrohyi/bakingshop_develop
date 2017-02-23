@@ -7,7 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MenuItem
  *
- * @ORM\Table()
+ * @ORM\Table(
+ *     indexes={
+ *         @ORM\Index(name="item_position", columns={"menu_id", "position"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MenuItemRepository")
  */
 class MenuItem

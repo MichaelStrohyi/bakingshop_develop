@@ -40,6 +40,7 @@ class Menu
      * @var MenuItem[]
      *
      * @ORM\OneToMany(targetEntity="MenuItem", mappedBy="menu")
+     * @ORM\OrderBy({"position" = "asc"})
      **/
     private $items;
 
