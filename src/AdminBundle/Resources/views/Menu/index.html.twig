@@ -1,7 +1,33 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}AdminBundle:Menu:index{% endblock %}
+{% block title %}Menu | Admin{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Menu:index page</h1>
+
+    <a href="{{ path("admin_menu_create") }}" class="btn btn-default">Create Menu</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Header</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for menu in menu_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ menu.name }}</td>
+                    <td>{{ menu.header }}</td>
+                    <td>
+                        <a href="{{ path("admin_menu_show", {id: menu.id}) }}">Show</a>
+                        <a href="{{ path("admin_menu_items", {id: menu.id}) }}">Items</a>
+                        <a href="{{ path("admin_menu_delete", {id: menu.id}) }}">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
