@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class MenuRepository extends EntityRepository
 {
+    /**
+     * Return list of all menu ordered by name
+     *
+     * @return Menu[]
+     * 
+     * @author Mykola Martynov
+     **/
+    public function findAllByName()
+    {
+        return $this->findBy([], ['name' => 'ASC']);
+    }
 }
