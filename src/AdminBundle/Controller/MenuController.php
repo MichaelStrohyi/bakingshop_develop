@@ -45,6 +45,13 @@ class MenuController extends Controller
         $menu = new Menu;
         $form = $this->createForm(new MenuType, $menu);
 
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            # create new menu
+            return $this->redirectToRoute("admin_menu_index");
+        }
+
         return [
             'form' => $form->createView(),
         ];

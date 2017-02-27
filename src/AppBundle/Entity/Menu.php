@@ -4,12 +4,15 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Menu
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MenuRepository")
+ * @UniqueEntity("name", message="Menu with this name already exists")
  */
 class Menu
 {
@@ -26,6 +29,9 @@ class Menu
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=30, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=30)
+     * @Assert\Regex(pattern="/^[a-zA-Z\d_\-]+$/", message="You can use only alphabet and dashes")
      */
     private $name;
 
@@ -33,6 +39,8 @@ class Menu
      * @var string
      *
      * @ORM\Column(name="header", type="string", length=255, nullable=false)
+     * @Assert\Length(max=200)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $header;
 

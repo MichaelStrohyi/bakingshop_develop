@@ -10,8 +10,8 @@ class MenuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('header')
+            ->add('name', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('header', null, ['attr' => ['autocomplete' => 'off']])
         ;
     }
 

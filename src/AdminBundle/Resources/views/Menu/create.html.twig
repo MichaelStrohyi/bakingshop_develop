@@ -7,8 +7,8 @@
         <h1>New Menu</h1>
     </header>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
         <div class="actions">
             <button type="submit">Create</button>
             <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
