@@ -1,0 +1,17 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Edit Menu | Admin{% endblock %}
+
+{% block body %}
+    <header>
+        <h1>Edit Menu</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
+        <div class="actions">
+            <button type="submit">Update</button>
+            <a href="{{ path("admin_menu_show", {"id": menu.id}) }}" class="btn btn-default">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

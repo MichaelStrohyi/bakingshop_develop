@@ -43,20 +43,44 @@ class MenuController extends Controller
     public function createAction(Request $request)
     {
         $menu = new Menu;
-        $form = $this->createForm(new MenuType, $menu);
-
-        $form->handleRequest($request);
+        $form = $this->createMenuForm($menu, $request);
 
         if ($form->isValid()) {
-            $entity_manager = $this->getDoctrine()->getEntityManager();
+            $this->persistMenu($menu);
 
-            $entity_manager->persist($menu);
-            $entity_manager->flush();
-
-            return $this->redirectToRoute("admin_menu_index");
+            return $this->redirectToRoute("admin_menu_items", ["id" => $menu->getId()]);
         }
 
         return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * Update menu
+     *
+     * @param  Menu  $menu
+     * @param  Request  $request
+     * 
+     * @return Template
+     * 
+     * @author Mykola Martynov
+     *
+     * @Route("/{id}/edit", name="admin_menu_edit", requirements={"id": "\d+"})
+     * @ParamConverter("menu", class="AppBundle:Menu")
+     * @Template()
+     **/
+    public function editAction(Menu $menu, Request $request)
+    {
+        $form = $this->createMenuForm($menu, $request);
+
+        if ($form->isValid()) {
+            $this->persistMenu($menu);
+
+            return $this->redirectToRoute("admin_menu_show", ["id" => $menu->getId()]);
+        }
+        return [
+            'menu' => $menu,
             'form' => $form->createView(),
         ];
     }
@@ -73,26 +97,6 @@ class MenuController extends Controller
      * @Template()
      */
     public function showAction(Menu $menu)
-    {
-        return [
-            'menu' => $menu,
-        ];
-    }
-
-    /**
-     * Update menu
-     *
-     * @param  Menu  $menu
-     * 
-     * @return Template
-     * 
-     * @author Mykola Martynov
-     *
-     * @Route("/{id}/edit", name="admin_menu_edit", requirements={"id": "\d+"})
-     * @ParamConverter("menu", class="AppBundle:Menu")
-     * @Template()
-     **/
-    public function editAction(Menu $menu)
     {
         return [
             'menu' => $menu,
@@ -117,5 +121,40 @@ class MenuController extends Controller
         return [
             'menu' => $menu,
         ];
+    }
+
+    /**
+     * Save given menu into database
+     *
+     * @param  Menu  $menu
+     * 
+     * @return void
+     * 
+     * @author Mykola Martynov
+     **/
+    private function persistMenu(Menu $menu)
+    {
+        $entity_manager = $this->getDoctrine()->getEntityManager();
+
+        $entity_manager->persist($menu);
+        $entity_manager->flush();
+    }
+
+    /**
+     * Return form for create/edit menu
+     *
+     * @param  Menu  $menu
+     * @param  Request  $request
+     * 
+     * @return FormBuilder
+     * 
+     * @author Mykola Martynov
+     **/
+    private function createMenuForm(Menu $menu, Request $request)
+    {
+        $form = $this->createForm(new MenuType, $menu);
+        $form->handleRequest($request);
+
+        return $form;
     }
 }
