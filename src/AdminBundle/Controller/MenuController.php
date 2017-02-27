@@ -107,6 +107,7 @@ class MenuController extends Controller
      * Delete givem menu
      *
      * @param  Menu  $menu
+     * @param  Request  $request
      * 
      * @return Template
      * 
@@ -116,10 +117,23 @@ class MenuController extends Controller
      * @ParamConverter("menu", class="AppBundle:Menu")
      * @Template()
      **/
-    public function deleteAction(Menu $menu)
+    public function deleteAction(Menu $menu, Request $request)
     {
+        $form = $this->createFormBuilder([])->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $entity_manager = $this->getDoctrine()->getEntityManager();
+
+            $entity_manager->remove($menu);
+            $entity_manager->flush();
+
+            return $this->redirectToRoute("admin_menu_index");
+        }
+
         return [
             'menu' => $menu,
+            'form' => $form->createView(),
         ];
     }
 

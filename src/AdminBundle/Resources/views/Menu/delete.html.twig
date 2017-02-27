@@ -1,0 +1,24 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Delete Menu | {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        <header>
+            <h1>Do you want to remove the following Menu ?</h1>
+        </header>
+
+        <dl>
+            <dt>Name</dt>
+            <dd>{{ menu.name }}</dd>
+
+            <dt>Header</dt>
+            <dd>{{ menu.header }}</dd>
+        </dl>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
