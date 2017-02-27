@@ -48,7 +48,11 @@ class MenuController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            # create new menu
+            $entity_manager = $this->getDoctrine()->getEntityManager();
+
+            $entity_manager->persist($menu);
+            $entity_manager->flush();
+
             return $this->redirectToRoute("admin_menu_index");
         }
 
