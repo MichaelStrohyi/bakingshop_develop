@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Menu;
+use AdminBundle\Form\MenuType;
 
 /**
  * @Route("/menu")
@@ -41,7 +42,12 @@ class MenuController extends Controller
      **/
     public function createAction(Request $request)
     {
-        return [];
+        $menu = new Menu;
+        $form = $this->createForm(new MenuType, $menu);
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
