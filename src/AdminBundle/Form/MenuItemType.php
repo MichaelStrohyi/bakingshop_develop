@@ -14,6 +14,7 @@ class MenuItemType extends AbstractType
         $builder
             ->add('title', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('position', 'hidden', ['data' => MenuItem::DEFAULT_POSITION])
         ;
     }
 

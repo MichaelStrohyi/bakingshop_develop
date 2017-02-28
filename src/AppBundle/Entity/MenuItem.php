@@ -19,6 +19,8 @@ use AppBundle\Validator\Constraints as AppAssert;
  */
 class MenuItem
 {
+    const DEFAULT_POSITION = 10000;
+
     /**
      * @var integer
      *
@@ -32,7 +34,6 @@ class MenuItem
      * @var string
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
-     * @Assert\NotBlank
      * @AppAssert\LocalURL
      */
     private $url;
@@ -50,10 +51,10 @@ class MenuItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default": 10000})
      * @Assert\NotNull
      */
-    private $position;
+    private $position = self::DEFAULT_POSITION;
 
     /**
      * @var Menu

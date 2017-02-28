@@ -9,7 +9,7 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     
-    <ul class="menu-items list-unstyled">
+    <ul class="menu-items list-unstyled mutable-items" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
         {% for menu_item in form.items %}
             <li>
                 {{ form_errors(menu_item) }}
@@ -24,4 +24,55 @@
     </div>
 
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        var $collectionHolder;
+
+        // setup an "add a tag" link
+        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-md-offset-2">Add an Item</a>');
+        var $newLinkLi = $('<li></li>').append($addItemLink);
+
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.mutable-items');
+
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addItemLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag form (see next code block)
+                addItemLink($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addItemLink($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+        }
+    </script>
 {% endblock %}

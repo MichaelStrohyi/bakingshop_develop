@@ -32,6 +32,7 @@ class MenuItemController extends Controller
     public function indexAction(Menu $menu, Request $request)
     {
         $form = $this->createMenuForm($menu, $request);
+        $this->setItemsPosition($menu);
 
         if ($form->isValid()) {
             $this->persistItems($menu);
@@ -43,6 +44,24 @@ class MenuItemController extends Controller
             'menu' => $menu,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * Set new positions for all items in menu
+     *
+     * @param  Menu  $menu
+     * 
+     * @return void
+     * 
+     * @author Mykola Martynov
+     **/
+    private function setItemsPosition(Menu $menu)
+    {
+        $position = 0;
+        foreach ($menu->getItems() as $item) {
+            $item->setPosition($position++);
+            $item->setMenu($menu);
+        }
     }
 
     /**
@@ -74,10 +93,6 @@ class MenuItemController extends Controller
      **/
     private function persistItems(Menu $menu)
     {
-        foreach ($menu->getItems() as $index => $item) {
-            $item->setPosition($index);
-        }
-
         $entity_manager = $this->getDoctrine()->getEntityManager();
 
         $entity_manager->persist($menu);
