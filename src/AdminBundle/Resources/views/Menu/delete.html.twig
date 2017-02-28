@@ -2,13 +2,13 @@
 
 {% block title %}Delete Menu | {{ parent() }}{% endblock %}
 
-{% block body %}
+{% block content %}
     {{ form_start(form) }}
         <header>
             <h1>Do you want to remove the following Menu ?</h1>
         </header>
 
-        <dl>
+        <dl class="dl-horizontal">
             <dt>Name</dt>
             <dd>{{ menu.name }}</dd>
 
@@ -16,7 +16,7 @@
             <dd>{{ menu.header }}</dd>
         </dl>
 
-        <div class="actions">
+        <div class="actions col-md-offset-2">
             <button type="submit" class="btn btn-danger">Delete</button>
             <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
         </div>

@@ -2,8 +2,12 @@
 
 {% block title %}Menu Information | {{ parent() }}{% endblock %}
 
-{% block body %}
-    <dl>
+{% block content %}
+    <header>
+        <h1>Menu Information</h1>
+    </header>
+
+    <dl class="dl-horizontal">
         <dt>Name</dt>
         <dd>{{ menu.name }}</dd>
 
@@ -16,7 +20,7 @@
         {% endfor %}
     </dl>
 
-    <div class="actions">
+    <div class="actions col-md-offset-2">
         <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Back</a>
         <a href="{{ path("admin_menu_edit", {"id": menu.id}) }}" class="btn btn-default">Edit</a>
         <a href="{{ path("admin_menu_delete", {"id": menu.id}) }}" class="btn btn-danger">Delete</a>
