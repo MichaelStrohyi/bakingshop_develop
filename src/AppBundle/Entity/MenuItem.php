@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * MenuItem
@@ -30,6 +32,8 @@ class MenuItem
      * @var string
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
+     * @Assert\NotBlank
+     * @AppAssert\LocalURL
      */
     private $url;
 
@@ -37,6 +41,9 @@ class MenuItem
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=200)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $title;
 
@@ -44,6 +51,7 @@ class MenuItem
      * @var integer
      *
      * @ORM\Column(name="position", type="integer", nullable=false)
+     * @Assert\NotNull
      */
     private $position;
 

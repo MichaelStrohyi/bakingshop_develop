@@ -49,6 +49,7 @@ class Menu
      *
      * @ORM\OneToMany(targetEntity="MenuItem", mappedBy="menu", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"position" = "asc"})
+     * @Assert\Valid
      **/
     private $items;
 

@@ -7,13 +7,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Menu;
 
-class MenuType extends AbstractType
+class MenuItemsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('header', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('items', 'collection', [
+                    'type' => new MenuItemType,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                ])
         ;
     }
 
@@ -26,6 +29,6 @@ class MenuType extends AbstractType
 
     public function getName()
     {
-        return 'admin_menu';
+        return 'admin_menu_items';
     }
 }

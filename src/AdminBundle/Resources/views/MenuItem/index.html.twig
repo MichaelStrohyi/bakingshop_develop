@@ -1,0 +1,27 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Menu Items | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <header>
+        <h1>Menu items for &lt; {{ menu.name }} &gt;</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    
+    <ul class="menu-items">
+        {% for menu_item in form.items %}
+            <li>
+                {{ form_errors(menu_item) }}
+                {{ form_widget(menu_item) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="actions">
+        <button type="submit" class="btn btn-default">Save Changes</button>
+        <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
