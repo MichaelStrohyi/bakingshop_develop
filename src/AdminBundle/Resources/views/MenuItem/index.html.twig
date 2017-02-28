@@ -7,7 +7,7 @@
         <h1>Menu items for &lt; {{ menu.name }} &gt;</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-items'}}) }}
     
     <ul class="menu-items list-unstyled mutable-items" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
         {% for menu_item in form.items %}
@@ -58,7 +58,14 @@
             // add a delete link to all of the existing tag form li elements
             $collectionHolder.find('li.list-item').each(function() {
                 addItemFormDeleteLink($(this));
-            });        
+            });
+
+            // add function for updating position before submit
+            $('#edit-items').on('submit', function(event) {
+                $collectionHolder.find('li.list-item .item-position').each(function(index) {
+                    $(this).val(index);
+                });
+            });
         });
 
         function addItemLink($collectionHolder, $newLinkLi) {

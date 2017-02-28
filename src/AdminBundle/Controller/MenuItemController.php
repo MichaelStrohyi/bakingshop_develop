@@ -32,7 +32,7 @@ class MenuItemController extends Controller
     public function indexAction(Menu $menu, Request $request)
     {
         $form = $this->createMenuForm($menu, $request);
-        $this->setItemsPosition($menu);
+        $this->addItemsInMenu($menu);
 
         if ($form->isValid()) {
             $this->persistItems($menu);
@@ -47,7 +47,7 @@ class MenuItemController extends Controller
     }
 
     /**
-     * Set new positions for all items in menu
+     * Set menu parent for each element
      *
      * @param  Menu  $menu
      * 
@@ -55,11 +55,9 @@ class MenuItemController extends Controller
      * 
      * @author Mykola Martynov
      **/
-    private function setItemsPosition(Menu $menu)
+    private function addItemsInMenu(Menu $menu)
     {
-        $position = 0;
         foreach ($menu->getItems() as $item) {
-            $item->setPosition($position++);
             $item->setMenu($menu);
         }
     }
