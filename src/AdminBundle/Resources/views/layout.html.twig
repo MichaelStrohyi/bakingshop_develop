@@ -8,3 +8,21 @@
         {% block content %}{% endblock %}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <style type="text/css">
+        ul.mutable-items li.list-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #aaa;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}

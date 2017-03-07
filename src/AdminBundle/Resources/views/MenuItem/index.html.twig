@@ -24,6 +24,8 @@
     </div>
 
     {{ form_end(form) }}
+
+    {% dump(form) %}
 {% endblock %}
 
 {% block javascripts %}
@@ -102,5 +104,7 @@
                 $itemFormLi.remove();
             });
         }
+
+        $("ul.menu-items").sortable();
     </script>
 {% endblock %}
