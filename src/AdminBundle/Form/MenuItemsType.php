@@ -19,20 +19,9 @@ class MenuItemsType extends AbstractType
                     'type' => new MenuItemType,
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'by_reference' => false,
                 ])
         ;
-
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $submittedData = $event->getData();
-
-            if (!array_key_exists('items', $submittedData)) {
-                return;
-            }
-
-            //Re-index the array to ensure the forms stay in the submitted order.
-            $submittedData['items'] = array_values($submittedData['items']);
-            $event->setData($submittedData);
-        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

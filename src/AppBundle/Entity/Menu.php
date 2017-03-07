@@ -148,4 +148,24 @@ class Menu
     {
         return $this->items;
     }
+
+    /**
+     * Sort items by position
+     *
+     * @return self
+     * 
+     * @author Mykola Martynov
+     **/
+    public function sortItems()
+    {
+        $items = [];
+        foreach ($this->items as $item) {
+            $key = $item->getPosition();
+            $items[$key] = $item;
+        }
+        ksort($items);
+        $this->items = new ArrayCollection($items);
+        
+        return $this;
+    }
 }

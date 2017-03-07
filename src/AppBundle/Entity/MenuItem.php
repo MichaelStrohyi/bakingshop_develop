@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as AppAssert;
@@ -51,6 +52,7 @@ class MenuItem
     /**
      * @var integer
      *
+     * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer", nullable=false, options={"default": 10000})
      * @Assert\NotNull
      */
@@ -142,7 +144,7 @@ class MenuItem
      */
     public function setPosition($position)
     {
-        $this->position = $position;
+        $this->position = intval($position);
 
         return $this;
     }

@@ -32,7 +32,6 @@ class MenuItemController extends Controller
     public function indexAction(Menu $menu, Request $request)
     {
         $form = $this->createMenuForm($menu, $request);
-        $this->addItemsInMenu($menu);
 
         if ($form->isValid()) {
             $this->persistItems($menu);
@@ -44,22 +43,6 @@ class MenuItemController extends Controller
             'menu' => $menu,
             'form' => $form->createView(),
         ];
-    }
-
-    /**
-     * Set menu parent for each element
-     *
-     * @param  Menu  $menu
-     * 
-     * @return void
-     * 
-     * @author Mykola Martynov
-     **/
-    private function addItemsInMenu(Menu $menu)
-    {
-        foreach ($menu->getItems() as $item) {
-            $item->setMenu($menu);
-        }
     }
 
     /**
