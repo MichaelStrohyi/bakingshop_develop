@@ -7,8 +7,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Menu;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 
 class MenuItemsType extends AbstractType
 {
@@ -20,6 +18,9 @@ class MenuItemsType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'by_reference' => false,
+                    'sort_by' => [
+                        'position' => 'asc',
+                    ],
                 ])
         ;
     }
