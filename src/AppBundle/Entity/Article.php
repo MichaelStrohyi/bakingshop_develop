@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ArticleRepository")
  * @UniqueEntity("header", message="Article with this header already exists")
+ * @ORM\HasLifecycleCallbacks
  */
 class Article
 {
@@ -105,6 +106,19 @@ class Article
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @ORM\PostLoad
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function transformLoadedData()
+    {
+        if (is_resource($this->url) && get_resource_type($this->url) == 'stream') {
+            $this->url = stream_get_contents($this->url, -1, 0);
+        }
     }
 
     /**
