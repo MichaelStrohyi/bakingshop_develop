@@ -22,8 +22,8 @@
                     <td>{{ article.header }}</td>
                     <td>{{ article.url }}</td>
                     <td>
-                        <a href="#">Edit</a>
-                        <a href="#">Remove</a>
+                        <a href="{{ path("admin_article_edit", {id: article.id}) }}">Edit</a>
+                        <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
