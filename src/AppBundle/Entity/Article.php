@@ -47,7 +47,7 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="body", type="blob")
+     * @ORM\Column(name="body", type="text", nullable=true)
      */
     private $body;
 
