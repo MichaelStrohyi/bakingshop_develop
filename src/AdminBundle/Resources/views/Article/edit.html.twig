@@ -1,0 +1,17 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}Edit Article | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <header>
+        <h1>Edit Article</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
+        <div class="actions text-right">
+            <button type="submit" class="btn btn-danger">Update</button>
+            <a href="{{ path('admin_article_index') }}" class="btn btn-default">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
