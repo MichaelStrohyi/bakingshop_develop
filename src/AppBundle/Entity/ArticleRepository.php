@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class ArticleRepository extends EntityRepository
 {
+    /**
+     * Return list aff all article ordered by header
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function findAllByHeader()
+    {
+        return $this->findBy([], ['header' => 'asc']);
+    }
 }

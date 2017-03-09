@@ -3,12 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Article
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ArticleRepository")
+ * @UniqueEntity("header", message="Article with this header already exists")
  */
 class Article
 {
@@ -24,7 +28,10 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="header", type="string", length=255)
+     * @ORM\Column(name="header", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=255)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $header;
 
@@ -32,6 +39,7 @@ class Article
      * @var string
      *
      * @ORM\Column(name="url", type="blob")
+     * @AppAssert\LocalUrl
      */
     private $url;
 
