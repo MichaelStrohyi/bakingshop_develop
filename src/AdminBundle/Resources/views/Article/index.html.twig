@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <a href="#" class="btn btn-default">Create Article</a>
+    <a href="{{ path("admin_article_create")}}" class="btn btn-default">Create Article</a>
 
     <table>
         <thead>
@@ -22,7 +22,7 @@
                     <td>{{ article.header }}</td>
                     <td>{{ article.url }}</td>
                     <td>
-                        <a href="#">Show</a>
+                        <a href="#">Edit</a>
                         <a href="#">Remove</a>
                     </td>
                 </tr>
