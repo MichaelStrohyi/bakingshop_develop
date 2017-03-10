@@ -2,7 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * MenuItem
@@ -17,6 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MenuItem
 {
+    const DEFAULT_POSITION = 10000;
+
     /**
      * @var integer
      *
@@ -30,6 +35,7 @@ class MenuItem
      * @var string
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
+     * @AppAssert\LocalURL
      */
     private $url;
 
@@ -37,15 +43,20 @@ class MenuItem
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=200)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $title;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default": 10000})
+     * @Assert\NotNull
      */
-    private $position;
+    private $position = self::DEFAULT_POSITION;
 
     /**
      * @var Menu
@@ -133,7 +144,7 @@ class MenuItem
      */
     public function setPosition($position)
     {
-        $this->position = $position;
+        $this->position = intval($position);
 
         return $this;
     }

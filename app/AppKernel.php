@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new AdminBundle\AdminBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Fsv\SortableCollectionTypeBundle\FsvSortableCollectionTypeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
