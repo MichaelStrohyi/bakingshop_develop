@@ -1,18 +1,17 @@
-{% extends 'AdminBundle::layout.html.twig' %}
+{% extends "AdminBundle::layout.html.twig" %}
 
-{% block title %}New Menu | {{ parent() }}{% endblock %}
+{% block title %}New Article |{{ parent() }}{% endblock %}
 
 {% block content %}
     <header>
-        <h1>New Menu</h1>
+        <h1>New Article</h1>
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
-
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Create</button>
-            <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
+            <a href="{{ path('admin_article_index') }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
 {% endblock %}

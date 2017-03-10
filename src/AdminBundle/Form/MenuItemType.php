@@ -5,27 +5,28 @@ namespace AdminBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Entity\Menu;
+use AppBundle\Entity\MenuItem;
 
-class MenuType extends AbstractType
+class MenuItemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('header', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('title', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('url', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('position', 'hidden', ['data' => MenuItem::DEFAULT_POSITION, 'attr' => ['class' => 'item-position']])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Menu::class,
+            'data_class' => MenuItem::class,
         ));
     }
 
     public function getName()
     {
-        return 'admin_menu';
+        return 'admin_menu_item';
     }
 }
