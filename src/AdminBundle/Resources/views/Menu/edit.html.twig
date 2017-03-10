@@ -2,15 +2,15 @@
 
 {% block title %}Edit Menu | {{ parent() }}{% endblock %}
 
-{% block body %}
+{% block content %}
     <header>
         <h1>Edit Menu</h1>
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
-        <div class="actions">
-            <button type="submit">Update</button>
+        <div class="actions text-right">
+            <button type="submit" class="btn btn-danger">Update</button>
             <a href="{{ path("admin_menu_show", {"id": menu.id}) }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}

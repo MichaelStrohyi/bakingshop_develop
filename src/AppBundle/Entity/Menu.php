@@ -49,6 +49,7 @@ class Menu
      *
      * @ORM\OneToMany(targetEntity="MenuItem", mappedBy="menu", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"position" = "asc"})
+     * @Assert\Valid
      **/
     private $items;
 
@@ -146,5 +147,25 @@ class Menu
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * Sort items by position
+     *
+     * @return self
+     * 
+     * @author Mykola Martynov
+     **/
+    public function sortItems()
+    {
+        $items = [];
+        foreach ($this->items as $item) {
+            $key = $item->getPosition();
+            $items[$key] = $item;
+        }
+        ksort($items);
+        $this->items = new ArrayCollection($items);
+        
+        return $this;
     }
 }
