@@ -20,7 +20,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "gedmo/doctrine-extensions": "^2.4",
-        "fsv/sortable-collection-type-bundle": "^0.1.1"
+        "fsv/sortable-collection-type-bundle": "^0.1.1",
+        "egeloen/ckeditor-bundle": "^5.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
