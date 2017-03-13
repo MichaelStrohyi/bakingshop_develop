@@ -14,7 +14,7 @@ class ArticleType extends AbstractType
         $builder
             ->add('header', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('body', 'textarea')
+            ->add('body', 'ckeditor')
         ;
     }
 
