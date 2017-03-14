@@ -79,3 +79,13 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+ivory_ck_editor:
+    configs:
+        my_config:
+            filebrowserBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=files"
+            filebrowserImageBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=images"
+            filebrowserFlashBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=flash"
+            filebrowserUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=files"
+            filebrowserImageUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=images"
+            filebrowserFlashUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=flash"
