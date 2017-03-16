@@ -22,7 +22,7 @@ $_CONFIG = array(
 // GENERAL SETTINGS
 
     'disabled' => false,
-    'uploadURL' => "..\..\upload",
+    'uploadURL' => "/articles",
     'uploadDir' => "",
     'theme' => "default",
 
@@ -59,7 +59,7 @@ $_CONFIG = array(
 
     'denyZipDownload' => true,
     'denyUpdateCheck' => true,
-    'denyExtensionRename' => false,
+    'denyExtensionRename' => true,
 
 
 // PERMISSION SETTINGS
@@ -89,15 +89,15 @@ $_CONFIG = array(
 
 // MISC SETTINGS
 
-    'filenameChangeChars' => array(/*
+    'filenameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
-    'dirnameChangeChars' => array(/*
+    'dirnameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
     'mime_magic' => "",
 
