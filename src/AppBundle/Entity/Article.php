@@ -40,7 +40,7 @@ class Article
      * @var string
      *
      * @ORM\Column(name="url", type="blob")
-     * @AppAssert\LocalUrl
+     * @AppAssert\LocalURL
      */
     private $url;
 
