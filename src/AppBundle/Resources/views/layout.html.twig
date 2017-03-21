@@ -26,3 +26,11 @@
         </section>
     </div>
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets '@AppBundle/Resources/public/css/*' %}
+        <link rel="stylesheet" type="text/css" href="{{ asset_url }}">
+    {% endstylesheets %}
+{% endblock %}
