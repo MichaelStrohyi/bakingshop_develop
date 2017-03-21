@@ -1,0 +1,28 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        <section class="page">
+            <header class="page-header">
+                {% block page_header %}
+                    {% include 'AppBundle:layout:_header.html.twig' ignore missing %}
+                {% endblock %}
+            </header>
+
+            <section class="page-content row">
+                <main class="col-sm-9">{% block main %}{% endblock %}</main>
+                <aside class="col-sm-3">
+                    {% block aside %}
+                        {{ render(controller('AppBundle:Page:sidebar')) }}
+                    {% endblock %}
+                </aside>
+            </section>
+
+            <footer class="page-footer">
+                {% block page_footer %}
+                    {% include 'AppBundle:layout:_footer.html.twig' ignore missing %}
+                {% endblock %}
+            </footer>
+        </section>
+    </div>
+{% endblock %}
