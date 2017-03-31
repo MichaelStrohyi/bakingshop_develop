@@ -89,3 +89,17 @@ ivory_ck_editor:
             filebrowserUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=files"
             filebrowserImageUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=images"
             filebrowserFlashUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=flash"
+
+            templates_replaceContent: false
+            templates: "my_templates"
+    templates:
+        my_templates:
+            templates:
+                -
+                    title: "Two Column"
+                    description: "Two Column with Bootstrap 3"
+                    html: >
+                        <div class="row">
+                            <div class="col-sm-6">column 1</div>
+                            <div class="col-sm-6">column 2</div>
+                        </div>
