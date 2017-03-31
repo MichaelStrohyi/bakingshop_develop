@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ article.header }}</td>
-                    <td>{{ article.url }}</td>
+                    <td><a href="{{ path('article_page', {id: article.id}) }}" target="_blank">{{ article.url }}</a></td>
                     <td>
                         <a href="{{ path("admin_article_edit", {id: article.id}) }}">Edit</a>
                         <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>

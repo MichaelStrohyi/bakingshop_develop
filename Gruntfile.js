@@ -80,6 +80,16 @@ module.exports = function(grunt) {
                     }
                 ]
             }
+        },
+        watch: {
+            styles: {
+                files: 'src/*/Resources/private/sass/*.scss',
+                tasks: ['sass', 'cssmin', 'copy'],
+                options: {
+                    interrupt: true,
+                    debounceDelay: 250
+                }
+            }
         }
     });
 
@@ -89,6 +99,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('default', ['clean', 'sass', 'cssmin', 'copy']);
 };

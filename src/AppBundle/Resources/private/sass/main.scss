@@ -1,5 +1,32 @@
-$theme-default-color: #f0f0f0;
+$background-color: white;
 
-body {
-    background-color: $theme-default-color;
+.box-wrapper {
+    background: url(/bundles/app/img/border-pattern.32x32.png);
+    padding: 0;
+    
+    .main {
+        margin: 32px;
+        padding: 0;
+        background-color: $background-color;
+    }
+}
+
+.recipe {
+    padding: 20px;
+
+    .recipe-title {
+        font-family: 'Felipa', coursive;
+        text-align: center;
+    }
+
+    table caption {
+        padding: 5px 20px;
+        text-align: center;
+    }
+
+    p {
+        line-height: 200%;
+        text-align: justify;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
 }
