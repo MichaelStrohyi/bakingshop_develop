@@ -22,6 +22,14 @@ class PageController extends Controller
     }
 
     /**
+     * @Template()
+     */
+    public function headerSlideshowAction()
+    {
+        return [];
+    }
+
+    /**
      * Render menu by name.
      *
      * @param  Menu|string  $name
