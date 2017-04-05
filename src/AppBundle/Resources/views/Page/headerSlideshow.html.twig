@@ -1,4 +1,4 @@
-<div class="slideshow">
+<div class="slideshow hidden-xs">
     {% for index in range(1,7) %}
         <img class="img-responsive{{ index == 1 ? ' active' : '' }}" src="{{ asset("bundles/app/img/slide#{index}.jpg") }}" alt="">
     {% endfor %}
