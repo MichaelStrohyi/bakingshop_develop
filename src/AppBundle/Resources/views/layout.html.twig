@@ -32,7 +32,7 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    {% stylesheets '@AppBundle/Resources/public/css/*' %}
+    {% stylesheets '@AppBundle/Resources/public/sass/*' %}
         <link rel="stylesheet" type="text/css" href="{{ asset_url }}">
     {% endstylesheets %}
 {% endblock %}
@@ -40,7 +40,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts '@AppBundle/Resources/public/js/*' %}
+    {% javascripts '@AppBundle/Resources/public/coffee/*' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
