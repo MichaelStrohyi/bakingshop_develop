@@ -21,7 +21,9 @@
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "gedmo/doctrine-extensions": "^2.4",
         "fsv/sortable-collection-type-bundle": "^0.1.1",
-        "egeloen/ckeditor-bundle": "^5.0"
+        "egeloen/ckeditor-bundle": "^5.0",
+        "leafo/scssphp": "^0.6.7",
+        "patchwork/jsqueeze": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

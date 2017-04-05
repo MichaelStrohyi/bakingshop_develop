@@ -19,12 +19,15 @@ slideSetHeight = (slide) ->
 slideAllHeight = ->
     $(".slideshow").each -> slideSetHeight this
 
+$(".slideshow img.active").load ->
+    slideAllHeight()
+
+$(window).resize ->
+    slideAllHeight()
+
 $ ->
-    setInterval "slideSwithc()", 3000
+    setInterval "slideSwitch()", 3000
 
-    $(".slideshow img.active").on "load", ->
-        slideAllHeight()
+    slideAllHeight()
 
-    $(window).resize ->
-        slideAllHeight()
     
