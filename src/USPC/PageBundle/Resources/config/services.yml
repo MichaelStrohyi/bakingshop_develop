@@ -1,0 +1,4 @@
+services:
+#    uspc_page.example:
+#        class: USPC\PageBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
