@@ -3,7 +3,7 @@
         <h3>{{ menu.header }}</h3>
     </header>
 
-    <ul>
+    <ul class="list-unstyled list-inline">
         {% for menu_item in menu.items %}
             <li><a href="{{ menu_item.url }}">{{ menu_item.title }}</a></li>
         {% endfor %}

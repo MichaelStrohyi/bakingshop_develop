@@ -14,7 +14,7 @@ slideSwitch = ->
 slideSetHeight = (slide) ->
     $slide = $ slide
     $img = $slide.find("img").first()
-    $slide.height $img.innerHeight()
+    $slide.height $img.innerHeight() - 1
 
 slideAllHeight = ->
     $(".slideshow").each -> slideSetHeight this
