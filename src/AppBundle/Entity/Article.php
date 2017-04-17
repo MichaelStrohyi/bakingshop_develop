@@ -17,6 +17,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Article
 {
+    const PAGE_TYPE = 'article';
+
     /**
      * @var integer
      *

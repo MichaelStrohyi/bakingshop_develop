@@ -13,7 +13,7 @@ use AdminBundle\Form\ArticleType;
 /**
  * @Route("/article")
  */
-class ArticleController extends Controller
+class ArticleController extends PageController
 {
     /**
      * @Route("/", name="admin_article_index")
@@ -106,6 +106,8 @@ class ArticleController extends Controller
             $entity_manager->remove($article);
             $entity_manager->flush();
 
+            $this->deletePageUrls(Article::PAGE_TYPE, $article);
+
             return $this->redirectToRoute("admin_article_index");
         }
 
@@ -129,6 +131,9 @@ class ArticleController extends Controller
 
         $entity_manager->persist($article);
         $entity_manager->flush();
+        
+        # add/update article url in database
+        $this->updatePageUrls(Article::PAGE_TYPE, $article);
     }
 
      /**

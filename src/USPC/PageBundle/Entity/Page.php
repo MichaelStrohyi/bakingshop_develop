@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     @Index(name="search_type_url", columns={"type", "url"}),
  *     @Index(name="search_type_object", columns={"type", "object_id"})
  * })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\PageRepository")
+ * @ORM\Entity(repositoryClass="USPC\PageBundle\Entity\PageRepository")
  */
 class Page
 {

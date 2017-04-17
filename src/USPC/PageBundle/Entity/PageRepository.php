@@ -2,7 +2,6 @@
 
 namespace USPC\PageBundle\Entity;
 
-use AppBundle\Entity\Coupon;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -37,7 +36,7 @@ class PageRepository extends EntityRepository
         # mark all urls with given {type,object_id}
         $query = $em
             ->createQuery(
-                'UPDATE AppBundle:Page p '
+                'UPDATE USPCPageBundle:Page p '
                 . 'SET p.is_alias = true '
                 . 'WHERE p.type = :type and p.object_id = :object_id and p.url != :url'
             )
@@ -47,7 +46,7 @@ class PageRepository extends EntityRepository
         # clear for the current object url
         $query = $em
             ->createquery(
-                'UPDATE AppBundle:Page p '
+                'UPDATE USPCPageBundle:Page p '
                 . 'SET p.is_alias = false '
                 . 'WHERE p.type = :type AND p.object_id = :object_id and p.url = :url'
             )
@@ -104,7 +103,7 @@ class PageRepository extends EntityRepository
 
         $query = $this->getEntityManager()
             ->createQuery(
-                'DELETE FROM AppBundle:Page p '
+                'DELETE FROM USPCPageBundle:Page p '
                 . 'WHERE p.type = :type and p.object_id = :object_id'
             )
             ->setParameters([
