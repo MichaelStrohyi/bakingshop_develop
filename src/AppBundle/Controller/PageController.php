@@ -10,6 +10,21 @@ use AppBundle\Entity\Menu;
 class PageController extends Controller
 {
     /**
+     * @Route("/", name="homepage")
+     */
+    public function homepageAction()
+    {
+        $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
+
+        $article = $article_repo->getHomepage();
+        if (!$article) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->forward('AppBundle:Article:page', ['article' => $article]);
+    }
+
+    /**
      * @Template()
      */
     public function sidebarAction()

@@ -134,6 +134,7 @@ class ArticleController extends PageController
         
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
+        $this->updateHomepage($article);
     }
 
      /**
@@ -153,4 +154,22 @@ class ArticleController extends PageController
             return $form;
     }
 
+    /**
+     * Reset homepage flag for other articles
+     *
+     * @param  Article  $article
+     * 
+     * @return void
+     * 
+     * @author Mykola Martynov
+     **/
+    private function updateHomepage(Article $article)
+    {
+        if (!$article->isHomepage()) {
+            return;
+        }
+
+        $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
+        $article_repo->resetHomepage($article);
+    }
 }

@@ -1,3 +1,3 @@
-uspc_page_homepage:
+uspc_pages:
     path:     /{slug}
     defaults: { _controller: USPCPageBundle:Default:dispatcher }

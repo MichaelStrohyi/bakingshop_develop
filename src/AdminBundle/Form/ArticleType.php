@@ -15,6 +15,7 @@ class ArticleType extends AbstractType
             ->add('header', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
             ->add('body', 'ckeditor')
+            ->add('is_homepage', null, ['label' => 'Use as Homepage'])
         ;
     }
 

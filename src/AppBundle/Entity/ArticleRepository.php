@@ -22,4 +22,39 @@ class ArticleRepository extends EntityRepository
     {
         return $this->findBy([], ['header' => 'asc']);
     }
+
+    /**
+     * Return article used for homepage
+     *
+     * @return Article
+     * @author Mykola Martynov
+     **/
+    public function getHomepage()
+    {
+        return $this->findOneBy(['is_homepage' => true]);
+    }
+
+    /**
+     * Clear homepage flag for other
+     *
+     * @param  Article  $article
+     * 
+     * @return void
+     * @author Mykola Martynov
+     **/
+    public function resetHomepage(Article $article)
+    {
+        $entity_manager = $this->getEntityManager();
+
+        $query = $entity_manager
+            ->createQuery(
+                'UPDATE AppBundle:Article a '
+                . 'SET a.is_homepage = false '
+                . 'WHERE a.is_homepage = true and a.id <> :id'
+            )
+            ->setParameters([
+                    'id' => $article->getId(),
+                ]);
+        $query->execute();
+    }
 }
