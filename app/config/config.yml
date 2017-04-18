@@ -7,6 +7,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    twig.extension.routing.class: USPC\PageBundle\Twig\AdvancedRoutingExtension
     router.dispatchers:
         article:
             entity: 'AppBundle:Article'
