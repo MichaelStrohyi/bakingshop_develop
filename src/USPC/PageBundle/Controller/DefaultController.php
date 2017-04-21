@@ -115,7 +115,7 @@ class DefaultController extends Controller
         }
 
         $entity = $dispatcher['entity'];
-        $object = $this->getDoctrine()->getRepository($entity)->find($this->page->getObjectId());;
+        $object = $this->getDoctrine()->getRepository($entity)->find($this->page->getObjectId());
 
         return $object;
     }
