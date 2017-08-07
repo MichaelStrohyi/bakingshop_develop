@@ -1,0 +1,5 @@
+_uspc_pages:
+    path:     /{slug}
+    defaults: { _controller: USPCPageBundle:Default:dispatcher, slug: null }
+    requirements:
+        slug: .+

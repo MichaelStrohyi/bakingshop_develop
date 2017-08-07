@@ -13,7 +13,7 @@ use AdminBundle\Form\ArticleType;
 /**
  * @Route("/article")
  */
-class ArticleController extends Controller
+class ArticleController extends PageController
 {
     /**
      * @Route("/", name="admin_article_index")
@@ -106,6 +106,8 @@ class ArticleController extends Controller
             $entity_manager->remove($article);
             $entity_manager->flush();
 
+            $this->deletePageUrls(Article::PAGE_TYPE, $article);
+
             return $this->redirectToRoute("admin_article_index");
         }
 
@@ -129,6 +131,10 @@ class ArticleController extends Controller
 
         $entity_manager->persist($article);
         $entity_manager->flush();
+        
+        # add/update article url in database
+        $this->updatePageUrls(Article::PAGE_TYPE, $article);
+        $this->updateHomepage($article);
     }
 
      /**
@@ -148,4 +154,22 @@ class ArticleController extends Controller
             return $form;
     }
 
+    /**
+     * Reset homepage flag for other articles
+     *
+     * @param  Article  $article
+     * 
+     * @return void
+     * 
+     * @author Mykola Martynov
+     **/
+    private function updateHomepage(Article $article)
+    {
+        if (!$article->isHomepage()) {
+            return;
+        }
+
+        $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
+        $article_repo->resetHomepage($article);
+    }
 }

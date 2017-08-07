@@ -6,3 +6,7 @@ admin:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+uspc_page:
+    resource: "@USPCPageBundle/Resources/config/routing.yml"
+    prefix:   /

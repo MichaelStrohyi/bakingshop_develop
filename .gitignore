@@ -12,3 +12,7 @@
 /composer.phar
 *~
 /web/articles/
+/node_modules/
+/dist/
+/web/js/
+/web/css/

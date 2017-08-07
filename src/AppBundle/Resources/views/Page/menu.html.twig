@@ -1,0 +1,11 @@
+{% if menu is not empty %}
+    <header>
+        <h3>{{ menu.header }}</h3>
+    </header>
+
+    <ul class="list-unstyled list-inline">
+        {% for menu_item in menu.items %}
+            <li><a href="{{ path(menu_item) }}">{{ menu_item.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}

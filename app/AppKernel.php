@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Fsv\SortableCollectionTypeBundle\FsvSortableCollectionTypeBundle(),
             new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
+            new USPC\PageBundle\USPCPageBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -1,0 +1,5 @@
+{% for menu in menus %}
+    <nav class="aside-menu">
+        {{ render(controller('AppBundle:Page:menu', {'name': menu})) }}
+    </nav>
+{% endfor %}

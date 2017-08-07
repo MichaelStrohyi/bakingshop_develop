@@ -17,6 +17,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Article
 {
+    const PAGE_TYPE = 'article';
+
     /**
      * @var integer
      *
@@ -50,6 +52,13 @@ class Article
      * @ORM\Column(name="body", type="text", nullable=true)
      */
     private $body;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_homepage", type="boolean", nullable=false, options={"default"=false})
+     **/
+    private $is_homepage;
 
 
     /**
@@ -142,5 +151,24 @@ class Article
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Return true if current article is set as homepage, otherwise return false.
+     * Set value if $isHomepage is not null.
+     * 
+     * @param boolean $isHomepage
+     * 
+     * @return boolean|self
+     */
+    public function isHomepage($isHomepage = null)
+    {
+        if (is_null($isHomepage)) {
+            return $this->is_homepage;
+        }
+
+        $this->is_homepage = !empty($isHomepage);
+
+        return $this;
     }
 }

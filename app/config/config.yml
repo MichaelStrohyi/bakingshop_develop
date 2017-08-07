@@ -7,6 +7,11 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    twig.extension.routing.class: USPC\PageBundle\Twig\AdvancedRoutingExtension
+    router.dispatchers:
+        article:
+            entity: 'AppBundle:Article'
+            controller: 'AppBundle:Article:page'
 
 framework:
     #esi:             ~
@@ -41,10 +46,19 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        [ 'AppBundle' ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
+        jsqueeze: ~
+        coffee:
+            bin: /usr/local/bin/coffee
+            node: /usr/local/bin/node
+            node_paths: ['/usr/local/bin/node_modules']
+            apply_to: '\.coffee$'
+            bare: true
+        scssphp:
+                formatter: "Leafo\ScssPhp\Formatter\Compressed"
         #closure:
         #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
         #yui_css:
@@ -83,9 +97,23 @@ swiftmailer:
 ivory_ck_editor:
     configs:
         my_config:
-            filebrowserBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=files"
-            filebrowserImageBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=images"
-            filebrowserFlashBrowseUrl: "/admin/kcfinder/browse.php?opener=ckeditor&type=flash"
-            filebrowserUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=files"
-            filebrowserImageUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=images"
-            filebrowserFlashUploadUrl: "/admin/kcfinder/upload.php?opener=ckeditor&type=flash"
+            filebrowserBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=files"
+            filebrowserImageBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=images"
+            filebrowserFlashBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=flash"
+            filebrowserUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=files"
+            filebrowserImageUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=images"
+            filebrowserFlashUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=flash"
+
+            templates_replaceContent: false
+            templates: "my_templates"
+    templates:
+        my_templates:
+            templates:
+                -
+                    title: "Two Column"
+                    description: "Two Column with Bootstrap 3"
+                    html: >
+                        <div class="row">
+                            <div class="col-sm-6">column 1</div>
+                            <div class="col-sm-6">column 2</div>
+                        </div>

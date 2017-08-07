@@ -1,0 +1,12 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+    <section class="recipe">
+        <header>
+            <h2 class="recipe-title">{{ article.header }}</h2>
+        </header>
+        {{ article.body|raw }}
+    </section>
+{% endblock %}

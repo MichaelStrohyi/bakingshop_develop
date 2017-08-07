@@ -1,0 +1,50 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <div class="container box-wrapper">
+        <section class="main">
+            <section class="main-header">
+                {% block page_header %}
+                    {% include 'AppBundle:layout:_header.html.twig' ignore missing %}
+                {% endblock %}
+            </section>
+
+            <section class="main-content">
+                <div class="row">
+                    <main class="col-sm-10 col-sm-offset-1">{% block main %}{% endblock %}</main>
+                    <aside class="col-sm-3 hidden">
+                        {% block aside %}
+                            {{ render(controller('AppBundle:Page:sidebar')) }}
+                        {% endblock %}
+                    </aside>
+                </div>
+            </section>
+
+            <section class="main-footer">
+                {% block page_footer %}
+                    {% include 'AppBundle:layout:_footer.html.twig' ignore missing %}
+                {% endblock %}
+            </section>
+        </section>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets filter="scssphp" output="css/app.css"
+        "@AppBundle/Resources/public/sass/*.scss"
+    %}
+        <link rel="stylesheet" type="text/css" href="{{ asset_url }}">
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/app.js"
+        '@AppBundle/Resources/public/coffee/*.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
