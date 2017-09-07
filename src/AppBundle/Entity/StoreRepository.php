@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoreRepository extends EntityRepository
 {
+    /**
+     * Return list aff all stores ordered by name
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function findAllByName()
+    {
+        return $this->findBy([], ['name' => 'asc']);
+    }
+
 }
