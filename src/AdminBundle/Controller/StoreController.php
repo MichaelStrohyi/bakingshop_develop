@@ -70,7 +70,17 @@ class StoreController extends Controller
      **/
     public function editAction(Store $store, Request $request)
     {
+        $form = $this->createStoreForm($store, $request);
+
+        if ($form->isValid()) {
+            $this->persiststore($store);
+
+            return $this->redirectToRoute("admin_store_index");
+        }
+
         return [
+            'store' => $store,
+            'form' => $form->createView(),
         ];
     }
 
@@ -89,7 +99,21 @@ class StoreController extends Controller
      **/
     public function deleteAction(Store $store, Request $request)
     {
+        $form = $this->createFormBuilder([])->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $entity_manager = $this->getDoctrine()->getEntityManager();
+
+            $entity_manager->remove($store);
+            $entity_manager->flush();
+
+            return $this->redirectToRoute("admin_store_index");
+        }
+
         return [
+            'store' => $store,
+            'form' => $form->createView(),
         ];
     }
 
