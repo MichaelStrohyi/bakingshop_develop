@@ -39,6 +39,7 @@ class Store
      * @var string
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
+     * @Assert\NotBlank
      * @Assert\Url(
      *    message = "The url '{{ value }}' is not a valid url",
      * )

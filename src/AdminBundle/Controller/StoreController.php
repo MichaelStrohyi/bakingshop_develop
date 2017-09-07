@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Store;
+use AdminBundle\Form\StoreType;
 
 /**
  * @Route("/store")
@@ -40,7 +41,17 @@ class StoreController extends Controller
      **/
     public function createAction(Request $request)
     {
+        $store = new Store;
+        $form = $this->createStoreForm($store, $request);
+
+        if ($form->isValid()) {
+            $this->persiststore($store);
+
+            return $this->redirectToRoute("admin_store_index");
+        }
+
         return [
+            'form' => $form->createView(),
         ];
     }
 
@@ -80,6 +91,39 @@ class StoreController extends Controller
     {
         return [
         ];
+    }
+
+    /**
+     * Save given store into database
+     *
+     * @param  Store  $store
+     * 
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function persistStore(Store $store)
+    {
+        $entity_manager = $this->getDoctrine()->getEntityManager();
+
+        $entity_manager->persist($store);
+        $entity_manager->flush();
+    }
+
+     /**
+     * Return form for create/edit store
+     *
+     * @param Store $store
+     * @param Request $request
+     *
+     * @return Form
+     * @author Michael Strohyi
+     **/
+    private function createStoreForm(Store $store, Request $request)
+    {
+            $form = $this->createForm(new StoreType(), $store);
+            $form->handleRequest($request);
+
+            return $form;
     }
 
 }
