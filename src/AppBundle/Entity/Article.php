@@ -171,4 +171,27 @@ class Article
 
         return $this;
     }
+
+    /**
+     * Set is_homepage
+     *
+     * @param boolean $isHomepage
+     * @return Article
+     */
+    public function setIsHomepage($isHomepage)
+    {
+        $this->is_homepage = $isHomepage;
+
+        return $this;
+    }
+
+    /**
+     * Get is_homepage
+     *
+     * @return boolean 
+     */
+    public function getIsHomepage()
+    {
+        return $this->is_homepage;
+    }
 }

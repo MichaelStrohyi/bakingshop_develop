@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -60,6 +61,19 @@ class Store
      */
     private $description;
 
+    /**
+     * @var StoreCoupon[]
+     *
+     * @ORM\OneToMany(targetEntity="StoreCoupon", mappedBy="store", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "asc"})
+     * @Assert\Valid
+     **/
+    private $coupons;
+
+    public function __construct()
+    {
+        $this->coupons = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -175,5 +189,39 @@ class Store
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Add coupon
+     *
+     * @param StoreCoupon $coupon
+     * @return Store
+     */
+    public function addCoupon(StoreCoupon $coupon)
+    {
+        $coupon->setStore($this);
+        $this->coupons[] = $coupon;
+
+        return $this;
+    }
+
+    /**
+     * Remove coupons
+     *
+     * @param StoreCoupon $coupons
+     */
+    public function removeCoupon(StoreCoupon $coupons)
+    {
+        $this->coupons->removeElement($coupons);
+    }
+
+    /**
+     * Get coupons
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCoupons()
+    {
+        return $this->coupons;
     }
 }
