@@ -27,7 +27,7 @@
                     <td>{{ store.name }}</td>
                     <td>
                         <a href="{{ path("admin_store_edit", {id: store.id}) }}">Edit</a>
-                        <a href="#">Coupons</a>
+                        <a href="{{ path("admin_store_coupons", {id: store.id}) }}">Coupons</a>
                         <a href="{{ path("admin_store_delete", {id: store.id}) }}">Remove</a>
                     </td>
                 </tr>
