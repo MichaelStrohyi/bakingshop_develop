@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Coupon
@@ -29,6 +30,8 @@ class Coupon
      * @var string
      *
      * @ORM\Column(name="label", type="text", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $label;
 
@@ -36,6 +39,8 @@ class Coupon
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=20, nullable=true)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     * @Assert\Length(max=20)
      */
     private $code;
 
@@ -43,6 +48,10 @@ class Coupon
      * @var string
      *
      * @ORM\Column(name="link", type="blob", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Url(
+     *    message = "The link '{{ value }}' is not a valid url",
+     * )
      */
     private $link;
 
@@ -71,6 +80,7 @@ class Coupon
      * @var integer
      *
      * @ORM\Column(name="position", type="smallint", nullable=false)
+     * @Assert\NotNull
      */
     private $position;
 

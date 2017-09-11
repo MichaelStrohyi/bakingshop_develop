@@ -32,6 +32,12 @@ class StoreCouponController extends Controller
     {
         $form = $this->createCouponsForm($store, $request);
 
+        if ($form->isValid()) {
+            $this->persistItems($store);
+
+            return $this->redirectToRoute("admin_store_index");
+        }
+
         return [
             'store' => $store,
             'form' => $form->createView(),
@@ -54,5 +60,22 @@ class StoreCouponController extends Controller
         $form->handleRequest($request);
 
         return $form;
+    }
+
+    /**
+     * Persist all store coupons and change position for each coupon.
+     *
+     * @param  Store  $store
+     * 
+     * @return void
+     * 
+     * @author Michael Strohyi
+     **/
+    private function persistItems(Store $store)
+    {
+        $entity_manager = $this->getDoctrine()->getEntityManager();
+
+        $entity_manager->persist($store);
+        $entity_manager->flush();
     }
 }
