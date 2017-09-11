@@ -1,0 +1,31 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Store Coupons | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Store coupons for &lt; {{ store.name }} &gt;</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-coupons'}}) }}
+    
+    <ul class="store-coupons list-unstyled mutable-items">
+        {% for store_coupon in form.coupons %}
+            <li class="list-item">
+                {{ form_errors(store_coupon) }}
+                {{ form_widget(store_coupon) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="actions text-right">
+        <button type="submit" class="btn btn-danger">Save Changes</button>
+        <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

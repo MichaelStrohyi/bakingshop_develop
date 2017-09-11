@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Store;
+use AdminBundle\Form\StoreCouponsType;
 
 /**
  * @Route("/store/{id}/coupons", requirements={"id": "\d+"})
@@ -29,7 +30,29 @@ class StoreCouponController extends Controller
      */
     public function indexAction(Store $store, Request $request)
     {
+        $form = $this->createCouponsForm($store, $request);
+
         return [
+            'store' => $store,
+            'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * Create form for manipulating store coupons
+     *
+     * @param  Store  $store
+     * @param  Request  $request
+     * 
+     * @return Form
+     *
+     * @author Michael Strohyi
+     **/
+    private function createCouponsForm(Store $store, Request $request)
+    {
+        $form = $this->createForm(new StoreCouponsType, $store);
+        $form->handleRequest($request);
+
+        return $form;
     }
 }
