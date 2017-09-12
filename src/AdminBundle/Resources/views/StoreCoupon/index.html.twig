@@ -11,13 +11,24 @@
     
     <ul class="store-coupons list-unstyled mutable-items">
         {% for store_coupon in form.coupons %}
-            <li class="list-item">
-                {{ form_errors(store_coupon) }}
-                {{ form_widget(store_coupon) }}
+            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
+                <div class="container">
+                    <div class="col-md-10">
+                        {{ form_errors(store_coupon) }}
+                        {{ form_widget(store_coupon) }}
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="couponActions">First</a></br>
+                        <a href="#" class="couponActions">Last</a></br>
+                        <a href="#" class="couponActions">Up</a></br>
+                        <a href="#" class="couponActions">Down</a></br>
+                        <a href="#" class="couponActions activateLink">{{ store_coupon.vars.value.activity == 0 ? 'Activate' : 'Deactivate'}}</a><br>
+                        <a href="#" class="couponActions removeLink">Remove</a>
+                    </div>
+                </div>
             </li>
         {% endfor %}
     </ul>
-
     <div class="actions text-right">
         <button type="submit" class="btn btn-danger">Save Changes</button>
         <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
