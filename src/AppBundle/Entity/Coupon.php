@@ -17,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Coupon
 {
+    const DEFAULT_POSITION = 10000;
+    const DEFAULT_ACTIVITY = 1;
     /**
      * @var integer
      *
@@ -72,9 +74,9 @@ class Coupon
     /**
      * @var integer
      *
-     * @ORM\Column(name="activity", type="smallint", nullable=false, options={"default"=1})
+     * @ORM\Column(name="activity", type="smallint", nullable=false)
      */
-    private $activity;
+    private $activity = self::DEFAULT_ACTIVITY;
 
     /**
      * @var integer
@@ -82,7 +84,7 @@ class Coupon
      * @ORM\Column(name="position", type="smallint", nullable=false)
      * @Assert\NotNull
      */
-    private $position;
+    private $position = self::DEFAULT_POSITION;
 
     /**
      * Get id
@@ -253,7 +255,7 @@ class Coupon
      */
     public function setPosition($position)
     {
-        $this->position = $position;
+        $this->position = intval($position);
 
         return $this;
     }

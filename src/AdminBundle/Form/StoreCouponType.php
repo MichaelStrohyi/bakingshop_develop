@@ -17,8 +17,8 @@ class StoreCouponType extends AbstractType
             ->add('link', null, ['attr' => ['autocomplete' => 'off']])
             ->add('startDate', null, ['attr' => ['autocomplete' => 'off']])
             ->add('expireDate', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('activity', 'hidden', ['attr' => ['class' => 'coupon-activity']])
-            ->add('position', 'hidden', ['attr' => ['class' => 'coupon-position']])
+            ->add('activity', 'hidden', ['default' => StoreCoupon::DEFAULT_ACTIVITY, 'attr' => ['class' => 'coupon-activity']])
+            ->add('position', 'hidden', ['default' => StoreCoupon::DEFAULT_POSITION, 'attr' => ['class' => 'coupon-position']])
         ;
     }
 
