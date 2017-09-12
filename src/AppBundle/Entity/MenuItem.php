@@ -53,7 +53,7 @@ class MenuItem
      * @var integer
      *
      * @Gedmo\SortablePosition
-     * @ORM\Column(name="position", type="integer", nullable=false, options={"default": 10000})
+     * @ORM\Column(name="position", type="integer", nullable=false)
      * @Assert\NotNull
      */
     private $position = self::DEFAULT_POSITION;
