@@ -69,6 +69,7 @@
             // add a delete link to all of the existing tag form li elements
             $collectionHolder.find('li.list-item').each(function() {
                 addItemFormDeleteLink($(this));
+                addItemFormActivateLink($(this));
             });
 
             // add function for updating position before submit
@@ -110,6 +111,37 @@
 
                 // remove the li for the tag form
                 $itemFormLi.remove();
+            });
+        }
+
+        function addItemFormActivateLink($itemFormLi) {
+            var $activateFormA = $itemFormLi.find('a.activateLink');
+
+            $activateFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                $inputActivity = $itemFormLi.find('input.coupon-activity');   
+
+                // change coupon's class to change background color'
+                $itemFormLi.toggleClass("deactivated");
+
+                // if coupon is active
+                if ($inputActivity.val() == 1) {
+                    // set coupon activity into 0
+                    $inputActivity.val('0');
+
+                    // change link text to "Activate"
+                    $itemFormLi.find('a.activateLink').text('Activate');
+
+                    return;
+                }
+                
+                // set coupon activity into 1
+                $inputActivity.val('1');
+
+                // change link text to "Deactivate"
+                $itemFormLi.find('a.activateLink').text('Deactivate');
             });
         }
 
