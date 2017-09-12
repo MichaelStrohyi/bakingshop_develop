@@ -18,10 +18,10 @@
                         {{ form_widget(store_coupon) }}
                     </div>
                     <div class="col-md-2">
-                        <a href="#" class="couponActions">First</a></br>
-                        <a href="#" class="couponActions">Last</a></br>
-                        <a href="#" class="couponActions">Up</a></br>
-                        <a href="#" class="couponActions">Down</a></br>
+                        <a href="#" class="couponActions firstLink">First</a></br>
+                        <a href="#" class="couponActions lastLink">Last</a></br>
+                        <a href="#" class="couponActions upLink">Up</a></br>
+                        <a href="#" class="couponActions downLink">Down</a></br>
                         <a href="#" class="couponActions activateLink">{{ store_coupon.vars.value.activity == 0 ? 'Activate' : 'Deactivate'}}</a><br>
                         <a href="#" class="couponActions removeLink">Remove</a>
                     </div>
@@ -66,10 +66,11 @@
                 addItemLink($collectionHolder, $newLinkLi);
             });
 
-            // add a delete link to all of the existing tag form li elements
+            // add actions links to all of the existing tag form li elements
             $collectionHolder.find('li.list-item').each(function() {
                 addItemFormDeleteLink($(this));
                 addItemFormActivateLink($(this));
+                addItemFormMoveLinks($(this));
             });
 
             // add function for updating position before submit
@@ -98,8 +99,10 @@
             var $newFormLi = $('<li class="list-item"></li>').append(newForm);
             $newLinkLi.before($newFormLi);
 
-            // add a delete link to the new form
+            // add actions links to the new form
             addItemFormDeleteLink($newFormLi);
+            addItemFormActivateLink($newFormLi);
+            addItemFormMoveLinks($newFormLi)
         }
 
         function addItemFormDeleteLink($itemFormLi) {
@@ -136,7 +139,7 @@
 
                     return;
                 }
-                
+
                 // set coupon activity into 1
                 $inputActivity.val('1');
 
@@ -144,6 +147,37 @@
                 $itemFormLi.find('a.activateLink').text('Deactivate');
             });
         }
+
+        function addItemFormMoveLinks($itemFormLi) {
+            $itemFormLi.find('a.upLink').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                // change current li position
+                $itemFormLi.insertBefore($itemFormLi.prev());
+            });
+
+            $itemFormLi.find('a.downLink').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                // change current li position
+                $itemFormLi.insertAfter($itemFormLi.next());
+            });
+
+            $itemFormLi.find('a.firstLink').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                // change current li position
+                $itemFormLi.insertBefore($('li.list-item').first());
+            });
+
+            $itemFormLi.find('a.lastLink').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+                // change current li position
+                $itemFormLi.insertAfter($('li.list-item').last());
+            });
+        }
+
 
         $("ul.store-coupons").sortable();
     </script>
