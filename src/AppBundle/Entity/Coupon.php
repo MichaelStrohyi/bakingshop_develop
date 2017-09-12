@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -82,6 +83,7 @@ class Coupon
      * @var integer
      *
      * @ORM\Column(name="position", type="smallint", nullable=false)
+     * @Gedmo\SortablePosition
      * @Assert\NotNull
      */
     private $position = self::DEFAULT_POSITION;
