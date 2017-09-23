@@ -70,6 +70,13 @@ class Store
      **/
     private $coupons;
 
+    /**
+     * @var StoreLogo
+     *
+     * @ORM\OneToOne(targetEntity="StoreLogo", cascade={"persist", "remove"}, orphanRemoval=true)
+     **/
+    private $logo;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -224,4 +231,28 @@ class Store
     {
         return $this->coupons;
     }
+
+    /**
+     * Set logo
+     *
+     * @param StoreLogo $logo
+     * @return Store
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return StoreLogo 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
 }
