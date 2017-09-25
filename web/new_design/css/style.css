@@ -37,17 +37,6 @@
 
 .top-menu-section {
   position: relative; }
-  .top-menu-section:after {
-    content: '';
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    margin-left: -36px;
-    left: 50%;
-    bottom: 72px;
-    background-image: url("images/top-menu-logo.png");
-    background-repeat: no-repeat;
-    background-position: bottom center; }
 
 .top-menu-pattern-top, .top-menu-pattern-bottom {
   height: 56px;
@@ -97,8 +86,21 @@
   .top-menu-item a {
     color: #669999;
     text-decoration: none; }
-  .top-menu-item.active a {
-    color: #ff6666; }
+  .top-menu-item.active {
+    position: relative; }
+    .top-menu-item.active a {
+      color: #ff6666; }
+  .top-menu-item.active:after {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+    left: 50%;
+    bottom: 95%;
+    background-image: url("images/top-menu-logo.png");
+    background-repeat: no-repeat;
+    background-position: bottom center; }
 
 .top-menu-search {
   position: absolute;

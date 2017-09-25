@@ -53,21 +53,6 @@ $coupons-block-item-bg: #fff4ef;
 }
 .top-menu-section {
     position: relative;
-    &:after {
-        content: '';
-        position: absolute;
-        width: 48px;
-        height: 48px;
-        margin-left: -36px;
-        left: 50%;
-        bottom: $menu-pattern-height / 2 + $top-menu-height + 12px;
-        background: {
-            image: url("images/top-menu-logo.png");
-            repeat: no-repeat;
-            position: bottom center;
-        }
-    }
-
 }
 .top-menu-pattern-top, .top-menu-pattern-bottom {
     height: $menu-pattern-height;
@@ -127,9 +112,26 @@ $coupons-block-item-bg: #fff4ef;
         color: $main-green-color;
         text-decoration: none;
     }
-    &.active a {
+    &.active {
+        position: relative;
+        a {
             color: $main-red-color;
         }
+    }
+    &.active:after {
+        content: '';
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        margin-left: -24px;
+        left: 50%;
+        bottom: 95%;
+        background: {
+            image: url("images/top-menu-logo.png");
+            repeat: no-repeat;
+            position: bottom center;
+        }
+    }
 }
 .top-menu-search {
     position: absolute;
