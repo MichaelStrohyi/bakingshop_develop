@@ -4,12 +4,14 @@ $logo-width: 362px;
 $menu-pattern-height: 56px;
 $top-menu-height: 32px;
 $main-red-color: #ff6666;
+$article-block-red-color: #ec7b7d;
 $main-green-color: #669999;
 $main-yellow-color: #ffc168;
 $main-blue-color: #617dda;
 $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
+$additional-text-color: #663333;
 .container {
     background: {
         image: url("images/main-bg.png");
@@ -17,6 +19,7 @@ $coupons-block-item-bg: #fff4ef;
     }
     width: $site-width;
     font-family: 'Rokkitt', serif;
+    color: #000;
 }
 .content {
     background-color: $background-color;
@@ -70,12 +73,15 @@ $coupons-block-item-bg: #fff4ef;
     background-image: url("images/top-menu-pattern-rotated.png");
     margin-top: -26px;
 }
+.top-menu-section-header {
+    position: relative;
+}
 .top-menu-text {
-    width: 356px;
-    height: 146px;
+    width: 346px;
+    min-height: 46px;
     text-align: right;
     line-height: 48px;
-    padding-left: 10px;
+    margin-left: 10px;
     color: $main-red-color;
     letter-spacing: -.01em;
     font: {
@@ -86,6 +92,8 @@ $coupons-block-item-bg: #fff4ef;
 
 .top-menu {
     z-index: 10;
+    position: relative;
+    margin-top: 48px;
 }
 .top-menu-list {
     list-style: none;
@@ -95,7 +103,7 @@ $coupons-block-item-bg: #fff4ef;
     line-height: 34px;
     letter-spacing: -0.025em;
     font: {
-        family: 'Rokkit', serif;
+        family: 'Rokkitt', serif;
         size: 16px;
     }
 }
@@ -136,7 +144,8 @@ $coupons-block-item-bg: #fff4ef;
 .top-menu-search {
     position: absolute;
     right: 8px;
-    top: $menu-pattern-height + 50px;
+    top: 50%;
+    margin-top: -23px;
     input {
         height: 46px;
         box-sizing: border-box;
@@ -144,6 +153,12 @@ $coupons-block-item-bg: #fff4ef;
         margin: 0;
         border: 0;
         outline: none;
+        color: $additional-text-color;
+        font-size: 18px;
+        font-family: 'Rokkitt', serif;
+        &:focus {
+            background-color: #f5f5f5;
+        }
         &[type="submit"] {
             width: 66px;
             margin-left: -4px;
@@ -155,6 +170,9 @@ $coupons-block-item-bg: #fff4ef;
             }
             &:hover {
                 opacity: .7;
+            }
+            &:active {
+                opacity: .9;
             }
         }
         &[type="text"] {
@@ -191,8 +209,11 @@ $coupons-block-item-bg: #fff4ef;
         left: -1px;
         width: 0;
         height: 0;
-        border: 23px solid transparent;
-        border-left: 14px solid $main-red-color;
+        border: {
+            top: 23px solid transparent;
+            bottom: 23px solid transparent;
+            left: 14px solid $main-red-color;
+        }
         box-sizing: border-box;
     }
     &:after {
@@ -202,8 +223,11 @@ $coupons-block-item-bg: #fff4ef;
         left: -5px;
         width: 0;
         height: 0;
-        border: 23px solid transparent;
-        border-left: 14px solid $background-color;
+        border: {
+            top: 23px solid transparent;
+            bottom: 23px solid transparent;
+            left: 14px solid $background-color;
+        }
         box-sizing: border-box;
     }
 }
@@ -225,7 +249,7 @@ $coupons-block-item-bg: #fff4ef;
         left: 100%;
     }
 }
-.content-coupons-block {
+.content-coupons-block, .content-article-block {
     padding: 10px 10px 10px 16px;
     margin-bottom: 14px;
     border: 2px solid $main-red-color;
@@ -264,10 +288,6 @@ $coupons-block-item-bg: #fff4ef;
     margin-left: 132px;
     margin-bottom: 8px;
     color: $headers-text-color;
-    span {
-        vertical-align: -9px;
-        padding-left: 54px;
-    }
     font: {
         size: 24px;
     }
@@ -360,15 +380,12 @@ $coupons-block-item-bg: #fff4ef;
 }
 .coupon-block-item-verify {
     padding-top: 6px;
-    color: #663333;
+    color: $additional-text-color;
     letter-spacing: .01em;
 
 }
-.coupon-block-item-code {
-    width: 192px;
+.coupon-block-item-code, .content-article-block-enjoy {
     position: absolute;
-    right: -10px;
-    top: 24px;
     &:after{
         position: absolute;
         content:'';
@@ -376,15 +393,16 @@ $coupons-block-item-bg: #fff4ef;
         top: 0;
         height: 0;
         width: 0;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
-        border-left: 8px solid $coupons-block-item-bg;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            left: 8px solid $coupons-block-item-bg;
+        }
     }
     font-size: 18px;
         span {
             vertical-align: -2px;
         }
-    letter-spacing: .02em;
     a {
         padding-left: 22px;
         height: 30px;
@@ -395,6 +413,12 @@ $coupons-block-item-bg: #fff4ef;
         background-color: $main-blue-color;
     }
 }
+.coupon-block-item-code {
+    width: 192px;
+    right: -10px;
+    top: 24px;
+    letter-spacing: .02em;
+}
 .content-offers-block {
     padding: 12px 10px 0 10px;
     margin-bottom: 14px;
@@ -404,23 +428,29 @@ $coupons-block-item-bg: #fff4ef;
 .offers-block-header {
     background-color: $main-yellow-color;
     color: $headers-text-color;
-    span {
-        vertical-align: -9px;
-    }
+   
     font-size: 24px;
 }
-.offers-block-header, .coupons-block-header-title {
+.offers-block-header, .coupons-block-header-title, .menu-section-header, .content-article-block h1, .content-article-block h2 {
     position: relative;
-    text-transform: uppercase;
+    text-align: center;
     letter-spacing: -.025em;
-    line-height: .8em;
+    text-transform: uppercase;
+    line-height: 28px !important;
+    height: 30px; 
+    span {
+        vertical-align: -4px;
+    }
     &:after, &:before {
         position: absolute;
         content:'';
         top: 0;
         height: 0;
         width: 0;
-        border: 14px solid transparent;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+        }
     }
     &:before {
         left: 0;
@@ -491,30 +521,12 @@ $coupons-block-item-bg: #fff4ef;
     .blue &{
         background-color: $main-blue-color;
     }
-    position: relative;
     color: $headers-text-color;
     letter-spacing: .07em;
-    height: 30px;
     font-weight: 800;
     span {
-        vertical-align: -4px;
+        vertical-align: -2px;
     }
-    &:after, &:before {
-        position: absolute;
-        content:'';
-        top: 0;
-        height: 0;
-        width: 0;
-        border: 15px solid transparent;
-    }
-    &:before {
-        left: 0;
-        border-left: 8px solid $background-color;
-    }
-    &:after {
-        right: 0;
-        border-right: 8px solid $background-color;
-    }  
 }  
 .right-menu-list {
     margin-top: 10px;
@@ -600,4 +612,200 @@ a img {
 }
 a:hover {
     opacity: .7;
+}
+a:active {
+    opacity: .9;
+}
+.top-menu-text.main-page {
+    position: relative;
+    width: 246px;
+    text: {
+        transform: uppercase;
+        align: left;
+    }
+    letter-spacing: .02em;
+    margin: 16px 0 32px 112px;
+    &:after {
+        content: '';
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        left: -58px;
+        top: -6px;
+        background: {
+            image: url("images/top-menu-logo.png");
+            repeat: no-repeat;
+            position: bottom center;
+        }
+    }
+}
+.top-menu-text-sign, .content-article-block-sign {
+    position: absolute;
+    text-transform: none;
+    color: #000;
+    left: 0;
+    margin-top: -4px;
+    line-height: 24px;
+    font: {
+        size: 17px;
+        weight: bold;
+    }
+    span {
+        text-decoration: underline;
+    }
+}
+.top-menu-text-sign {
+    top: 100%;
+}
+
+.content-article-block{
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 112px;
+    border-color: $article-block-red-color;
+    h1, h2 {
+        display: block;
+        font-weight: bold;
+        text-transform: none;
+    }
+    h1 {
+        background-color: $article-block-red-color;
+        color: $background-color;
+        margin: 0 0 10px;
+        font-size: 24px;
+        letter-spacing: 0.025em;
+        & + img {
+            width: 200px;
+            float: left;
+            margin-left: 0;
+            & ~ img {
+                float: none;
+            }
+            & ~ p ~ img {
+                    float: left;
+                    width: auto;
+                    margin-left: 12px;
+            }
+        }
+    }
+    h2 {
+        background-color: #e0d4d6;
+        overflow: hidden;
+        font-size: 17px;
+        letter-spacing: 0.015em;
+        color: #000;
+        margin-bottom: 15px;
+    }
+    img {
+        float: left;
+        width: 126px;
+        margin-right: 12px;
+        vertical-align: top;
+    }
+    p {
+        font: {
+            size: 17px;
+            family: 'Rokkitt', serif;
+            weight: bold;
+        }
+        line-height: 23px;
+        letter-spacing: -0.005em;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        background-color: #fff4ef;
+        margin: 0;
+        & span {
+            font: {
+                size: 13px;
+                weight: 500;
+            }
+        letter-spacing: 0.03em;
+        }
+    }
+    p:first-of-type {
+        padding-bottom: 10px;
+        background-color: $background-color;
+        color: $additional-text-color;
+        font: {
+            family: 'Droid Sans', sans-serif;
+            weight: normal;
+            size: 14px;
+        }
+    }
+    table {
+        display: block;
+        position: relative;
+        &:after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 28px;
+            right: 0;
+            bottom: -13px;
+            background: {
+                image: url("images/article-table-corner.png");
+                repeat: no-repeat;
+                position: bottom center;
+            }
+        }
+        font: {
+            size: 14px;
+            family: 'Droid Sans', sans-serif;
+        }
+        color: $additional-text-color;
+        line-height: 24px;
+        width: 100%;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 5px;
+        td, th {
+            width: 1%;
+            padding: 0 10px;
+        }
+        td:first-of-type, th:first-of-type {
+            padding-left: 15px;
+        }
+        th {
+            padding-top: 8px;
+            color: $main-red-color;
+            font-weight: bold;
+            letter-spacing: 0.03em;
+        }
+        background-color: #eee8e9;
+        tr:last-of-type td {
+            padding-bottom: 18px;
+        }
+    }
+ }
+ .content-article-block-sign {
+    bottom: 66px;
+    left: 100px;
+    &:after {
+        content: '';
+        position: absolute;
+        width: 36px;
+        height: 56px;
+        left: -42px;
+        top: -20px;
+        background: {
+            image: url("images/article-sign-logo.png");
+            repeat: no-repeat;
+            position: bottom center;
+        }
+    }
+}
+.content-article-block-enjoy  {
+    right: 0;
+    bottom: 14px;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        weight: bold;
+    }
+    letter-spacing: .03em;
+    a {
+        padding-right: 18px;
+    }
+    &:after {
+        border-left: 8px solid $background-color;
+    }
 }
