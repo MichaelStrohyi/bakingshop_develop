@@ -551,16 +551,17 @@ a:active {
     margin: 0 0 10px;
     font-size: 24px;
     letter-spacing: 0.025em; }
-    .content-article-block h1 + img {
-      width: 200px;
-      float: left;
+    .content-article-block h1 + p img {
+      float: none;
+      width: 132px !important;
+      height: auto !important;
       margin-left: 0; }
-      .content-article-block h1 + img ~ img {
-        float: none; }
-      .content-article-block h1 + img ~ p ~ img {
-        float: left;
-        width: auto;
-        margin-left: 12px; }
+      .content-article-block h1 + p img:first-of-type {
+        width: 200px !important;
+        height: auto !important;
+        float: left; }
+      .content-article-block h1 + p img:last-of-type {
+        margin-right: 0; }
   .content-article-block h2 {
     background-color: #e0d4d6;
     overflow: hidden;
@@ -570,42 +571,42 @@ a:active {
     margin-bottom: 15px; }
   .content-article-block img {
     float: left;
-    width: 126px;
-    margin-right: 12px;
+    margin: 0 12px;
     vertical-align: top; }
-  .content-article-block p {
-    font-size: 17px;
+  .content-article-block h2 ~ p {
+    font-size: 13px;
     font-family: 'Rokkitt', serif;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 23px;
     letter-spacing: -0.005em;
     padding-top: 12px;
     padding-bottom: 4px;
-    background-color: #fff4ef;
-    margin: 0; }
-    .content-article-block p span {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.03em; }
-  .content-article-block p:first-of-type {
+    background-color: #fff4ef; }
+  .content-article-block p {
     padding-bottom: 10px;
     background-color: #fff;
     color: #663333;
+    margin: 0;
     font-family: 'Droid Sans', sans-serif;
     font-weight: normal;
     font-size: 14px; }
   .content-article-block table {
     display: block;
     position: relative;
-    font-size: 14px;
-    font-family: 'Droid Sans', sans-serif;
+    border: 0 !important;
+    background-color: #eee8e9;
     color: #663333;
     line-height: 24px;
     width: 100%;
     border-radius: 15px;
-    padding: 20px;
+    padding: 6px 0 16px 0;
     margin-top: 5px;
-    background-color: #eee8e9; }
+    font-size: 14px;
+    font-family: 'Droid Sans', sans-serif; }
+    .content-article-block table p {
+      background-color: #eee8e9;
+      margin: 0;
+      padding: 0; }
     .content-article-block table:after {
       content: '';
       position: absolute;
@@ -621,13 +622,10 @@ a:active {
       padding: 0 10px; }
     .content-article-block table td:first-of-type, .content-article-block table th:first-of-type {
       padding-left: 15px; }
-    .content-article-block table th {
-      padding-top: 8px;
+    .content-article-block table th, .content-article-block table th p {
       color: #ff6666;
       font-weight: bold;
       letter-spacing: 0.03em; }
-    .content-article-block table tr:last-of-type td {
-      padding-bottom: 18px; }
 
 .content-article-block-sign {
   bottom: 66px;

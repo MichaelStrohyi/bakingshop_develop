@@ -657,7 +657,6 @@ a:active {
 .top-menu-text-sign {
     top: 100%;
 }
-
 .content-article-block{
     overflow: hidden;
     position: relative;
@@ -674,17 +673,20 @@ a:active {
         margin: 0 0 10px;
         font-size: 24px;
         letter-spacing: 0.025em;
-        & + img {
-            width: 200px;
-            float: left;
-            margin-left: 0;
-            & ~ img {
+        & + p {
+            img {
                 float: none;
-            }
-            & ~ p ~ img {
+                width: 132px !important;
+                height: auto !important;
+                margin-left: 0;
+                &:first-of-type {
+                    width: 200px !important;
+                    height: auto !important;
                     float: left;
-                    width: auto;
-                    margin-left: 12px;
+                }
+                &:last-of-type {
+                    margin-right: 0;
+                }
             }
         }
     }
@@ -698,34 +700,26 @@ a:active {
     }
     img {
         float: left;
-        width: 126px;
-        margin-right: 12px;
+        margin: 0 12px;
         vertical-align: top;
     }
-    p {
+    h2 ~ p {
         font: {
-            size: 17px;
+            size: 13px;
             family: 'Rokkitt', serif;
-            weight: bold;
+            weight: 500;
         }
         line-height: 23px;
         letter-spacing: -0.005em;
         padding-top: 12px;
         padding-bottom: 4px;
         background-color: #fff4ef;
-        margin: 0;
-        & span {
-            font: {
-                size: 13px;
-                weight: 500;
-            }
-        letter-spacing: 0.03em;
-        }
     }
-    p:first-of-type {
+    p {
         padding-bottom: 10px;
         background-color: $background-color;
         color: $additional-text-color;
+        margin: 0;
         font: {
             family: 'Droid Sans', sans-serif;
             weight: normal;
@@ -733,8 +727,21 @@ a:active {
         }
     }
     table {
+        p {
+            background-color: #eee8e9;
+            margin: 0;
+            padding: 0;            
+        }
         display: block;
         position: relative;
+        border: 0 !important;
+        background-color: #eee8e9;
+        color: $additional-text-color;
+        line-height: 24px;
+        width: 100%;
+        border-radius: 15px;
+        padding: 6px 0 16px 0;
+        margin-top: 5px;
         &:after {
             content: '';
             position: absolute;
@@ -752,12 +759,6 @@ a:active {
             size: 14px;
             family: 'Droid Sans', sans-serif;
         }
-        color: $additional-text-color;
-        line-height: 24px;
-        width: 100%;
-        border-radius: 15px;
-        padding: 20px;
-        margin-top: 5px;
         td, th {
             width: 1%;
             padding: 0 10px;
@@ -765,15 +766,10 @@ a:active {
         td:first-of-type, th:first-of-type {
             padding-left: 15px;
         }
-        th {
-            padding-top: 8px;
+        th, th p {
             color: $main-red-color;
             font-weight: bold;
             letter-spacing: 0.03em;
-        }
-        background-color: #eee8e9;
-        tr:last-of-type td {
-            padding-bottom: 18px;
         }
     }
  }
