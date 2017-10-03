@@ -3,10 +3,25 @@
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-    <section class="recipe">
+{#    <section class="recipe">
         <header>
             <h2 class="recipe-title">{{ article.header }}</h2>
         </header>
         {{ article.body|raw }}
     </section>
+#}
+
+<div class="content-article-block">
+    <h1><span>{{ article.header }}</span></h1>
+    {{ article.body|raw }}
+
+
+    <div class="content-article-block-sign">
+        Recipe by: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+{#    <div class=content-article-block-enjoy>
+        <a href="#"><span>Enjoy delicious Pear Tart.</span></a>
+    </div>
+#}
+</div>
 {% endblock %}

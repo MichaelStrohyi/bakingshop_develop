@@ -2,30 +2,31 @@
 
 {% block body %}
     <div class="container box-wrapper">
-        <section class="main">
-            <section class="main-header">
+        <div class="content">
+            <div class="header">
                 {% block page_header %}
                     {% include 'AppBundle:layout:_header.html.twig' ignore missing %}
                 {% endblock %}
-            </section>
+            </div>
 
-            <section class="main-content">
+            <div class="main-content">
                 <div class="row">
-                    <main class="col-sm-10 col-sm-offset-1">{% block main %}{% endblock %}</main>
-                    <aside class="col-sm-3 hidden">
-                        {% block aside %}
-                            {{ render(controller('AppBundle:Page:sidebar')) }}
-                        {% endblock %}
-                    </aside>
-                </div>
-            </section>
+                    <div class="col-sm-8 content-left-column">
+                            {% block main %}{% endblock %}       
+                    </div>
+                    <div class="col-sm-4 content-right-column">
+                        {{ render(controller('AppBundle:Page:sidebar')) }}                        
+                    </div>
 
-            <section class="main-footer">
+                </div>
+            </div>
+
+            <div class="footer">
                 {% block page_footer %}
                     {% include 'AppBundle:layout:_footer.html.twig' ignore missing %}
                 {% endblock %}
-            </section>
-        </section>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
