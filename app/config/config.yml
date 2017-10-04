@@ -52,12 +52,12 @@ assetic:
         cssrewrite: ~
         jsqueeze: ~
         coffee:
-            #bin: /usr/local/bin/coffee
-            #node: /usr/local/bin/node
-            #node_paths: ['/usr/local/bin/node_modules']
-            bin: '%node_modules%\coffeescript\bin\coffee'
-            node: '%nodejs%\node'
-            node_paths: ['%node_modules%']
+            bin: /usr/local/bin/coffee
+            node: /usr/local/bin/node
+            node_paths: ['/usr/local/bin/node_modules']
+            #bin: '%node_modules%\coffeescript\bin\coffee'
+            #node: '%nodejs%\node'
+            #node_paths: ['%node_modules%']
             apply_to: '\.coffee$'
             bare: true
         scssphp:
