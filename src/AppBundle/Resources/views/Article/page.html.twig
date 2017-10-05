@@ -15,10 +15,12 @@
     <h1><span>{{ article.header }}</span></h1>
     {{ article.body|raw }}
 
+    {% if article.type != 'info' %}
+        <div class="content-article-block-sign">
+            {{ article.type|capitalize }} by: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+    {% endif %}
 
-    <div class="content-article-block-sign">
-        Recipe by: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-    </div>
 {#    <div class=content-article-block-enjoy>
         <a href="#"><span>Enjoy delicious Pear Tart.</span></a>
     </div>

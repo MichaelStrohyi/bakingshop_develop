@@ -12,9 +12,19 @@
 <div class="top-menu-section">
 <div class="top-menu-pattern-top"></div>
 <div class="top-menu-section-header">
-    <div class="top-menu-text main-page">Recipies
-        <div class="top-menu-text-sign">Recipe by: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <div class="top-menu-text main-page">
+
+    {% if article.type == 'info' %}
+        Information
+    {% else %}
+        {% if article.type == 'article' %}
+            Articles
+        {% elseif article.type == 'recipe' %}
+            Recipies
+        {% endif %}
+        <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
+    {% endif %}
     </div>
 {#        <div class="top-menu-search">
         <div class="top-menu-search-form">

@@ -18,6 +18,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Article
 {
     const PAGE_TYPE = 'article';
+    const PAGE_TYPE_ARTICLE = 'article';
+    const PAGE_TYPE_RECIPE = 'recipe';
+    const PAGE_TYPE_INFO = 'info';
 
     /**
      * @var integer
@@ -59,6 +62,14 @@ class Article
      * @ORM\Column(name="is_homepage", type="boolean", nullable=false, options={"default"=false})
      **/
     private $is_homepage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=20, nullable=false)
+     * @Assert\NotBlank
+     */
+    private $type;
 
 
     /**
@@ -194,4 +205,42 @@ class Article
     {
         return $this->is_homepage;
     }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Article
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get list of available types
+     *
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            self::PAGE_TYPE_ARTICLE,
+            self::PAGE_TYPE_RECIPE,
+            self::PAGE_TYPE_INFO,
+        ];
+    }
+
 }

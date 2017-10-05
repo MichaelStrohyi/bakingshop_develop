@@ -24,6 +24,7 @@ class ArticleController extends PageController
         $article_list = $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByHeader();
         return [
             'article_list' => $article_list,
+            'article_types' => Article::getTypes(),
         ];
     }
 
