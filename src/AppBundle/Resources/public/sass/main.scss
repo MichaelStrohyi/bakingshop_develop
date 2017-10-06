@@ -690,7 +690,7 @@ a:active {
         font-size: 24px;
         letter-spacing: 0.025em;
         & + p {
-            img {
+            & > img {
                 float: none;
                 width: 132px !important;
                 margin-left: 0;
@@ -699,6 +699,22 @@ a:active {
                     float: left;
                 }
                 &:last-of-type {
+                    margin-right: 0;
+                }
+            }
+            a {
+                img {
+                    width: 200px !important;
+                    float: left;
+                    }
+            }
+            a + a {
+                img {
+                    float: none;
+                    width: 132px !important;
+                    margin-left: 0;
+                }
+                &:last-of-type img {
                     margin-right: 0;
                 }
             }

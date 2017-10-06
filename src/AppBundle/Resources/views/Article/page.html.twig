@@ -27,3 +27,14 @@
 #}
 </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('.content-article-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="article-images" target="_blank">';
+            });
+        });
+    </script>
+{% endblock %}
