@@ -17,7 +17,7 @@
 
     {% if article.type != 'info' %}
         <div class="content-article-block-sign">
-            {{ article.type|capitalize }} by: <span>Vanya Filippov</span>
+            {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
         </div>
     {% endif %}
 

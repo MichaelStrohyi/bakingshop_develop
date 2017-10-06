@@ -71,6 +71,15 @@ class Article
      */
     private $type;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="author", type="string", length=255, nullable=true)
+     * @Assert\Length(min=3, max=255)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     */
+    private $author;
+
 
     /**
      * Get id
@@ -243,4 +252,26 @@ class Article
         ];
     }
 
+    /**
+     * Set author
+     *
+     * @param string $author
+     * @return Article
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return string 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
 }

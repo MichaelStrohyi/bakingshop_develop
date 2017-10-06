@@ -19,6 +19,7 @@ class ArticleType extends AbstractType
         $builder
             ->add('header', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('author', null, ['attr' => ['autocomplete' => 'off']])
             ->add('type', 'choice', [
                 'choices'  => $choices,
                 'choice_attr' => function($key, $val, $index) {
