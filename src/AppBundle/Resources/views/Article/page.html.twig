@@ -3,15 +3,8 @@
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-{#    <section class="recipe">
-        <header>
-            <h2 class="recipe-title">{{ article.header }}</h2>
-        </header>
-        {{ article.body|raw }}
-    </section>
-#}
 
-<div class="content-article-block">
+<article class="content-article-block">
     <h1><span>{{ article.header }}</span></h1>
     {{ article.body|raw }}
 
@@ -25,7 +18,7 @@
         <a href="#"><span>Enjoy delicious Pear Tart.</span></a>
     </div>
 #}
-</div>
+</article>
 {% endblock %}
 
 {% block javascripts %}
