@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use AppBundle\AMP\AppAMP;
 
 /**
  * Article
@@ -79,6 +80,13 @@ class Article
      * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $author;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="amp_body", type="text", nullable=true)
+     */
+    private $ampBody;
 
 
     /**
@@ -159,6 +167,7 @@ class Article
     public function setBody($body)
     {
         $this->body = $body;
+        $this->updateAmpBody();
 
         return $this;
     }
@@ -273,5 +282,49 @@ class Article
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set ampBody
+     *
+     * @param string $ampBody
+     * @return Article
+     */
+    public function setAmpBody($ampBody)
+    {
+        $this->ampBody = $ampBody;
+
+        return $this;
+    }
+
+    /**
+     * Get ampBody
+     *
+     * @return string 
+     */
+    public function getAmpBody()
+    {
+        return $this->ampBody;
+    }
+
+    /**
+     * Actualize ampBody with current body
+     *
+     * @return Article
+     */
+    private function updateAmpBody()
+    {
+        if (is_null($this->getBody())) {
+            $this->ampBody = null;
+            return;
+        }
+
+        $amp = new AppAMP();
+        $amp->loadHtml($this->getBody(), [
+            'img_max_fixed_layout_width' => '2560'
+            ]);
+        $this->ampBody = $amp->convertToAmpHtml();
+
+        return $this;
     }
 }
