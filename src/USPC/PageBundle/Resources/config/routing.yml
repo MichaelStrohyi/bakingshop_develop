@@ -1,3 +1,8 @@
+_uspc_amp_pages:
+    path:     /amp/{slug}
+    defaults: { _controller: USPCPageBundle:Default:dispatcher, slug: null, amp: true }
+    requirements:
+        slug: .+
 _uspc_pages:
     path:     /{slug}
     defaults: { _controller: USPCPageBundle:Default:dispatcher, slug: null }

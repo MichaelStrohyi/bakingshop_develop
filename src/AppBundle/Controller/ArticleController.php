@@ -12,15 +12,30 @@ class ArticleController extends Controller
 {
     /**
      * @Route("/article/{id}", name="article_page",
-     *     requirements={"id": "\d+"}
+     *     requirements={"id": "\d+"},
      * )
      * @ParamConverter("article", class="AppBundle:Article")
      * @Template()
      */
-    public function pageAction(Article $article)
+    public function pageAction(Article $article, $amp = false)
     {
         return [
             'article' => $article,
+            'amp' => $amp,
+        ];
+    }
+
+    /**
+     * @Route("/amp/article/{id}", name="article_amp_page",
+     *     requirements={"id": "\d+"},
+     * )
+     * @ParamConverter("article", class="AppBundle:Article")
+     * @Template()
+     */
+    public function pageAmpAction(Article $article)
+    {
+        return [
+            'article' => $article
         ];
     }
 }

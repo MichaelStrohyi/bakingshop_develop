@@ -25,6 +25,22 @@ class PageController extends Controller
     }
 
     /**
+     * @Route("/amp/", name="homepage_amp")
+     */
+    public function homepageAmpAction()
+    {
+        $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
+
+        $article = $article_repo->getHomepage();
+        if (!$article) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->forward('AppBundle:Article:pageAmp', ['article' => $article]);
+    }
+
+
+    /**
      * @Template()
      */
     public function sidebarAction()
@@ -52,6 +68,32 @@ class PageController extends Controller
      * @Template()
      */
     public function menuAction($name)
+    {
+        return $this->getMenuByName($name);
+    }
+
+    /**
+     * Render menu for amp-page by name and type.
+     *
+     * @param  Menu|string  $name
+     *
+     * @Template()
+     */
+    public function menuAmpAction($name, $type = null)
+    {
+        $menu = $this->getMenuByName($name);
+        $menu['type'] = $type;
+        return $menu;
+    }
+
+    /**
+     * Return menu by name
+     *
+     * @param  string  $name
+     * @return array
+     * @author Michael Strohyi
+     **/
+    function getMenuByName($name)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
