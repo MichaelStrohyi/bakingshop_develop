@@ -1,0 +1,31 @@
+{# {% if menu is not empty %}
+    <div class="menu-title"><span>{{ menu.header }}</span></div>
+    <nav class="menu-items">
+        <ul class="menu-list">
+            {% for menu_item in menu.items %}
+                <li class="menu-item"><a href="{{ path(menu_item) }}">{{ menu_item.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %} #}
+{% if type is defined and type == 'top' %}
+    <li class="top-menu-item">
+        <a href="{{ path('homepage') }}">{{ menu.header }}</a>
+        <ul class="top-menu-submenu">
+            {% for menu_item in menu.items %}
+                <li><a href="{{ '/amp' ~ path(menu_item) }}">{{ menu_item.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+{% else %}
+    <div class="footer-menu-block">
+        <div><span>{{ menu.header }}</span></div>
+        <nav>
+            <ul class="footer-menu">
+                {% for menu_item in menu.items %}
+                    <li><a href="{{ '/amp' ~ path(menu_item) }}">{{ menu_item.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+{% endif %}
