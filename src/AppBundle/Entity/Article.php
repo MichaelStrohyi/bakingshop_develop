@@ -321,7 +321,7 @@ class Article
 
         $amp = new AppAMP();
         $amp->loadHtml($this->getBody(), [
-            'img_max_fixed_layout_width' => '2560'
+            'img_max_fixed_layout_width' => '100'
             ]);
         $this->ampBody = $amp->convertToAmpHtml();
 

@@ -404,9 +404,13 @@ $this->isHeader = $first_p_line === $dom_el->parentNode ? true : false;
     {        
         if ($this->isHeader) { 
             $el->setAttribute('sizes', '(min-width: 320px) 20vw, 60px');
-            if ($el->hasAttribute('layout')) {
-                $el->removeAttribute('layout');
+        }
+        else {
+            $el_width = $el->getAttribute('width');
+            if (empty($el_width)) {
+                $el_width = 400;
             }
+            $el->setAttribute('sizes', '(min-width: ' . $el_width . 'px) ' . $el_width . 'px, 100vw');
         }
         $el->setAttribute('on', 'tap:lightbox1');
         $el->setAttribute('role', 'button');
