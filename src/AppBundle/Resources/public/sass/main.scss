@@ -697,7 +697,7 @@ a:active {
                 margin-left: 0;
                 &:first-of-type {
                     width: 200px !important;
-                    float: left;
+                    margin-left: 0;
                 }
                 &:last-of-type {
                     margin-right: 0;
@@ -706,7 +706,7 @@ a:active {
             a {
                 img {
                     width: 200px !important;
-                    float: left;
+                    margin-left: 0;
                     }
             }
             a + a {
@@ -745,7 +745,7 @@ a:active {
         line-height: 23px;
         letter-spacing: -0.005em;
         padding-top: 12px;
-        padding-bottom: 4px;
+        padding: 4px;
         background-color: #fff4ef;
     }
     p {

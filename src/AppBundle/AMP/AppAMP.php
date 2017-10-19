@@ -7,7 +7,7 @@ class AppAMP extends AMP
 {
     public $passes = [
         'Lullabot\AMP\Pass\PreliminaryPass',
-        'AppBundle\AMP\Pass\ImgTagTransformPass',
+        'AppBundle\AMP\Pass\AppImgTagTransformPass',
         'Lullabot\AMP\Pass\IframeSoundCloudTagTransformPass',
         'Lullabot\AMP\Pass\IframeFacebookTagTransformPass',
         'Lullabot\AMP\Pass\AudioTagTransformPass',
