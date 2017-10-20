@@ -5,14 +5,18 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Menu;
 
 class PageController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/{prefix}", name="homepage",
+     *     requirements={"prefix": "amp/|"},
+     *     defaults={"prefix": ""},
+     * )
      */
-    public function homepageAction()
+    public function homepageAction(Request $request)
     {
         $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
 
@@ -21,24 +25,11 @@ class PageController extends Controller
             throw $this->createNotFoundException();
         }
 
-        return $this->forward('AppBundle:Article:page', ['article' => $article]);
+        $parameters['request'] = $request;
+        $parameters['article'] = $article;
+
+        return $this->forward('AppBundle:Article:page', $parameters);
     }
-
-    /**
-     * @Route("/amp/", name="homepage_amp")
-     */
-    public function homepageAmpAction()
-    {
-        $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
-
-        $article = $article_repo->getHomepage();
-        if (!$article) {
-            throw $this->createNotFoundException();
-        }
-
-        return $this->forward('AppBundle:Article:pageAmp', ['article' => $article]);
-    }
-
 
     /**
      * @Template()
@@ -61,39 +52,14 @@ class PageController extends Controller
     }
 
     /**
-     * Render menu by name.
-     *
-     * @param  Menu|string  $name
-     *
-     * @Template()
-     */
-    public function menuAction($name)
-    {
-        return $this->getMenuByName($name);
-    }
-
-    /**
      * Render menu for amp-page by name and type.
      *
-     * @param  Menu|string  $name
+     * @param Menu|string  $name
+     * @param string $link_prefix
+     * @param string $type
      *
-     * @Template()
      */
-    public function menuAmpAction($name, $type = null)
-    {
-        $menu = $this->getMenuByName($name);
-        $menu['type'] = $type;
-        return $menu;
-    }
-
-    /**
-     * Return menu by name
-     *
-     * @param  string  $name
-     * @return array
-     * @author Michael Strohyi
-     **/
-    function getMenuByName($name)
+    public function menuAction($name, $link_prefix = '', $type = null)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
@@ -102,9 +68,10 @@ class PageController extends Controller
         } else {
             $menu = null;
         }
+        $parameters['menu'] = $menu;
+        $parameters['menu_type'] = $type;
+        $parameters['link_prefix'] = $link_prefix;
 
-        return [
-           'menu' => $menu,
-        ];
+        return empty($link_prefix) ? $this->render('AppBundle:Page:menu.html.twig', $parameters) : $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
     }
 }

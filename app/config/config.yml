@@ -12,6 +12,7 @@ parameters:
         article:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
+    amp_prefix: 'amp/'
 
 framework:
     #esi:             ~

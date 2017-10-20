@@ -1,4 +1,6 @@
-{% set page_route = 'http://' ~ app.request.server.get('SERVER_NAME') ~ app.request.pathInfo[4:] %}
+{% if link_prefix is not defined %}
+    {% set link_prefix = '' %}
+{% endif %}
 <!DOCTYPE html>
 <html amp lang="en">
     <head>
@@ -8,7 +10,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
-        <link rel="canonical" href="{{ page_route }}">
+        <link rel="canonical" href="{{ crosslink }}">
         <script async src="https://cdn.ampproject.org/v0.js"></script>
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
         {% block javascripts %}{% endblock %}        

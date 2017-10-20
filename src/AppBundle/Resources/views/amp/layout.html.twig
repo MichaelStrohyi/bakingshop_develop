@@ -1,10 +1,10 @@
-{% extends "::baseAmp.html.twig" %}
+{% extends ":amp:base.html.twig" %}
 
 {% block body %}
     <section class="content">
         <header class="header">
             {% block page_header %}
-                {% include 'AppBundle:layout/amp:_header.html.twig' ignore missing %}
+                {% include 'AppBundle:amp/layout:_header.html.twig' ignore missing %}
             {% endblock %}
         </header>
 
@@ -14,7 +14,7 @@
 
         <footer class="footer">
             {% block page_footer %}
-                {% include 'AppBundle:layout/amp:_footer.html.twig' ignore missing %}
+                {% include 'AppBundle:amp/layout:_footer.html.twig' ignore missing %}
             {% endblock %}
         </footer>
     </section>
@@ -91,7 +91,6 @@
       .top-menu > li {
         display: table-cell;
         width: 1%;
-        white-space: nowrap;
         box-sizing: border-box;
         text-align: center;
         text-transform: capitalize;
