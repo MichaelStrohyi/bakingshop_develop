@@ -48,14 +48,15 @@ class PageController extends Controller
      *
      * @param string $type page type
      * @param object $obj object for save url
+     *
      * 
      * @return void
      *
      * @author Mykola Martynov
      **/
-    protected function deletePageUrls($type, $obj)
+    protected function deletePageUrls($type, $obj, $obj_id = null)
     {
         $this->getDoctrine()->getRepository('USPCPageBundle:Page')
-            ->deletePageUrls($type, $obj);
+            ->deletePageUrls($type, $obj, $obj_id);
     }
 }

@@ -103,11 +103,11 @@ class ArticleController extends PageController
 
         if ($form->isValid()) {
             $entity_manager = $this->getDoctrine()->getEntityManager();
-
+            $article_id = $article->getId();
             $entity_manager->remove($article);
             $entity_manager->flush();
 
-            $this->deletePageUrls(Article::PAGE_TYPE, $article);
+            $this->deletePageUrls(Article::PAGE_TYPE, $article, $article_id);
 
             return $this->redirectToRoute("admin_article_index");
         }

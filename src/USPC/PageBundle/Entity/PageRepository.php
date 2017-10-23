@@ -92,15 +92,18 @@ class PageRepository extends EntityRepository
      *
      * @param  string  $type
      * @param  object  $obj
+     * @param  int  $obj_id
+     *
      * @return void
      * @author Mykola Martynov
      **/
-    public function deletePageUrls($type, $obj)
+    public function deletePageUrls($type, $obj, $obj_id = null)
     {
-        if (!$this->isValidObject($obj)) {
+        if (!$this->isValidObject($obj) || empty($obj_id) && empty($obj->getId())) {
             return;
         }
 
+        $obj_id = empty($obj->getId) ? $obj_id : $obj->getId();
         $query = $this->getEntityManager()
             ->createQuery(
                 'DELETE FROM USPCPageBundle:Page p '
@@ -108,7 +111,7 @@ class PageRepository extends EntityRepository
             )
             ->setParameters([
                 'type' => $type,
-                'object_id' => $obj->getId(),
+                'object_id' => $obj_id,
             ]);
         $query->execute();
     }
