@@ -12,4 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class MenuItemRepository extends EntityRepository
 {
+
+    /**
+     * Remove menu items with given $url
+     *
+     * @param string $url
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deleteMenuItems($url)
+    {
+        if (empty($url)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'DELETE FROM AppBundle:MenuItem m '
+                . 'WHERE m.url = :url'
+            )
+            ->setParameters([
+                'url' => $url,
+            ]);
+        $query->execute();
+    }
 }

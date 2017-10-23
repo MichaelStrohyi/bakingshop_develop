@@ -107,6 +107,7 @@ class ArticleController extends PageController
             $entity_manager->remove($article);
             $entity_manager->flush();
 
+            $this->deleteFromMenus(Article::PAGE_TYPE, $article, $article_id);
             $this->deletePageUrls(Article::PAGE_TYPE, $article, $article_id);
 
             return $this->redirectToRoute("admin_article_index");
