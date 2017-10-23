@@ -1,9 +1,9 @@
 {% if menu_type is defined and menu_type == 'top' %}
     <li class="top-menu-item">
-        <a href="{{ path('homepage') }}">{{ menu.header }}</a>
+        <a href="{{ path('homepage', {'prefix': prefix}) }}">{{ menu.header }}</a>
         <ul class="top-menu-submenu">
             {% for menu_item in menu.items %}
-                <li><a href="{{ link_prefix ~ path(menu_item) }}">{{ menu_item.title }}</a></li>
+                <li><a href="{{ path(menu_item, {'prefix': prefix}) }}">{{ menu_item.title }}</a></li>
             {% endfor %}
         </ul>
     </li>
@@ -13,7 +13,7 @@
         <nav>
             <ul class="footer-menu">
                 {% for menu_item in menu.items %}
-                    <li><a href="{{ link_prefix ~ path(menu_item) }}">{{ menu_item.title }}</a></li>
+                    <li><a href="{{ path(menu_item, {'prefix': prefix}) }}">{{ menu_item.title }}</a></li>
                 {% endfor %}
             </ul>
         </nav>

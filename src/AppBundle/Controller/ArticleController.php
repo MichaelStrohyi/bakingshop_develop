@@ -28,17 +28,13 @@ class ArticleController extends Controller
         $path = $request->getPathInfo();
         if  (!empty($prefix)) {
             $path = substr($path, strlen($prefix));
-            $link_prefix = '/' . rtrim($prefix, '/');
-
             $crosslink = $this->generateUrl('homepage', [], true) . ltrim($path, '/');
         } else {
-            $crosslink = $this->generateUrl('homepage', [], true) . $amp_prefix . ltrim($path, '/');
-            $link_prefix = '';
+            $crosslink = $this->generateUrl('homepage', [], true) . trim($amp_prefix, '/') . $path;
         }
 
         $parameters = [
             'article' => $article,
-            'link_prefix' => $link_prefix,
             'crosslink' =>$crosslink
         ];
 

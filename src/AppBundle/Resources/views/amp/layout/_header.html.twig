@@ -1,7 +1,7 @@
 <div class="header-logo-line">
-  <a href="/"><amp-img src="{{ asset("bundles/app/img/amp-logo.png") }}" alt="Bakingshop.com" width="50px" height="50px" layout="fixed"></amp-img>
+  <a href="{{ path('homepage', {"prefix": amp_prefix}) }}" id="menu-link">Menu</a>
+  <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="{{ asset("bundles/app/img/amp-logo.png") }}" alt="Bakingshop.com" width="50px" height="50px" layout="fixed"></amp-img>
   <span>Bakingshop</span></a>
   <a href="{{ path('homepage') }}" id="search-link"><amp-img src="{{ asset("bundles/app/img/search-icon.png") }}" alt="Bakingshop.com" width="31px" height="30px" layout="fixed"></amp-img></a>
-  <a href="{{ path('homepage') }}" id="menu-link">Menu</a>
 </div>
 {% include 'AppBundle:amp/layout:_top_menu.html.twig' ignore missing %}

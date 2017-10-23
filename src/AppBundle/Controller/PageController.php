@@ -52,14 +52,14 @@ class PageController extends Controller
     }
 
     /**
-     * Render menu for amp-page by name and type.
+     * Render menu by name and type.
      *
      * @param Menu|string  $name
-     * @param string $link_prefix
+     * @param string $prefix
      * @param string $type
      *
      */
-    public function menuAction($name, $link_prefix = '', $type = null)
+    public function menuAction($name, $prefix = null, $type = null)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
@@ -70,8 +70,11 @@ class PageController extends Controller
         }
         $parameters['menu'] = $menu;
         $parameters['menu_type'] = $type;
-        $parameters['link_prefix'] = $link_prefix;
+        if (empty($prefix)) {
+            return $this->render('AppBundle:Page:menu.html.twig', $parameters);
+        }
 
-        return empty($link_prefix) ? $this->render('AppBundle:Page:menu.html.twig', $parameters) : $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
+        $parameters['prefix'] = $prefix;
+        return $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
     }
 }

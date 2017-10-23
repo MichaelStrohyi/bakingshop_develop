@@ -42,7 +42,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources: ['bootstrap_3_horizontal_layout.html.twig']
-
+    globals:
+        amp_prefix: "%amp_prefix%"
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
