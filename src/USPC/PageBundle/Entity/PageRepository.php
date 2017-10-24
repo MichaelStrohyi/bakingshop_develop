@@ -166,16 +166,20 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * Transform url into string from stream
+     * Try to get string from $res
      *
-     * @param resource $res
+     * @param resource|string $res
      * @return mixed
      * @author Michael Strohyi
      **/
-    private function getUrlFromRes($res)
+    public function getUrlFromRes($res)
     {
         if (is_resource($res) && get_resource_type($res) == 'stream') {
-            return  stream_get_contents($res, -1, 0);
+            return stream_get_contents($res, -1, 0);
+        }
+
+        if (is_string($res)) {
+            return $res;
         }
 
         return null;

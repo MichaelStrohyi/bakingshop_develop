@@ -130,6 +130,7 @@ class ArticleController extends PageController
     private function persistArticle(Article $article)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
+        $old_url = $entity_manager->getRepository('AppBundle:Article')->getUrlFromDB($article);
 
         $entity_manager->persist($article);
         $entity_manager->flush();
@@ -137,6 +138,10 @@ class ArticleController extends PageController
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
         $this->updateHomepage($article);
+
+        # add/update article url in menus
+        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $article->getUrl());
+
     }
 
      /**
