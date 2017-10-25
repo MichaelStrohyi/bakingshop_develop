@@ -184,4 +184,29 @@ class PageRepository extends EntityRepository
 
         return null;
     }
+
+    /**
+     * Return true if $url exists in db, otherwise return false
+     *
+     * @param string $url
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function isUrlValid($url)
+    {
+        if ($url == '/' || empty($url)) {
+            return true;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.object_id FROM USPCPageBundle:Page p '
+                . 'WHERE p.url = :url'
+            )
+            ->setParameters([
+                'url' => $url,
+            ]);
+
+        return empty($query->setMaxResults(1)->getOneOrNullResult()) ? false : true;
+    }
 }
