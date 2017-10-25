@@ -35,11 +35,26 @@ class LocalURLExistsValidator extends ConstraintValidator
         $menu_item = $this->context->getObject();
         $repo = $this->em->getRepository('USPCPageBundle:Page');
 
+        $validation_result = $repo->validateURL($menu_item->getUrl());
 
 
-        if (!$repo->isUrlValid($menu_item->getUrl())) {
-            $this->context->buildViolation($constraint->message)
+        if (is_array($validation_result)) {
+            $new_url = '';
+            $message = '';
+            switch ($validation_result['error']) {
+                case $repo::URL_IS_INVALID:
+                    $message = $constraint->url_invalid;
+                    break;
+                case $repo::URL_IS_ALIAS:
+                    $message = $constraint->url_is_alias;
+                    $new_url = $validation_result['new_url'];
+                    break;
+                default:
+                    break;
+            }
+            $this->context->buildViolation($message)
                 ->setParameter('%url%', $value)
+                ->setParameter('%new_url%', $new_url)
                 ->addViolation();
         }
     }

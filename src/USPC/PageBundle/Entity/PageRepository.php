@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class PageRepository extends EntityRepository
 {
+    const URL_IS_ALIAS = 'alias';
+    const URL_IS_INVALID = 'invalid';
     /**
      * Mark all unused object urls as alias
      *
@@ -186,13 +188,13 @@ class PageRepository extends EntityRepository
     }
 
     /**
-     * Return true if $url exists in db, otherwise return false
+     * Return true if $url exists in db, otherwise return array with additional error options
      *
      * @param string $url
-     * @return boolean
+     * @return mixed
      * @author Michael Strohyi
      **/
-    public function isUrlValid($url)
+    public function validateURL($url)
     {
         if ($url == '/' || empty($url)) {
             return true;
@@ -200,13 +202,33 @@ class PageRepository extends EntityRepository
 
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT p.object_id FROM USPCPageBundle:Page p '
+                'SELECT p.object_id, p.is_alias, p.type  FROM USPCPageBundle:Page p '
                 . 'WHERE p.url = :url'
             )
             ->setParameters([
                 'url' => $url,
             ]);
+        $result = $query->setMaxResults(1)->getOneOrNullResult();
 
-        return empty($query->setMaxResults(1)->getOneOrNullResult()) ? false : true;
+        if (empty($result)) {
+            return ['error' => self::URL_IS_INVALID];
+        }
+
+        if (!$result['is_alias']) {
+            return true;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.url FROM USPCPageBundle:Page p '
+                . 'WHERE p.type = :type and p.object_id = :object_id and p.is_alias = false'
+            )
+            ->setParameters([
+                'type' => $result['type'],
+                'object_id' => $result['object_id'],
+            ]);
+        $result = $query->setMaxResults(1)->getOneOrNullResult();
+
+        return (empty($result)) ? true : ['error' => self::URL_IS_ALIAS, 'new_url' => $this->getUrlFromRes($result['url'])];
     }
 }
