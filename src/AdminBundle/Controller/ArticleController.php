@@ -103,11 +103,12 @@ class ArticleController extends PageController
 
         if ($form->isValid()) {
             $entity_manager = $this->getDoctrine()->getEntityManager();
-
+            $article_id = $article->getId();
             $entity_manager->remove($article);
             $entity_manager->flush();
 
-            $this->deletePageUrls(Article::PAGE_TYPE, $article);
+            $this->deleteFromMenus(Article::PAGE_TYPE, $article, $article_id);
+            $this->deletePageUrls(Article::PAGE_TYPE, $article, $article_id);
 
             return $this->redirectToRoute("admin_article_index");
         }
@@ -129,6 +130,7 @@ class ArticleController extends PageController
     private function persistArticle(Article $article)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
+        $old_url = $entity_manager->getRepository('AppBundle:Article')->getUrlFromDB($article);
 
         $entity_manager->persist($article);
         $entity_manager->flush();
@@ -136,6 +138,10 @@ class ArticleController extends PageController
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
         $this->updateHomepage($article);
+
+        # add/update article url in menus
+        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $article->getUrl());
+
     }
 
      /**

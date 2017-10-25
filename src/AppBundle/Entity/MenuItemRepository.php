@@ -12,4 +12,55 @@ use Doctrine\ORM\EntityRepository;
  */
 class MenuItemRepository extends EntityRepository
 {
+
+    /**
+     * Remove menu items with given $url
+     *
+     * @param string $url
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deleteMenuItems($url)
+    {
+        if (empty($url)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'DELETE FROM AppBundle:MenuItem m '
+                . 'WHERE m.url = :url'
+            )
+            ->setParameters([
+                'url' => $url,
+            ]);
+        $query->execute();
+    }
+
+    /**
+     * Set url to $new_url for all menu items with url $old_url
+     *
+     * @param string $old_url
+     * @param string $new_url
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function updateUrls($old_url, $new_url)
+    {
+        if (empty($old_url) || empty($new_url)) {
+            return;
+        }
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:MenuItem m SET m.url = :new_url '
+                . 'WHERE m.url = :old_url'
+            )
+            ->setParameters([
+                'new_url' => $new_url,
+                'old_url' => $old_url,
+            ]);
+        $query->execute();
+    }
 }

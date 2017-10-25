@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class PageRepository extends EntityRepository
 {
+    const URL_IS_ALIAS = 'alias';
+    const URL_IS_INVALID = 'invalid';
     /**
      * Mark all unused object urls as alias
      *
@@ -92,15 +94,18 @@ class PageRepository extends EntityRepository
      *
      * @param  string  $type
      * @param  object  $obj
+     * @param  int  $obj_id
+     *
      * @return void
      * @author Mykola Martynov
      **/
-    public function deletePageUrls($type, $obj)
+    public function deletePageUrls($type, $obj, $obj_id = null)
     {
-        if (!$this->isValidObject($obj)) {
+        if (!$this->isValidObject($obj) || empty($obj_id) && empty($obj->getId())) {
             return;
         }
 
+        $obj_id = empty($obj->getId) ? $obj_id : $obj->getId();
         $query = $this->getEntityManager()
             ->createQuery(
                 'DELETE FROM USPCPageBundle:Page p '
@@ -108,8 +113,122 @@ class PageRepository extends EntityRepository
             )
             ->setParameters([
                 'type' => $type,
-                'object_id' => $obj->getId(),
+                'object_id' => $obj_id,
             ]);
         $query->execute();
+    }
+
+    /**
+     * Remove from all menu urls to given object
+     *
+     * @param string $type
+     * @param object $obj
+     * @param int $obj_id
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deleteFromMenus($type, $obj, $obj_id = null)
+    {
+        if (!$this->isValidObject($obj) || empty($obj_id) && empty($obj->getId())) {
+            return;
+        }
+
+        $obj_id = empty($obj->getId()) ? $obj_id : $obj->getId();
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.url FROM USPCPageBundle:Page p '
+                . 'WHERE p.type = :type and p.object_id = :object_id'
+            )
+            ->setParameters([
+                'type' => $type,
+                'object_id' => $obj_id,
+            ]);
+        $obj_page_urls = $query->getResult();
+        $obj_url = $obj->getUrl();
+        if (empty($obj_page_urls) && empty($obj_url)) {
+            return;
+        }
+        $item_repo = $this->getEntityManager()->getRepository('AppBundle:MenuItem');
+        foreach ($obj_page_urls as $value) {
+            if (!empty($value['url'])) {
+                $url = $this->getUrlFromRes($value['url']);
+                $item_repo->deleteMenuItems($url);
+                if ($obj_url === $url) {
+                    $obj_url = null;
+                }
+            }
+        }
+
+        if (empty($obj_url)) {
+            return;
+        }
+
+        $item_repo->deleteMenuItems($obj_url);
+    }
+
+    /**
+     * Try to get string from $res
+     *
+     * @param resource|string $res
+     * @return mixed
+     * @author Michael Strohyi
+     **/
+    public function getUrlFromRes($res)
+    {
+        if (is_resource($res) && get_resource_type($res) == 'stream') {
+            return stream_get_contents($res, -1, 0);
+        }
+
+        if (is_string($res)) {
+            return $res;
+        }
+
+        return null;
+    }
+
+    /**
+     * Return true if $url exists in db, otherwise return array with additional error options
+     *
+     * @param string $url
+     * @return mixed
+     * @author Michael Strohyi
+     **/
+    public function validateURL($url)
+    {
+        if ($url == '/' || empty($url)) {
+            return true;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.object_id, p.is_alias, p.type  FROM USPCPageBundle:Page p '
+                . 'WHERE p.url = :url'
+            )
+            ->setParameters([
+                'url' => $url,
+            ]);
+        $result = $query->setMaxResults(1)->getOneOrNullResult();
+
+        if (empty($result)) {
+            return ['error' => self::URL_IS_INVALID];
+        }
+
+        if (!$result['is_alias']) {
+            return true;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.url FROM USPCPageBundle:Page p '
+                . 'WHERE p.type = :type and p.object_id = :object_id and p.is_alias = false'
+            )
+            ->setParameters([
+                'type' => $result['type'],
+                'object_id' => $result['object_id'],
+            ]);
+        $result = $query->setMaxResults(1)->getOneOrNullResult();
+
+        return (empty($result)) ? true : ['error' => self::URL_IS_ALIAS, 'new_url' => $this->getUrlFromRes($result['url'])];
     }
 }
