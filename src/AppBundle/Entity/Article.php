@@ -19,9 +19,9 @@ use AppBundle\AMP\AppAMP;
 class Article
 {
     const PAGE_TYPE = 'article';
-    const PAGE_TYPE_ARTICLE = 'article';
-    const PAGE_TYPE_RECIPE = 'recipe';
-    const PAGE_TYPE_INFO = 'info';
+    const PAGE_SUBTYPE_ARTICLE = 'article';
+    const PAGE_SUBTYPE_RECIPE = 'recipe';
+    const PAGE_SUBTYPE_INFO = 'info';
 
     /**
      * @var integer
@@ -255,9 +255,9 @@ class Article
     public static function getTypes()
     {
         return [
-            self::PAGE_TYPE_ARTICLE,
-            self::PAGE_TYPE_RECIPE,
-            self::PAGE_TYPE_INFO,
+            self::PAGE_SUBTYPE_ARTICLE,
+            self::PAGE_SUBTYPE_RECIPE,
+            self::PAGE_SUBTYPE_INFO,
         ];
     }
 
