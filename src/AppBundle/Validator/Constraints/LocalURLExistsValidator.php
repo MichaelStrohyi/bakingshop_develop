@@ -32,15 +32,19 @@ class LocalURLExistsValidator extends ConstraintValidator
             $value = stream_get_contents($value, -1, 0);
         }
 
+        # get current validating MenuItem object and PageRepository
         $menu_item = $this->context->getObject();
         $repo = $this->em->getRepository('USPCPageBundle:Page');
 
+        # validate url of current MenuItem
         $validation_result = $repo->validateURL($menu_item->getUrl());
 
-
+        # if url is not valid
         if (is_array($validation_result)) {
             $new_url = '';
             $message = '';
+
+            # select error message according to validation error
             switch ($validation_result['error']) {
                 case $repo::URL_IS_INVALID:
                     $message = $constraint->url_invalid;
@@ -52,6 +56,8 @@ class LocalURLExistsValidator extends ConstraintValidator
                 default:
                     break;
             }
+            
+            # create violation with error message
             $this->context->buildViolation($message)
                 ->setParameter('%url%', $value)
                 ->setParameter('%new_url%', $new_url)

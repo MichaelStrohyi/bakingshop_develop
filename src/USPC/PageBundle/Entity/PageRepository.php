@@ -134,7 +134,10 @@ class PageRepository extends EntityRepository
             return;
         }
 
+        # try to get object_id from object, if it is empty get id from arguments
         $obj_id = empty($obj->getId()) ? $obj_id : $obj->getId();
+
+        # find all urls for current object with given type
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT p.url FROM USPCPageBundle:Page p '
@@ -146,9 +149,13 @@ class PageRepository extends EntityRepository
             ]);
         $obj_page_urls = $query->getResult();
         $obj_url = $obj->getUrl();
+
+        # return if no url is found and object has no url inside
         if (empty($obj_page_urls) && empty($obj_url)) {
             return;
         }
+
+        # delete all menu-items link to current object (menu-item url is in the list of object urls)
         $item_repo = $this->getEntityManager()->getRepository('AppBundle:MenuItem');
         foreach ($obj_page_urls as $value) {
             if (!empty($value['url'])) {
@@ -164,6 +171,7 @@ class PageRepository extends EntityRepository
             return;
         }
 
+        # if object url was not in url list from Pages db, delete menu-item linked to this url
         $item_repo->deleteMenuItems($obj_url);
     }
 
@@ -196,10 +204,12 @@ class PageRepository extends EntityRepository
      **/
     public function validateURL($url)
     {
+        # if url is homepage or empty return true
         if ($url == '/' || empty($url)) {
             return true;
         }
 
+        # search for current url in Page db
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT p.object_id, p.is_alias, p.type  FROM USPCPageBundle:Page p '
@@ -210,14 +220,17 @@ class PageRepository extends EntityRepository
             ]);
         $result = $query->setMaxResults(1)->getOneOrNullResult();
 
+        # if url is not found in db return error
         if (empty($result)) {
             return ['error' => self::URL_IS_INVALID];
         }
 
+        # if url exists in db and not alias return true
         if (!$result['is_alias']) {
             return true;
         }
 
+        # if url is alias for object try to find not alias url for this object
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT p.url FROM USPCPageBundle:Page p '
@@ -228,7 +241,8 @@ class PageRepository extends EntityRepository
                 'object_id' => $result['object_id'],
             ]);
         $result = $query->setMaxResults(1)->getOneOrNullResult();
-
+        
+        # if not alias url is found return error with mesage containinig this url, else return true
         return (empty($result)) ? true : ['error' => self::URL_IS_ALIAS, 'new_url' => $this->getUrlFromRes($result['url'])];
     }
 }

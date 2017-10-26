@@ -26,6 +26,8 @@ class ArticleController extends Controller
         $prefix = $route_params['prefix'];
         $amp_prefix = $this->container->getParameter('amp_prefix');
         $path = $request->getPathInfo();
+        
+        # create crosslink to link apm-html page with html page
         if  (!empty($prefix)) {
             $path = substr($path, strlen($prefix));
             $crosslink = $this->generateUrl('homepage', [], true) . ltrim($path, '/');
@@ -38,6 +40,7 @@ class ArticleController extends Controller
             'crosslink' =>$crosslink
         ];
 
+        # if prefix is not set render html page else render amp-html page
         return empty($prefix) ? $this->render('AppBundle:Article:page.html.twig', $parameters) : $this->render('AppBundle:amp/Article:page.html.twig', $parameters);
     }
 }

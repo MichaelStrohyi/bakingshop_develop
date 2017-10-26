@@ -45,7 +45,7 @@ class DefaultController extends Controller
         if (empty($page) || empty($page_object)) {
             throw $this->createNotFoundException();
         }
-        # redirect to new url
+        # if page is alias redirect to new url
         if ($page->isAlias()) {
             $new_url = $request->getBaseUrl();
             if (!empty($prefix)) {

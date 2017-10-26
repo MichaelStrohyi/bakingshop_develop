@@ -62,7 +62,7 @@ class PageController extends Controller
     }
 
     /**
-     * Removw from all menu items associated with the given object
+     * Remove from all menu items associated with the given object
      *
      * @param object $obj
      * @param string $type page type

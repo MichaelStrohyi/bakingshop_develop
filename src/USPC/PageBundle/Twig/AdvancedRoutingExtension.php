@@ -80,10 +80,11 @@ class AdvancedRoutingExtension extends RoutingExtension
         $prefix = '';
         if (array_key_exists('prefix', $parameters)) {
             $prefix = '/' . trim($parameters['prefix'], '/');
+            # delete url prefix from parameters list
             unset($parameters['prefix']);
         }
 
-        # add base url
+        # add base url and prefix
         if (!empty($url)) {
             $url = $this->baseUrl . $prefix . $url;
         }

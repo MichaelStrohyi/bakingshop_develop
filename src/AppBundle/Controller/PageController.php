@@ -70,10 +70,13 @@ class PageController extends Controller
         }
         $parameters['menu'] = $menu;
         $parameters['menu_type'] = $type;
+
+        # if prefix is not set render menu for html page
         if (empty($prefix)) {
             return $this->render('AppBundle:Page:menu.html.twig', $parameters);
         }
 
+        # if prefix is set render menu for amp-html page
         $parameters['prefix'] = $prefix;
         return $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
     }
