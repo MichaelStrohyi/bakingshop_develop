@@ -6,6 +6,7 @@ $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
 $additional-text-color: #663333;
+$menu-hover-bg: #f3e1d9;
 body {
     background-color: #f2f2f2;
 }
@@ -83,6 +84,10 @@ a:hover {
         display: block;
         background-color: $coupons-block-item-bg;
         padding: 10px 5px;
+        &:hover {
+            background-color: $menu-hover-bg;
+            opacity: 1;
+        }
     }
     li + li {
         border-left: 2px solid transparent;

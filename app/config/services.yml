@@ -18,3 +18,10 @@ services:
             em: "@doctrine.orm.entity_manager"
         tags:
             - { name: validator.constraint_validator, alias: local_url_exists_validator }
+
+    app.twig_extension:
+        class: AppBundle\Twig\IncludeFileExtention
+        public: false
+        arguments: [ %web_dir%]
+        tags:
+            - { name: twig.extension }

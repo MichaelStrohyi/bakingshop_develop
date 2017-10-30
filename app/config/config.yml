@@ -13,6 +13,7 @@ parameters:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
     amp_prefix: 'amp/'
+    web_dir: "%kernel.root_dir%/../web"
 
 framework:
     #esi:             ~
