@@ -8,11 +8,43 @@
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(form.name, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(form.url, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(form.keywords, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(form.description, {'attr': {'autocomplete': false}}) }}
+    {% if form.vars.value.logo is not null %}
+        <div class="form-group" id="store-logo">
+            {{ form_label(form.logo, 'Current logo') }}
+            <div class="col-sm-10">
+                <div><img  alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}"></div>
+                <a href="#" class="btn btn-default" id="delete-logo-link">Remove logo</a>
+                <input type="text" name="current_logo" hidden>
+            </div>
+        </div>
+        {{ form_widget(form.logo) }}
+    {% else %}
+        {{ form_widget(form.logo) }}
+    {% endif %}
 
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Update</button>
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function() {
+            $('#delete-logo-link').on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                $('#store-logo').remove();
+            });
+        });
+    </script>
 {% endblock %}

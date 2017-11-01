@@ -255,4 +255,16 @@ class Store
     {
         return $this->logo;
     }
+
+    /**
+     * Remove logo
+     *
+     * @return Store
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
+
+        return $this;
+    }
 }

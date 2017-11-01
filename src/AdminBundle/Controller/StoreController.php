@@ -73,7 +73,8 @@ class StoreController extends Controller
         $form = $this->createStoreForm($store, $request);
 
         if ($form->isValid()) {
-            $this->persiststore($store);
+            $this->handleLogo($store, $request);
+            $this->persistStore($store);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -148,6 +149,22 @@ class StoreController extends Controller
             $form->handleRequest($request);
 
             return $form;
+    }
+
+    /**
+     * Remove store logo if crrent logo was deleted and new logo was not selected
+     *
+     * @param Store $store
+     * @param Request $request
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function handleLogo(Store $store, Request $request)
+    {
+        if (null === $request->request->get('current_logo') && (null === $store->getLogo() || null === $store->getLogo()->getImageFile())) {
+            $store->removeLogo();
+        }
     }
 
 }

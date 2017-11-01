@@ -5,31 +5,26 @@ namespace AdminBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Entity\Store;
+use AppBundle\Entity\StoreLogo;
 
-class StoreType extends AbstractType
+class StoreLogoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('url', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('keywords', 'textarea')
-            ->add('description', 'textarea')
-            ->add('logo', new StoreLogoType, ['required' => false])
+            ->add('imageFile', 'file', ['label' => 'New logo'])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Store',
+            'data_class' => StoreLogo::class,
         ));
     }
 
-
     public function getName()
     {
-        return 'admin_store';
+        return 'admin_store_logo';
     }
 }
