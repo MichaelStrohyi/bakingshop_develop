@@ -12,6 +12,7 @@ parameters:
         article:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
+    store_logo_prefix: '/images/logos'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
 
@@ -44,7 +45,9 @@ twig:
     form:
         resources: ['bootstrap_3_horizontal_layout.html.twig']
     globals:
+        store_logo_prefix: '%store_logo_prefix%'
         amp_prefix: "%amp_prefix%"
+
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
@@ -123,3 +126,11 @@ ivory_ck_editor:
                             <div class="col-sm-6">column 1</div>
                             <div class="col-sm-6">column 2</div>
                         </div>
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        store_logo:
+            uri_prefix:         '%store_logo_prefix%'
+            upload_destination: '%kernel.root_dir%/../web/images/logos'
+            namer:              vich_uploader.namer_uniqid
