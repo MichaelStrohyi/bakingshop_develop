@@ -21,10 +21,8 @@
                 <input type="text" name="current_logo" hidden>
             </div>
         </div>
-        {{ form_widget(form.logo) }}
-    {% else %}
-        {{ form_widget(form.logo) }}
     {% endif %}
+        {{ form_widget(form.logo) }}
 
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Update</button>

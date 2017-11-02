@@ -33,21 +33,21 @@ class Image
      *
      * @ORM\Column(name="width", type="smallint", nullable=false)
      */
-    private $width = 200; // !!! stub
+    private $width;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="height", type="smallint", nullable=false)
      */
-    private $height = 200; // !!! stub
+    private $height;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="size", type="integer", nullable=false)
      */
-    private $size = 1024; // !!! stub
+    private $size;
 
     /**
      * @var string
@@ -69,7 +69,7 @@ class Image
      *
      * @ORM\Column(name="mime", type="string", length=32, nullable=false)
      */
-    private $mime = 'mime/jpeg'; // !!! stub
+    private $mime;
 
     /**
      * @ORM\Column(type="datetime")
@@ -237,7 +237,7 @@ class Image
         $this->imageFile = $imageFile;
 
         if ($imageFile) {
-            $this->updatedAt = new \DateTimeImmutable();
+            $this->grabImageInfo($imageFile);
         }
         
         return $this;
@@ -251,4 +251,20 @@ class Image
         return $this->imageFile;
     }
 
+    /**
+     * Grab information about image
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function grabImageInfo($imageFile)
+    {
+        $image_info = getimagesize($imageFile);
+        $this->setWidth($image_info['0']);
+        $this->setHeight($image_info['1']);
+        $this->setMime($image_info['mime']);
+        $this->setSize(filesize($imageFile));
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 }
