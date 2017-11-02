@@ -1,0 +1,17 @@
+ul.mutable-items  {
+    li.list-item {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #aaa;
+        background: #f0f0f0;
+        border-radius: 5px;
+    }
+    li.deactivated {
+        background: #ccc;
+    }
+}
+.store-logo {
+    max-width: 200px;
+    max-height: 200px;
+    margin-bottom: 5px;
+}
