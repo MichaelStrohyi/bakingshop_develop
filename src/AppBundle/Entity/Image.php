@@ -4,8 +4,9 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Image
@@ -59,10 +60,14 @@ class Image
     /**
      * 
      * @Vich\UploadableField(mapping="store_logo", fileNameProperty="filename", size="size")
+     * @Assert\Image(
+     *     mimeTypes = {"image/jpeg", "image/png", "image/gif"},
+     *     mimeTypesMessage = "Only .gif, .jpg, .jpeg, .png images are allowed",
+     * )
      * 
      * @var File
      */
-    private $imageFile;
+    protected $imageFile;
 
     /**
      * @var string
@@ -227,15 +232,16 @@ class Image
     }
 
     /**
+     * Set imageFile
      *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
      *
-     * @return Product
+     * @return Store
      */
     public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
-
+        # grab info from imagFile if it is loaded
         if ($imageFile) {
             $this->grabImageInfo($imageFile);
         }
@@ -244,6 +250,8 @@ class Image
     }
 
     /**
+     * Get imageFile
+     *
      * @return File|null
      */
     public function getImageFile()

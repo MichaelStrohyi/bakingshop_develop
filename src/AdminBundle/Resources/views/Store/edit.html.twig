@@ -12,12 +12,12 @@
     {{ form_row(form.url, {'attr': {'autocomplete': false}}) }}
     {{ form_row(form.keywords, {'attr': {'autocomplete': false}}) }}
     {{ form_row(form.description, {'attr': {'autocomplete': false}}) }}
-    {% if form.vars.value.logo is not null %}
+    {% if form.vars.value.logo is not null and form.vars.value.logo.filename is not null %}
         <div class="form-group" id="store-logo">
             {{ form_label(form.logo, 'Current logo') }}
             <div class="col-sm-10">
-                <div><img  alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}"></div>
-                <a href="#" class="btn btn-default" id="delete-logo-link">Remove logo</a>
+                <div><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}"></div>
+                <a href="#" class="btn btn-link btn-sm" id="delete-logo-link">Remove logo</a>
                 <input type="text" name="current_logo" hidden>
             </div>
         </div>
