@@ -17,6 +17,8 @@ class StoreCouponType extends AbstractType
             ->add('link', null, ['attr' => ['autocomplete' => 'off']])
             ->add('startDate', null, ['attr' => ['autocomplete' => 'off']])
             ->add('expireDate', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('expireDate', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('logo', new ImageType, ['required' => false, 'data_class' => 'AppBundle\Entity\CouponImage'])
             ->add('activity', 'hidden', ['default' => StoreCoupon::DEFAULT_ACTIVITY, 'attr' => ['class' => 'coupon-activity']])
             ->add('position', 'hidden', ['default' => StoreCoupon::DEFAULT_POSITION, 'attr' => ['class' => 'coupon-position']])
         ;

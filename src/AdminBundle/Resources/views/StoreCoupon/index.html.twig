@@ -14,8 +14,12 @@
             <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
                 <div class="container">
                     <div class="col-md-10">
-                        {{ form_errors(store_coupon) }}
-                        {{ form_widget(store_coupon) }}
+    {{ form_row(store_coupon.label, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(store_coupon.code, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(store_coupon.link, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(store_coupon.startDate, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(store_coupon.expireDate, {'attr': {'autocomplete': false}}) }}
+    {{ form_widget(store_coupon.logo) }}
                     </div>
                     <div class="col-md-2">
                         <a href="#" class="couponActions firstLink">First</a></br>

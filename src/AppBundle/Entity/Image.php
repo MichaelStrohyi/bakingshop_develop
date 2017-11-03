@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ImageRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"store_logo" = "StoreLogo", "image" = "Image"})
+ * @ORM\DiscriminatorMap({"store_logo" = "StoreLogo", "coupon_image" = "CouponImage", "image" = "Image"})
  * @Vich\Uploadable
  */
 class Image

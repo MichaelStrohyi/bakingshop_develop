@@ -13,6 +13,7 @@ parameters:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
     store_logo_prefix: '/images/logos'
+    coupon_image_prefix: '/images/coupons'
     all_images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
@@ -134,6 +135,10 @@ vich_uploader:
         store_logo:
             uri_prefix:         '%store_logo_prefix%'
             upload_destination: '%kernel.root_dir%/../web%store_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
+        coupon_image:
+            uri_prefix:         '%coupon_image_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%coupon_image_prefix%'
             namer:              vich_uploader.namer_uniqid
         all_images:
             uri_prefix:         '%all_images_prefix%'

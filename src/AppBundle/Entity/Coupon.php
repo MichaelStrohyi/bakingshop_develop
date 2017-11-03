@@ -89,6 +89,15 @@ class Coupon
     private $position = self::DEFAULT_POSITION;
 
     /**
+     * @var CouponImage
+     *
+     * @ORM\OneToOne(targetEntity="CouponImage", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="logo", referencedColumnName="id", nullable=true)
+     * @Assert\Valid
+     **/
+    private $logo;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -270,5 +279,40 @@ class Coupon
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param CouponImage $logo
+     * @return Coupon
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return CouponImage
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Remove logo
+     *
+     * @return Coupon
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
+
+        return $this;
     }
 }
