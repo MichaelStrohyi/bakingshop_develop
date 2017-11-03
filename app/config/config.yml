@@ -13,6 +13,7 @@ parameters:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
     store_logo_prefix: '/images/logos'
+    all_images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
 
@@ -132,5 +133,9 @@ vich_uploader:
     mappings:
         store_logo:
             uri_prefix:         '%store_logo_prefix%'
-            upload_destination: '%kernel.root_dir%/../web/images/logos'
+            upload_destination: '%kernel.root_dir%/../web%store_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
+        all_images:
+            uri_prefix:         '%all_images_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%all_images_prefix%'
             namer:              vich_uploader.namer_uniqid

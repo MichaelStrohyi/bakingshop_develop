@@ -16,7 +16,7 @@ class StoreType extends AbstractType
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
             ->add('keywords', 'textarea')
             ->add('description', 'textarea')
-            ->add('logo', new StoreLogoType, ['required' => false])
+            ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\StoreLogo'])
         ;
     }
 

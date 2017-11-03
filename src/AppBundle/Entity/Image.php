@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ImageRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"store_logo" = "StoreLogo"})
+ * @ORM\DiscriminatorMap({"store_logo" = "StoreLogo", "image" = "Image"})
  * @Vich\Uploadable
  */
 class Image
@@ -59,7 +59,7 @@ class Image
 
     /**
      * 
-     * @Vich\UploadableField(mapping="store_logo", fileNameProperty="filename", size="size")
+     * @Vich\UploadableField(mapping="all_images", fileNameProperty="filename")
      * @Assert\Image(
      *     mimeTypes = {"image/jpeg", "image/png", "image/gif"},
      *     mimeTypesMessage = "Only .gif, .jpg, .jpeg, .png images are allowed",
