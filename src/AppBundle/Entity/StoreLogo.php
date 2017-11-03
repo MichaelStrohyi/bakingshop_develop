@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * StoreLogo
@@ -12,31 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class StoreLogo extends Image
 {
     /**
-     * @var Store
      *
-     **/
-    private $store;
-
-    /**
-     * Set store
+     * @Assert\Image(
+     *     maxWidth = 200,
+     *     maxHeight = 200,
+     * )
+     * @Assert\File(
+     *     maxSize = "100k",
+     * )
      *
-     * @param Store $store
-     * @return StoreLogo
+     * @var File
      */
-    public function setStore(Store $store = null)
-    {
-        $this->store = $store;
-
-        return $this;
-    }
-
-    /**
-     * Get store
-     *
-     * @return Store 
-     */
-    public function getStore()
-    {
-        return $this->store;
-    }
+    protected $imageFile;
 }

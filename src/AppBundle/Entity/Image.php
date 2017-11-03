@@ -3,6 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Image
@@ -12,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"store_logo" = "StoreLogo"})
+ * @Vich\Uploadable
  */
 class Image
 {
@@ -53,12 +58,30 @@ class Image
     private $filename;
 
     /**
+     * 
+     * @Vich\UploadableField(mapping="store_logo", fileNameProperty="filename", size="size")
+     * @Assert\Image(
+     *     mimeTypes = {"image/jpeg", "image/png", "image/gif"},
+     *     mimeTypesMessage = "Only .gif, .jpg, .jpeg, .png images are allowed",
+     * )
+     * 
+     * @var File
+     */
+    protected $imageFile;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mime", type="string", length=32, nullable=false)
      */
     private $mime;
 
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
+     */
+    private $updatedAt;
 
     /**
      * Get id
@@ -183,5 +206,73 @@ class Image
     public function getMime()
     {
         return $this->mime;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param DateTime $updatedAt
+     * @return Image
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return Store 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set imageFile
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     *
+     * @return Store
+     */
+    public function setImageFile(File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+        # grab info from imagFile if it is loaded
+        if ($imageFile) {
+            $this->grabImageInfo($imageFile);
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Get imageFile
+     *
+     * @return File|null
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * Grab information about image
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function grabImageInfo($imageFile)
+    {
+        $image_info = getimagesize($imageFile);
+        $this->setWidth($image_info['0']);
+        $this->setHeight($image_info['1']);
+        $this->setMime($image_info['mime']);
+        $this->setSize(filesize($imageFile));
+        $this->updatedAt = new \DateTimeImmutable();
     }
 }

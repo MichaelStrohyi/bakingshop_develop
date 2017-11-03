@@ -74,6 +74,8 @@ class Store
      * @var StoreLogo
      *
      * @ORM\OneToOne(targetEntity="StoreLogo", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="logo", referencedColumnName="id", nullable=true)
+     * @Assert\Valid
      **/
     private $logo;
 
@@ -255,4 +257,15 @@ class Store
         return $this->logo;
     }
 
+    /**
+     * Remove logo
+     *
+     * @return Store
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
+
+        return $this;
+    }
 }
