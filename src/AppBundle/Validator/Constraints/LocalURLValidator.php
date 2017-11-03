@@ -14,7 +14,7 @@ class LocalURLValidator extends ConstraintValidator
             $value = stream_get_contents($value, -1, 0);
         }
 
-        if (!preg_match('#^/[a-zA-Z0-9\_\.\-/]+$#', $value, $matches)) {
+        if (!preg_match('#^/[a-zA-Z0-9\_\.\-/]*$#', $value, $matches)) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('%string%', $value)
                 ->addViolation();

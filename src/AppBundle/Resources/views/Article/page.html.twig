@@ -3,10 +3,31 @@
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-    <section class="recipe">
-        <header>
-            <h2 class="recipe-title">{{ article.header }}</h2>
-        </header>
-        {{ article.body|raw }}
-    </section>
+
+<article class="content-article-block">
+    <h1><span>{{ article.header }}</span></h1>
+    {{ article.body|raw }}
+
+    {% if article.type != 'info' %}
+        <div class="content-article-block-sign">
+            {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
+        </div>
+    {% endif %}
+
+{#    <div class=content-article-block-enjoy>
+        <a href="#"><span>Enjoy delicious Pear Tart.</span></a>
+    </div>
+#}
+</article>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('.content-article-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="article-images" target="_blank">';
+            });
+        });
+    </script>
 {% endblock %}

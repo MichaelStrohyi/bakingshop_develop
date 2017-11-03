@@ -57,4 +57,29 @@ class ArticleRepository extends EntityRepository
                 ]);
         $query->execute();
     }
+
+    /**
+     * Get current url for $article from db
+     *
+     * @param Article $article
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function getUrlFromDB($article)
+    {
+        if (empty($article->getId())) {
+            return;
+        }
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a.url FROM AppBundle:Article a '
+                . 'WHERE a.id = :id'
+            )
+            ->setParameters([
+                'id' => $article->getId(),
+            ]);
+
+        return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['url']);
+    }
 }

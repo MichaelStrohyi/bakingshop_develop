@@ -19,5 +19,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     # Path to nodejs and coffeescript
-    coffescript_bin: 'path\to\coffeescript'
-    nodejs: 'path\to\nodejs'
+    bin: '/usr/local/bin/coffee'
+    node: '/usr/local/bin/node'
+    node_paths: '/usr/local/bin/node_modules'

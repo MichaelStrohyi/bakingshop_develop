@@ -1,0 +1,6 @@
+<nav>
+    <ul class="top-menu">
+        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-articles', 'prefix': amp_prefix, 'type': 'top'})) }}
+        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-recipies', 'prefix': amp_prefix, 'type': 'top'})) }}
+    </ul>
+</nav>

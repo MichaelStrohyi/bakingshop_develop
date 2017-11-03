@@ -11,9 +11,27 @@ class ArticleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = ['' => null];
+        foreach (Article::getTypes() as $key => $value) {
+            $choices[$value] = strtolower($value);
+        }
+
         $builder
             ->add('header', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('author', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('type', 'choice', [
+                'choices'  => $choices,
+                'choice_attr' => function($key, $val, $index) {
+                    $disabled = false;
+                    if ($key === null) {
+                        $disabled = true;
+                    }
+
+                    return $disabled ? ['disabled' => 'disabled'] : [];
+                },
+                'choices_as_values' => true,
+            ])
             ->add('body', 'ckeditor')
             ->add('is_homepage', null, ['label' => 'Use as Homepage'])
         ;

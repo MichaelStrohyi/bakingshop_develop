@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use AppBundle\AMP\AppAMP;
 
 /**
  * Article
@@ -18,6 +19,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Article
 {
     const PAGE_TYPE = 'article';
+    const PAGE_SUBTYPE_ARTICLE = 'article';
+    const PAGE_SUBTYPE_RECIPE = 'recipe';
+    const PAGE_SUBTYPE_INFO = 'info';
 
     /**
      * @var integer
@@ -59,6 +63,30 @@ class Article
      * @ORM\Column(name="is_homepage", type="boolean", nullable=false, options={"default"=false})
      **/
     private $is_homepage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=20, nullable=false)
+     * @Assert\NotBlank
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="author", type="string", length=255, nullable=true)
+     * @Assert\Length(min=3, max=255)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     */
+    private $author;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="amp_body", type="text", nullable=true)
+     */
+    private $ampBody;
 
 
     /**
@@ -139,6 +167,7 @@ class Article
     public function setBody($body)
     {
         $this->body = $body;
+        $this->updateAmpBody();
 
         return $this;
     }
@@ -193,5 +222,109 @@ class Article
     public function getIsHomepage()
     {
         return $this->is_homepage;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Article
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get list of available types
+     *
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            self::PAGE_SUBTYPE_ARTICLE,
+            self::PAGE_SUBTYPE_RECIPE,
+            self::PAGE_SUBTYPE_INFO,
+        ];
+    }
+
+    /**
+     * Set author
+     *
+     * @param string $author
+     * @return Article
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return string 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Set ampBody
+     *
+     * @param string $ampBody
+     * @return Article
+     */
+    public function setAmpBody($ampBody)
+    {
+        $this->ampBody = $ampBody;
+
+        return $this;
+    }
+
+    /**
+     * Get ampBody
+     *
+     * @return string 
+     */
+    public function getAmpBody()
+    {
+        return $this->ampBody;
+    }
+
+    /**
+     * Actualize ampBody with current body
+     *
+     * @return Article
+     */
+    private function updateAmpBody()
+    {
+        if (is_null($this->getBody())) {
+            $this->ampBody = null;
+            return;
+        }
+
+        $amp = new AppAMP();
+        $amp->loadHtml($this->getBody(), [
+            'img_max_fixed_layout_width' => '100'
+            ]);
+        $this->ampBody = $amp->convertToAmpHtml();
+
+        return $this;
     }
 }

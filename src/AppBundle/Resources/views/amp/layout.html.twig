@@ -1,0 +1,36 @@
+{% extends ":amp:base.html.twig" %}
+
+{% block body %}
+    <section class="content">
+        <header class="header">
+            {% block page_header %}
+                {% include 'AppBundle:amp/layout:_header.html.twig' ignore missing %}
+            {% endblock %}
+        </header>
+
+        <section class="main-content-block">
+            {% block main %}{% endblock %}
+        </section>
+
+        <footer class="footer">
+            {% block page_footer %}
+                {% include 'AppBundle:amp/layout:_footer.html.twig' ignore missing %}
+            {% endblock %}
+        </footer>
+    </section>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style amp-custom>
+      {% stylesheets filter="scssphp" output="css/amp/app.css"
+          "@AppBundle/Resources/public/sass/amp/*.scss"
+      %}
+          {{ fileGetContents(asset_url)|raw }}
+      {% endstylesheets %}
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

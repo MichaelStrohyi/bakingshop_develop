@@ -1,5 +1,6 @@
-{% for menu in menus %}
-    <nav class="aside-menu">
-        {{ render(controller('AppBundle:Page:menu', {'name': menu})) }}
-    </nav>
-{% endfor %}
+<div class="side-menu-section">
+    {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-articles'})) }}
+</div>
+<div class="side-menu-section blue">
+    {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-recipies'})) }}
+</div>

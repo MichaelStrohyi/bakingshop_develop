@@ -44,18 +44,36 @@ class PageController extends Controller
     }
 
     /**
-     * Remove unused urls
+     * Remove urls associated with the given object
      *
      * @param string $type page type
      * @param object $obj object for save url
+     * @param int $obj_id
+     *
      * 
      * @return void
      *
      * @author Mykola Martynov
      **/
-    protected function deletePageUrls($type, $obj)
+    protected function deletePageUrls($type, $obj, $obj_id = null)
     {
         $this->getDoctrine()->getRepository('USPCPageBundle:Page')
-            ->deletePageUrls($type, $obj);
+            ->deletePageUrls($type, $obj, $obj_id);
+    }
+
+    /**
+     * Remove from all menu items associated with the given object
+     *
+     * @param object $obj
+     * @param string $type page type
+     * @param int $obj_id
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deleteFromMenus($type, $obj, $obj_id = null)
+    {
+        $this->getDoctrine()->getRepository('USPCPageBundle:Page')
+            ->deleteFromMenus($type, $obj, $obj_id);
     }
 }

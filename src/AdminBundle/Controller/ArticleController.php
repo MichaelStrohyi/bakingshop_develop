@@ -24,6 +24,7 @@ class ArticleController extends PageController
         $article_list = $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByHeader();
         return [
             'article_list' => $article_list,
+            'article_types' => Article::getTypes(),
         ];
     }
 
@@ -102,11 +103,13 @@ class ArticleController extends PageController
 
         if ($form->isValid()) {
             $entity_manager = $this->getDoctrine()->getEntityManager();
-
+            $article_id = $article->getId();
+            # delete article
             $entity_manager->remove($article);
             $entity_manager->flush();
-
-            $this->deletePageUrls(Article::PAGE_TYPE, $article);
+            # delete urls for current article from db and from menu-items
+            $this->deleteFromMenus(Article::PAGE_TYPE, $article, $article_id);
+            $this->deletePageUrls(Article::PAGE_TYPE, $article, $article_id);
 
             return $this->redirectToRoute("admin_article_index");
         }
@@ -128,13 +131,19 @@ class ArticleController extends PageController
     private function persistArticle(Article $article)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
-
+        # get old article url from db
+        $old_url = $entity_manager->getRepository('AppBundle:Article')->getUrlFromDB($article);
+        # save article into db
         $entity_manager->persist($article);
         $entity_manager->flush();
         
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
         $this->updateHomepage($article);
+
+        # update article url in menus
+        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $article->getUrl());
+
     }
 
      /**

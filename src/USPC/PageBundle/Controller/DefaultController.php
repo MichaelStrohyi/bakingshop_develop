@@ -27,7 +27,7 @@ class DefaultController extends Controller
      **/
     private $page_object;
 
-    public function dispatcherAction($slug, Request $request)
+    public function dispatcherAction($slug, $prefix = null, Request $request)
     {
         # load dispatchers
         $this->dispatchers = $this->container->getParameter('router.dispatchers');
@@ -45,19 +45,23 @@ class DefaultController extends Controller
         if (empty($page) || empty($page_object)) {
             throw $this->createNotFoundException();
         }
-
-        # redirect to new url
+        # if page is alias redirect to new url
         if ($page->isAlias()) {
-            return $this->redirect($request->getBaseUrl() . $this->page_object->getUrl(), 301);
+            $new_url = $request->getBaseUrl();
+            if (!empty($prefix)) {
+                $new_url .=  '/' . rtrim($prefix, '/');
+            }
+            $new_url .= $this->page_object->getUrl();
+
+            return $this->redirect($new_url, 301);
         }
 
         list($controller, $parameters) = $this->getPageController();
 
         # add request into parameters
         $parameters['request'] = $request;
-
         $response = $this->forward($controller, $parameters, $request->query->all());
-        
+
         return $response;
     }
 
