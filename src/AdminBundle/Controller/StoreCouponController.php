@@ -33,6 +33,7 @@ class StoreCouponController extends Controller
         $form = $this->createCouponsForm($store, $request);
 
         if ($form->isValid()) {
+            $this->handleLogo($store, $request);
             $this->persistItems($store);
 
             return $this->redirectToRoute("admin_store_index");
@@ -77,5 +78,25 @@ class StoreCouponController extends Controller
 
         $entity_manager->persist($store);
         $entity_manager->flush();
+    }
+
+    /**
+     * Remove logo for each coupon if crrent logo was deleted and new logo was not selected
+     *
+     * @param Store $store
+     * @param Request $request
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function handleLogo(Store $store, Request $request)
+    {
+        $current_logo = $request->request->get('current_logo');
+
+        foreach ($store->getCoupons() as $value) {
+            if (!array_key_exists($value->getId(), $current_logo) && (null === $value->getLogo() || null === $value->getLogo()->getImageFile())) {
+                    $value->removeLogo();
+            }
+        }
     }
 }

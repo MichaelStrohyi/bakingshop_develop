@@ -45,7 +45,7 @@ class StoreController extends Controller
         $form = $this->createStoreForm($store, $request);
 
         if ($form->isValid()) {
-            $this->persiststore($store);
+            $this->persistStore($store);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -166,5 +166,4 @@ class StoreController extends Controller
             $store->removeLogo();
         }
     }
-
 }

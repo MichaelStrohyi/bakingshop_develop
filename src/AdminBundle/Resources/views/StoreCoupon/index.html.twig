@@ -17,9 +17,21 @@
     {{ form_row(store_coupon.label, {'attr': {'autocomplete': false}}) }}
     {{ form_row(store_coupon.code, {'attr': {'autocomplete': false}}) }}
     {{ form_row(store_coupon.link, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(store_coupon.startDate, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(store_coupon.expireDate, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(store_coupon.startDate) }}
+    {{ form_row(store_coupon.expireDate) }}
+    {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
+        <div class="form-group" id="store-logo">
+            {{ form_label(store_coupon.logo, 'Current logo') }}
+            <div class="col-sm-10">
+                <div><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></div>
+                <a href="#" class="btn btn-link btn-sm" onclick="removeLogo(event, this);">Remove logo</a>
+                <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
+            </div>
+        </div>
+    {% endif %}
     {{ form_widget(store_coupon.logo) }}
+        {{ form_widget(store_coupon.activity) }}
+        {{ form_widget(store_coupon.position) }}
                     </div>
                     <div class="col-md-2">
                         <a href="#" class="couponActions firstLink">First</a></br>
@@ -180,8 +192,11 @@
                 $itemFormLi.insertAfter($('li.list-item').last());
             });
         }
-
-
+        window.removeLogo = function(e, $link) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+            $link.closest('.form-group').remove();
+        }
         $("ul.store-coupons").sortable();
     </script>
 {% endblock %}
