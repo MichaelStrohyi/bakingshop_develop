@@ -21,6 +21,7 @@ class StoreCouponsType extends AbstractType
                     'sort_by' => [
                         'position' => 'asc',
                     ],
+                    'label' => false,
                 ])
         ;
     }
