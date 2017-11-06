@@ -20,7 +20,7 @@
     {{ form_row(store_coupon.startDate) }}
     {{ form_row(store_coupon.expireDate) }}
     {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
-        <div class="form-group" id="store-logo">
+        <div class="form-group">
             {{ form_label(store_coupon.logo, 'Current logo') }}
             <div class="col-sm-10">
                 <div><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></div>

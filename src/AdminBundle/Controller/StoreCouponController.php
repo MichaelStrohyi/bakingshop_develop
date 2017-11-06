@@ -94,7 +94,7 @@ class StoreCouponController extends Controller
         $current_logo = $request->request->get('current_logo');
 
         foreach ($store->getCoupons() as $value) {
-            if (!array_key_exists($value->getId(), $current_logo) && (null === $value->getLogo() || null === $value->getLogo()->getImageFile())) {
+            if ((empty($current_logo) || !array_key_exists($value->getId(), $current_logo)) && (null === $value->getLogo() || null === $value->getLogo()->getImageFile())) {
                     $value->removeLogo();
             }
         }
