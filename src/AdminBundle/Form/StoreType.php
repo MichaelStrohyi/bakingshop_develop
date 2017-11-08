@@ -14,9 +14,9 @@ class StoreType extends AbstractType
         $builder
             ->add('name', null, ['attr' => ['autocomplete' => 'off']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('keywords', 'textarea')
-            ->add('description', 'textarea')
-            ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\StoreLogo'])
+            ->add('keywords', 'textarea', ['attr' => ['rows' => '5']])
+            ->add('description', 'textarea', ['attr' => ['rows' => '5']])
+            ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\StoreLogo', 'label' => false])
         ;
     }
 
