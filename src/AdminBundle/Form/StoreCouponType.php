@@ -12,13 +12,12 @@ class StoreCouponType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', 'textarea')
+            ->add('label', 'textarea', ['attr' => ['rows' => '3']])
             ->add('code', null, ['attr' => ['autocomplete' => 'off']])
             ->add('link', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('startDate', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('expireDate', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('expireDate', null, ['attr' => ['autocomplete' => 'off']])
-            ->add('logo', new ImageType, ['required' => false, 'data_class' => 'AppBundle\Entity\CouponImage'])
+            ->add('startDate', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'Starts'])
+            ->add('expireDate', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'Expires'])
+            ->add('logo', new ImageType, ['required' => false, 'data_class' => 'AppBundle\Entity\CouponImage', 'label' => false])
             ->add('activity', 'hidden', ['default' => StoreCoupon::DEFAULT_ACTIVITY, 'attr' => ['class' => 'coupon-activity']])
             ->add('position', 'hidden', ['default' => StoreCoupon::DEFAULT_POSITION, 'attr' => ['class' => 'coupon-position']])
         ;

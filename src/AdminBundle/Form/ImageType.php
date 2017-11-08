@@ -10,7 +10,7 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('imageFile', 'file', ['label' => 'New logo', 'attr' => ['accept' => '.gif, .jpg, .jpeg, .png']])
+            ->add('imageFile', 'file', ['label' => 'Logo', 'attr' => ['accept' => '.gif, .jpg, .jpeg, .png']])
         ;
     }
 

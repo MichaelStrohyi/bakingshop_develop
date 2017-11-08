@@ -4,7 +4,7 @@
 
 {% block content %}
     <header>
-        <h1>Store coupons for &lt; {{ store.name }} &gt;</h1>
+        <h1>Coupons for &lt; {{ store.name }} &gt;</h1>
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-coupons'}}) }}
@@ -13,27 +13,56 @@
         {% for store_coupon in form.coupons %}
             <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
                 <div class="container">
-                    <div class="col-md-10">
-    {{ form_row(store_coupon.label, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(store_coupon.code, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(store_coupon.link, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(store_coupon.startDate) }}
-    {{ form_row(store_coupon.expireDate) }}
-    {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
-        <div class="form-group">
-            {{ form_label(store_coupon.logo, 'Current logo') }}
-            <div class="col-sm-10">
-                <div><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></div>
-                <a href="#" class="btn btn-link btn-sm" onclick="removeLogo(event, this);">Remove logo</a>
-                <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
-            </div>
-        </div>
-    {% endif %}
-    {{ form_widget(store_coupon.logo) }}
-        {{ form_widget(store_coupon.activity) }}
-        {{ form_widget(store_coupon.position) }}
+                    <div class="coupon-content col-sm-11">
+                        <div class="col-sm-8">
+                            {{ form_row(store_coupon.label) }}
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.code) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.code)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.code) }}
+                                    {{ form_errors(store_coupon.code) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.startDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.startDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.startDate) }}
+                                    {{ form_errors(store_coupon.startDate) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.link) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.link)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.link) }}
+                                    {{ form_errors(store_coupon.link) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.expireDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.expireDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.expireDate) }}
+                                    {{ form_errors(store_coupon.expireDate) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4{{ form_errors(store_coupon.logo) is not empty ? " has-error" : "" }}">
+                            {{ form_widget(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}
+                            {{ form_errors(store_coupon.logo) }}
+                            {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
+                                <div class="form-group">
+                                    {{ form_label(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3'})|raw }}
+                                    <div class="col-sm-9">
+                                        <img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}">
+                                        <a href="#" class="btn btn-link" onclick="removeLogo(event, this);">Remove logo</a>
+                                        <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                            {{ form_widget(store_coupon.activity) }}
+                            {{ form_widget(store_coupon.position) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-sm-1">
                         <a href="#" class="couponActions firstLink">First</a></br>
                         <a href="#" class="couponActions lastLink">Last</a></br>
                         <a href="#" class="couponActions upLink">Up</a></br>
@@ -60,7 +89,7 @@
         var $collectionHolder;
 
         // setup an "add a tag" link
-        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-md-offset-2">Add Coupon</a>');
+        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-sm-offset-2">Add Coupon</a>');
 
         jQuery(document).ready(function() {
             // Get the ul that holds the collection of tags
@@ -192,10 +221,11 @@
                 $itemFormLi.insertAfter($('li.list-item').last());
             });
         }
-        window.removeLogo = function(e, $link) {
+        window.removeLogo = function(e, link) {
             // prevent the link from creating a "#" on the URL
             e.preventDefault();
-            $link.closest('.form-group').remove();
+            link.closest('.form-group').remove();
+
         }
         $("ul.store-coupons").sortable();
     </script>
