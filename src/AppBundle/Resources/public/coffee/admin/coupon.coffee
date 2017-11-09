@@ -44,21 +44,33 @@ addItemFormMoveLinks = ($itemFormLi) ->
         e.preventDefault()
         # change current li position
         $itemFormLi.insertBefore $itemFormLi.prev()
+        # scroll page if new li position came out of screen
+        if ($(document).scrollTop() > $itemFormLi.position().top)
+            $(document).scrollTop $itemFormLi.position().top
 
     $itemFormLi.find('a.downLink').on 'click', (e) ->
         # prevent the link from creating a "#" on the URL
         e.preventDefault()
         # change current li position
         $itemFormLi.insertAfter $itemFormLi.next()
+        # scroll page if new li position came out of screen
+        if ($(document).scrollTop() + $(window).height() - $itemFormLi.outerHeight() < $itemFormLi.position().top)
+            $(document).scrollTop $itemFormLi.position().top - $(window).height() + $itemFormLi.outerHeight()
 
     $itemFormLi.find('a.firstLink').on 'click', (e) ->
         # prevent the link from creating a "#" on the URL
         e.preventDefault()
         # change current li position
         $itemFormLi.insertBefore $('li.list-item').first()
+        # scroll page if new li position came out of screen
+        if ($(document).scrollTop() > $itemFormLi.position().top)
+            $(document).scrollTop $itemFormLi.position().top
 
     $itemFormLi.find('a.lastLink').on 'click', (e) ->
         # prevent the link from creating a "#" on the URL
         e.preventDefault()
         # change current li position
         $itemFormLi.insertAfter $('li.list-item').last()
+        # scroll page if new li position came out of screen
+        if ($(document).scrollTop() + $(window).height() - $itemFormLi.outerHeight() < $itemFormLi.position().top)
+            $(document).scrollTop $itemFormLi.position().top - $(window).height() + $itemFormLi.outerHeight()

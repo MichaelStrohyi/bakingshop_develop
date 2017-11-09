@@ -39,18 +39,30 @@ addItemFormActivateLink = function($itemFormLi) {
 addItemFormMoveLinks = function($itemFormLi) {
   $itemFormLi.find('a.upLink').on('click', function(e) {
     e.preventDefault();
-    return $itemFormLi.insertBefore($itemFormLi.prev());
+    $itemFormLi.insertBefore($itemFormLi.prev());
+    if ($(document).scrollTop() > $itemFormLi.position().top) {
+      return $(document).scrollTop($itemFormLi.position().top);
+    }
   });
   $itemFormLi.find('a.downLink').on('click', function(e) {
     e.preventDefault();
-    return $itemFormLi.insertAfter($itemFormLi.next());
+    $itemFormLi.insertAfter($itemFormLi.next());
+    if ($(document).scrollTop() + $(window).height() - $itemFormLi.outerHeight() < $itemFormLi.position().top) {
+      return $(document).scrollTop($itemFormLi.position().top - $(window).height() + $itemFormLi.outerHeight());
+    }
   });
   $itemFormLi.find('a.firstLink').on('click', function(e) {
     e.preventDefault();
-    return $itemFormLi.insertBefore($('li.list-item').first());
+    $itemFormLi.insertBefore($('li.list-item').first());
+    if ($(document).scrollTop() > $itemFormLi.position().top) {
+      return $(document).scrollTop($itemFormLi.position().top);
+    }
   });
   return $itemFormLi.find('a.lastLink').on('click', function(e) {
     e.preventDefault();
-    return $itemFormLi.insertAfter($('li.list-item').last());
+    $itemFormLi.insertAfter($('li.list-item').last());
+    if ($(document).scrollTop() + $(window).height() - $itemFormLi.outerHeight() < $itemFormLi.position().top) {
+      return $(document).scrollTop($itemFormLi.position().top - $(window).height() + $itemFormLi.outerHeight());
+    }
   });
 };
