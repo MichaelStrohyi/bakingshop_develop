@@ -14,11 +14,11 @@
     {{ form_row(form.description, {'attr': {'autocomplete': false}}) }}
     {{ form_widget(form.logo) }}
     {% if form.vars.value.logo is not null and form.vars.value.logo.filename is not null %}
-        <div class="form-group" id="store-logo">
+        <div class="form-group">
             {{ form_label(form.logo) }}
             <div class="col-sm-10">
                 <img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}">
-                <a href="#" class="btn btn-link btn-sm" id="delete-logo-link">Remove logo</a>
+                <a href="#" class="btn btn-link btn-sm" onclick="removeLogo(event, this);">Remove logo</a>
                 <input type="text" name="current_logo" hidden>
             </div>
         </div>
@@ -35,14 +35,9 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
-        jQuery(document).ready(function() {
-            $('#delete-logo-link').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                $('#store-logo').remove();
-            });
-        });
-    </script>
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

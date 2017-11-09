@@ -9,7 +9,7 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-coupons'}}) }}
     
-    <ul class="store-coupons list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
+    <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
         {% for store_coupon in form.coupons %}
             <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
                 <div class="container">
@@ -85,148 +85,11 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
-        var $collectionHolder;
-
-        // setup an "add a tag" link
-        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-sm-offset-2">Add Coupon</a>');
-
-        jQuery(document).ready(function() {
-            // Get the ul that holds the collection of tags
-            $collectionHolder = $('ul.mutable-items');
-
-            // add the "add a tag" anchor and li to the tags ul
-            $collectionHolder.after($addItemLink);
-
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(".list-item").length);
-
-            $addItemLink.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // add a new tag form (see next code block)
-                addItemLink($collectionHolder);
-            });
-
-            // add actions links to all of the existing tag form li elements
-            $collectionHolder.find('li.list-item').each(function() {
-                addItemFormDeleteLink($(this));
-                addItemFormActivateLink($(this));
-                addItemFormMoveLinks($(this));
-            });
-
-            // add function for updating position before submit
-            $('#edit-coupons').on('submit', function(event) {
-                $collectionHolder.find('li.list-item .coupon-position').each(function(index) {
-                    $(this).val(index);
-                });
-            });
-        });
-
-        function addItemLink($collectionHolder) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
-            var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-            var newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a tag" link li
-            var $newFormLi = $('<li class="list-item"></li>').append(newForm);
-            $collectionHolder.append($newFormLi);
-
-            // add actions links to the new form
-            addItemFormDeleteLink($newFormLi);
-            addItemFormActivateLink($newFormLi);
-            addItemFormMoveLinks($newFormLi)
-        }
-
-        function addItemFormDeleteLink($itemFormLi) {
-            var $removeFormA = $itemFormLi.find('a.removeLink');
-
-            $removeFormA.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // remove the li for the tag form
-                $itemFormLi.remove();
-            });
-        }
-
-        function addItemFormActivateLink($itemFormLi) {
-            var $activateFormA = $itemFormLi.find('a.activateLink');
-
-            $activateFormA.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                $inputActivity = $itemFormLi.find('input.coupon-activity');   
-
-                // change coupon's class to change background color'
-                $itemFormLi.toggleClass("deactivated");
-
-                // if coupon is active
-                if ($inputActivity.val() == 1) {
-                    // set coupon activity into 0
-                    $inputActivity.val('0');
-
-                    // change link text to "Activate"
-                    $itemFormLi.find('a.activateLink').text('Activate');
-
-                    return;
-                }
-
-                // set coupon activity into 1
-                $inputActivity.val('1');
-
-                // change link text to "Deactivate"
-                $itemFormLi.find('a.activateLink').text('Deactivate');
-            });
-        }
-
-        function addItemFormMoveLinks($itemFormLi) {
-            $itemFormLi.find('a.upLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertBefore($itemFormLi.prev());
-            });
-
-            $itemFormLi.find('a.downLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertAfter($itemFormLi.next());
-            });
-
-            $itemFormLi.find('a.firstLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertBefore($('li.list-item').first());
-            });
-
-            $itemFormLi.find('a.lastLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertAfter($('li.list-item').last());
-            });
-        }
-        window.removeLogo = function(e, link) {
-            // prevent the link from creating a "#" on the URL
-            e.preventDefault();
-            link.closest('.form-group').remove();
-
-        }
-        $("ul.store-coupons").sortable();
-    </script>
+    {% javascripts filter="?jsqueeze" output="js/admin/coupons.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+        '@AppBundle/Resources/public/coffee/admin/coupon.coffee'
+        '@AppBundle/Resources/public/coffee/admin/sortable.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
