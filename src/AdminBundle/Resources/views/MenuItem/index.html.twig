@@ -90,16 +90,15 @@
         }
 
         function addItemFormDeleteLink($itemFormLi) {
-            var $removeFormA = $('<div class="text-right"><a href="#" class="btn btn-default">delete this item</a></div>');
-            $itemFormLi.prepend($removeFormA);
-
-            $removeFormA.on('click', function(e) {
+            var $removeItemLink = $('<a href="#" class="btn btn-default">delete this item</a>');
+            $removeItemLink.on('click', function(e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
-
                 // remove the li for the tag form
                 $itemFormLi.remove();
             });
+            var $removeFormA = $('<div class="text-right"></div>').append($removeItemLink);
+            $itemFormLi.prepend($removeFormA);
         }
 
         $("ul.menu-items").sortable();
