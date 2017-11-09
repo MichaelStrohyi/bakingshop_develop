@@ -17,7 +17,7 @@
         <div class="form-group">
             {{ form_label(form.logo) }}
             <div class="col-sm-10">
-                <img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}">
+                <a href="{{  store_logo_prefix }}/{{ form.vars.value.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ form.vars.value.logo.filename }}"></a>
                 <a href="#" class="btn btn-link btn-sm" onclick="removeLogo(event, this);">Remove logo</a>
                 <input type="text" name="current_logo" hidden>
             </div>

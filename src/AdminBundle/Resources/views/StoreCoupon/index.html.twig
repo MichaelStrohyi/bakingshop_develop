@@ -52,7 +52,7 @@
                                 <div class="form-group">
                                     {{ form_label(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3'})|raw }}
                                     <div class="col-sm-9">
-                                        <img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}">
+                                        <a href="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></a>
                                         <a href="#" class="btn btn-link" onclick="removeLogo(event, this);">Remove logo</a>
                                         <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
                                     </div>
