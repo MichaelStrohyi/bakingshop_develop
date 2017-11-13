@@ -1,3 +1,9 @@
+_uspc_stores:
+    path:     /{prefix}/{slug}/coupons
+    defaults: { _controller: USPCPageBundle:Default:coupons, slug: null, prefix: null}
+    requirements:
+        slug: .+
+        prefix: amp/
 _uspc_pages:
     path:     /{prefix}{slug}
     defaults: { _controller: USPCPageBundle:Default:dispatcher, slug: null, prefix: null}

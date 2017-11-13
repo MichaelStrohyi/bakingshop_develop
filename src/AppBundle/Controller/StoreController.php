@@ -4,23 +4,21 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use AppBundle\Entity\Article;
+use AppBundle\Entity\Store;
 
-class ArticleController extends Controller
+class StoreController extends Controller
 {
     /**
-     * @Route("/{prefix}article/{id}", name="article_page",
+     * @Route("/{prefix}store/{id}/coupons", name="store_coupons_page",
      *     requirements={"id": "\d+", "prefix": "amp/|"},
      *     defaults={"prefix": ""},
      * )
-     * @ParamConverter("article", class="AppBundle:Article")
-     * @Template()
+     * @ParamConverter("store", class="AppBundle:Store")
      */
-    public function pageAction(Article $article, Request $request)
+    public function couponsAction(Store $store, Request $request)
     {
         $route_params = $request->attributes->get('_route_params');
         $prefix = $route_params['prefix'];
@@ -36,11 +34,11 @@ class ArticleController extends Controller
         }
 
         $parameters = [
-            'article' => $article,
+            'store' => $store,
             'crosslink' =>$crosslink
         ];
 
         # if prefix is not set render html page else render amp-html page
-        return empty($prefix) ? $this->render('AppBundle:Article:page.html.twig', $parameters) : $this->render('AppBundle:amp/Article:page.html.twig', $parameters);
+        return empty($prefix) ? $this->render('AppBundle:Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
     }
 }
