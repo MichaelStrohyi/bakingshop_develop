@@ -26,7 +26,7 @@ addItemFormActivateLink = function($itemFormLi) {
     e.preventDefault();
     $inputActivity = $itemFormLi.find('input.coupon-activity');
     $itemFormLi.toggleClass("deactivated");
-    if ($inputActivity.val() === 1) {
+    if ($inputActivity.val() === '1') {
       $inputActivity.val('0');
       $itemFormLi.find('a.activateLink').text('Activate');
       return;

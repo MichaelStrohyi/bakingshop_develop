@@ -25,7 +25,7 @@ addItemFormActivateLink = ($itemFormLi) ->
         # change coupon's class to change background color
         $itemFormLi.toggleClass "deactivated"
         # if coupon is active
-        if ($inputActivity.val() is 1)
+        if ($inputActivity.val() is '1')
             # set coupon activity into 0
             $inputActivity.val '0'
             # change link text to "Activate"
