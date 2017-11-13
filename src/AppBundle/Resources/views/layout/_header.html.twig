@@ -12,16 +12,20 @@
     <div class="top-menu-pattern-top"></div>
     <div class="top-menu-section-header">
         <div class="top-menu-text main-page">
-            {% if article.type == 'info' %}
-                Information
-            {% else %}
-                {% if article.type == 'article' %}
-                    Articles
-                {% elseif article.type == 'recipe' %}
-                    Recipies
+            {% if article is defined %}
+                {% if article.type == 'info' %}
+                    Information
+                {% else %}
+                    {% if article.type == 'article' %}
+                        Articles
+                    {% elseif article.type == 'recipe' %}
+                        Recipies
+                    {% endif %}
+                    <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
+                    </div>
                 {% endif %}
-                <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
-                </div>
+            {% else %}
+                Coupons
             {% endif %}
         </div>
     </div>

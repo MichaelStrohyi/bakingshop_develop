@@ -315,4 +315,47 @@ class Coupon
 
         return $this;
     }
+
+    /**
+     * Return true if coupon is active and not expired
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function isActual()
+    {
+        $current_date = date(time());
+        $start_date = empty($this->startDate) ? null : $this->startDate->getTimestamp();
+        $expire_date = empty($this->expireDate) ? null : $this->expireDate->getTimestamp();
+        return $this->activity == 0 || !empty($start_date) && $start_date > $current_date || !empty($expire_date) && $expire_date < $current_date ? false : true;
+    }
+
+    /**
+     * Get startDate for production in format yyyy-mm-dd
+     *
+     * @return string
+     */
+    public function getStartDateProd()
+    {
+        if (empty($this->startDate)) {
+            return null;
+        }
+
+        return $this->startDate->format('Y-m-d');
+    }
+
+    /**
+     * Get expireDate for production in format yyyy-mm-dd
+     *
+     * @return string
+     */
+    public function getExpireDateProd()
+    {
+        if (empty($this->expireDate)) {
+            return null;
+        }
+
+        return $this->expireDate->format('Y-m-d');
+    }
+
 }

@@ -1,1 +1,74 @@
-amp store coupons
+{% extends 'AppBundle:amp:layout.html.twig' %}
+
+{% block title %}{{ store.name }} coupons | {{ parent() }}{% endblock %}
+
+{% block main %}
+    <header>
+        <h1>Coupons for &lt; {{ store.name }} &gt;</h1>
+    </header>
+    
+    <ul class="coupons-list list-unstyled">
+        {% for store_coupon in store.coupons %}
+            {% if store_coupon.actual %}
+                <li class="list-item">
+                    <div class="coupon-content col-sm-12">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Label</label>
+                                <div class="col-sm-10">
+                                    <textarea rows="3" class="form-control" disabled>{{ store_coupon.label }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Code</label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="{{ store_coupon.code }}" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Starts</label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="{{ store_coupon.startDateProd }}" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Link</label>
+                                <div class="col-sm-10">
+                                    <input type="url" value="{{ store_coupon.link }}" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 control-label">Expires</label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="{{ store_coupon.expireDateProd }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
+                                    <label class="col-sm-3 control-label">Logo</label>
+                                    <div class="col-sm-9">
+                                        <a href="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}"></a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .coupon-content {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
