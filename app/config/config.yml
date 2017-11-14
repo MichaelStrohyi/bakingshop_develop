@@ -12,6 +12,9 @@ parameters:
         article:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
+        store:
+            entity: 'AppBundle:Store'
+            controller: 'AppBundle:Store:coupons'
     store_logo_prefix: '/images/logos'
     coupon_image_prefix: '/images/coupons'
     all_images_prefix: '/images'
