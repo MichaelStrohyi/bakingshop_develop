@@ -3,11 +3,45 @@
 {% block title %}{{ store.name }} coupons | {{ parent() }}{% endblock %}
 
 {% block main %}
-    <header>
-        <h1>Coupons for &lt; {{ store.name }} &gt;</h1>
-    </header>
+    <div class="content-coupons-block">
+        <div class="coupons-block-header">
+            <div class="coupons-block-header-logo">
+                {% if store.logo is not null and store.logo.filename is not null %}
+                    <a href="{{ coupon_image_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                {% endif %}
+            </div>
+            <div class="coupons-block-header-title">
+                <span>{{ store.name }} coupons</span>
+            </div>
+            <div class="coupons-block-header-descr">
+                <span>{{ store.description }}</span>
+            </div>
+        </div>
+        {% for store_coupon in store.coupons %}
+            {% if store_coupon.actual %}
+                <div class="coupons-block-item">
+                    <div class="coupon-block-item-left">
+                        <div class="coupon-block-item-logo">
+                            {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
+                                <a href="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}"></a>
+                            {% endif %}
+                        </div>
+                        <div class="coupon-block-item-details"><a href="#">See details &gt;&gt;</a></div>
+                    </div>
+                    <div class="coupon-block-item-right">
+                        <div class="coupon-block-item-title">In store coupon</div>
+                        <div class="coupon-block-item-descr">
+                            <div class="coupon-block-item-label">{{ store_coupon.label }}</div>
+                            <div class="coupon-block-item-code"><a href="#"><span>{{ store_coupon.code is not empty ? store_coupon.code : 'ShowCoupon' }}</span></a></div>
+                        </div>
+                        <div class="coupon-block-item-verify">Verified 2 days ago Added by dealsaver</div>
+                    </div>                                    
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
     
-    <ul class="coupons-list list-unstyled">
+{#    <ul class="coupons-list list-unstyled">
         {% for store_coupon in store.coupons %}
             {% if store_coupon.actual %}
                 <li class="list-item">
@@ -58,7 +92,7 @@
                 </li>
             {% endif %}
         {% endfor %}
-    </ul>
+    </ul>#}
 {% endblock %}
 
 {% block stylesheets %}
