@@ -41,7 +41,7 @@ class LoadMenuData implements FixtureInterface
 
         $store1 = new Store;
         $store1
-            ->setUrl("http://walmart.com")
+            ->setLink("http://walmart.com")
             ->setName("Walmart")
             ->addCoupon($coupon1)
             ->addCoupon($coupon2)
@@ -51,7 +51,7 @@ class LoadMenuData implements FixtureInterface
 
         $store2 = new Store;
         $store2
-            ->setUrl("http://amazon.com")
+            ->setLink("http://amazon.com")
             ->setName("Amazon")
             ->setDescription("Amazon - the great store")
         ;
@@ -59,7 +59,7 @@ class LoadMenuData implements FixtureInterface
 
         $store3 = new Store;
         $store3
-            ->setUrl("https://aliexpress.com")
+            ->setLink("https://aliexpress.com")
             ->setName("Aliexpress")
             ->setKeywords("aliexpress china market")
         ;

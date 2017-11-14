@@ -39,13 +39,13 @@ class Store
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="blob", nullable=false)
+     * @ORM\Column(name="link", type="blob", nullable=false)
      * @Assert\NotBlank
      * @Assert\Url(
-     *    message = "The url '{{ value }}' is not a valid url",
+     *    message = "The link '{{ value }}' is not a valid url",
      * )
      */
-    private $url;
+    private $link;
 
     /**
      * @var string
@@ -118,26 +118,26 @@ class Store
     }
 
     /**
-     * Set url
+     * Set link
      *
-     * @param string $url
+     * @param string $link
      * @return Store
      */
-    public function setUrl($url)
+    public function setLink($link)
     {
-        $this->url = $url;
+        $this->link = $link;
 
         return $this;
     }
 
     /**
-     * Get url
+     * Get link
      *
      * @return string 
      */
-    public function getUrl()
+    public function getLink()
     {
-        return $this->url;
+        return $this->link;
     }
 
     /**
@@ -155,8 +155,8 @@ class Store
      **/
     public function transformLoadedData()
     {
-        if (is_resource($this->url) && get_resource_type($this->url) == 'stream') {
-            $this->url = stream_get_contents($this->url, -1, 0);
+        if (is_resource($this->link) && get_resource_type($this->link) == 'stream') {
+            $this->link = stream_get_contents($this->link, -1, 0);
         }
     }
 
@@ -268,4 +268,5 @@ class Store
 
         return $this;
     }
+
 }
