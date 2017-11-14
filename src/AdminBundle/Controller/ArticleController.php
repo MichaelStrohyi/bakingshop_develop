@@ -136,14 +136,13 @@ class ArticleController extends PageController
         # save article into db
         $entity_manager->persist($article);
         $entity_manager->flush();
-        
+
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
         $this->updateHomepage($article);
 
         # update article url in menus
         $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $article->getUrl());
-
     }
 
      /**

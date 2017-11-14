@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Store
 {
+    const PAGE_TYPE = 'store';
     /**
      * @var integer
      *
@@ -201,6 +202,16 @@ class Store
     }
 
     /**
+     * Return page name for local url, based on store name
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->convertNameToUrl($this->name);
+    }
+
+    /**
      * Add coupon
      *
      * @param StoreCoupon $coupon
@@ -269,4 +280,26 @@ class Store
         return $this;
     }
 
+    /**
+     * Return page name for local url, based on store name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function convertNameToUrl($name)
+    {
+        $pattern = [
+            "/&/",
+            "/['\"`()\[\]{}]/",
+            "/[\s]+/",
+            "/(?(?=[[:punct:]])[^.!:]|^$)+/",
+        ];
+        $replacement = [
+            "-and-",
+            "",
+            "-",
+            "-",
+        ];
+        return '/' . strtolower(trim(preg_replace($pattern, $replacement, $name), '-'));
+    }
 }
