@@ -12,20 +12,13 @@ $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
 $additional-text-color: #663333;
-.container {
-    background: {
-        image: url("/bundles/app/img/main-bg.png");
-        color: #f2f2f2;
-    }
-    width: $site-width;
-    font-family: 'Rokkitt', serif;
-    color: #000;
-}
-.content {
-    background-color: $background-color;
-    width: $content-width;
-    margin: 0 auto;
-}
+
+$xSmallScreenWidth: 450px;
+$smallScreenWidth: 600px;
+$mediumScreenWidth: 768px;
+$largeScreenWidth: 1024px;
+$extraLargeScreenWidth: 1600px;
+
 .row.no-expand {
     margin: 0;
 }
@@ -252,19 +245,6 @@ $additional-text-color: #663333;
     padding: 16px 8px 32px 10px;
     margin: 0;
     position: relative;
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        right: 100%;
-        bottom: 0;
-        height: 90px;
-        width: $site-width * 0.1;
-        background-color: #f2f2f2;
-
-    }
-    &:after {
-        left: 100%;
-    }
 }
 .content-coupons-block, .content-article-block {
     padding: 10px 10px 10px 16px;
@@ -288,8 +268,8 @@ $additional-text-color: #663333;
         bottom: 10px;
     }
 }
-.coupons-block-header-logo, {
-    float: left;    
+.coupons-block-header-logo {
+    float: left;
     &:after {
         content:'';
         clear: both;
@@ -445,7 +425,7 @@ $additional-text-color: #663333;
 .offers-block-header {
     background-color: $main-yellow-color;
     color: $headers-text-color;
-   
+
     font-size: 24px;
 }
 .offers-block-header, .coupons-block-header-title, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2 {
@@ -581,18 +561,6 @@ a img {
         family: 'Droid Sans', sans-serif;
         size: 9px;
     }
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        right: 100%;
-        bottom: 0;
-        height: 100%;
-        width: $site-width * 0.1;
-        background-color: #f2f2f2;
-    }
-    &:after {
-        left: 100%;
-    }
 }
 .footer-top {
     font-size: 12px;
@@ -693,10 +661,12 @@ a:active {
         & + p {
             & > img {
                 float: none;
-                width: 132px !important;
+                width: 19% !important;
+                max-width: 132px !important;
                 margin-left: 0;
                 &:first-of-type {
-                    width: 200px !important;
+                    width: 30% !important;
+                    max-width: 200px !important;
                     margin-left: 0;
                 }
                 &:last-of-type {
@@ -705,14 +675,16 @@ a:active {
             }
             a {
                 img {
-                    width: 200px !important;
+                    width: 30% !important;
+                    max-width: 200px !important;
                     margin-left: 0;
                     }
             }
             a + a {
                 img {
                     float: none;
-                    width: 132px !important;
+                    width: 19% !important;
+                    max-width: 132px !important;
                     margin-left: 0;
                 }
                 &:last-of-type img {
@@ -733,7 +705,7 @@ a:active {
         float: left;
         margin: 0 10px 10px;
         vertical-align: top;
-        max-width: 98% !important; 
+        max-width: 98% !important;
         height: auto !important;
     }
     h2 ~ p {
@@ -763,7 +735,7 @@ a:active {
         p {
             background-color: #eee8e9;
             margin: 0;
-            padding: 0;            
+            padding: 0;
         }
         display: block;
         position: relative;
@@ -836,5 +808,100 @@ a:active {
     }
     &:after {
         border-left: 8px solid $background-color;
+    }
+}
+
+.container {
+    background: {
+        image: url("/bundles/app/img/main-bg.png");
+        color: #f2f2f2;
+    }
+    width: 100%;
+    max-width: $extraLargeScreenWidth;
+    font-family: 'Rokkitt', serif;
+    color: #000;
+}
+.content {
+    background-color: $background-color;
+    width: 100%;
+    max-width: 1024px;
+    margin: 24px auto;
+}
+.main-logo {
+    background-size: contain;
+}
+
+@mixin mediaScreen($widthSize) {
+    @media screen and (max-width: $widthSize) {
+        @content;
+    }
+}
+
+@include mediaScreen($largeScreenWidth) {
+    .container {
+        max-width: $largeScreenWidth;
+    }
+    .content {
+        margin: 18px auto;
+    }
+    .main-logo {
+        width: 240px;
+        height: 240px;
+        line-height: 220px;
+        a {
+            img {
+                height: 107px;
+            }
+        }
+    }
+}
+
+@include mediaScreen($mediumScreenWidth) {
+    .container {
+        max-width: $mediumScreenWidth;
+    }
+    .content {
+        margin: 12px auto;
+    }
+    .main-logo {
+        left: 310px;
+    }
+}
+
+@include mediaScreen($smallScreenWidth) {
+    .container {
+        max-width: none;
+    }
+    .content {
+        margin: 6px auto;
+    }
+    .main-logo {
+        background-repeat: no-repeat;
+        background-position: center;
+        top: 40px;
+        width: 100%;
+        left: auto;
+        a {
+            display: block;
+
+        }
+    }
+    .top-menu-section {
+        padding-top: 140px;
+
+        .top-menu-pattern-top {
+            margin-top: -160px;
+        }
+        .top-menu-section-header {
+            padding-top: 100px;
+        }
+    }
+}
+
+@include mediaScreen($xSmallScreenWidth) {
+    .top-menu-section {
+        .top-menu-section-header {
+            padding-top: 140px;
+        }
     }
 }
