@@ -44,6 +44,8 @@
                                     {{ form_errors(store_coupon.expireDate) }}
                                 </div>
                             </div>
+
+                            {{ form_row(store_coupon.inStore) }}
                         </div>
                         <div class="col-sm-4{{ form_errors(store_coupon.logo) is not empty ? " has-error" : "" }}">
                             {{ form_widget(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}

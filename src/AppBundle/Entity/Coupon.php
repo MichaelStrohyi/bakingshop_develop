@@ -98,6 +98,29 @@ class Coupon
     private $logo;
 
     /**
+     * @var Operator
+     *
+     * @ORM\OneToOne(targetEntity="Operator")
+     * @ORM\JoinColumn(name="verifiedBy", referencedColumnName="id", nullable=true)
+     *
+     */
+    private $verifiedBy;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="verifiedAt", type="date", nullable=true)
+     */
+    private $verifiedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="subtype", type="string", nullable=true)
+     */
+    private $subtype;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -314,6 +337,76 @@ class Coupon
         $this->logo = null;
 
         return $this;
+    }
+
+
+    /**
+     * Set verifiedAt
+     *
+     * @param \DateTime $verifiedAt
+     * @return Coupon
+     */
+    public function setVerifiedAt($verifiedAt)
+    {
+        $this->verifiedAt = $verifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get verifiedAt
+     *
+     * @return \DateTime
+     */
+    public function getVerifiedAt()
+    {
+        return $this->verifiedAt;
+    }
+
+    /**
+     * Set verifiedBy
+     *
+     * @param CouponImage $verifiedBy
+     * @return Coupon
+     */
+    public function setVerifiedBy($verifiedBy)
+    {
+        $this->verifiedBy = $verifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get verifiedBy
+     *
+     * @return CouponImage
+     */
+    public function getVerifiedBy()
+    {
+        return $this->verifiedBy;
+    }
+
+    /**
+     * Set subtype
+     *
+     * @param string $subtype
+     * @return Coupon
+     */
+    public function setSubtype($subtype)
+    {
+        $this->subtype = $subtype;
+
+        return $this;
+    }
+
+    /**
+     * Get subtype
+     *
+     * @return string
+     */
+    public function getSubtype()
+    {
+        return $this->subtype;
     }
 
     /**

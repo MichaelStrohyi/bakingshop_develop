@@ -64,7 +64,7 @@ class StoreCouponController extends Controller
     }
 
     /**
-     * Persist all store coupons and change position for each coupon.
+     * Persist all store coupons
      *
      * @param  Store  $store
      * 

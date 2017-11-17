@@ -20,6 +20,7 @@ class StoreCouponType extends AbstractType
             ->add('logo', new ImageType, ['required' => false, 'data_class' => 'AppBundle\Entity\CouponImage', 'label' => false])
             ->add('activity', 'hidden', ['default' => StoreCoupon::DEFAULT_ACTIVITY, 'attr' => ['class' => 'coupon-activity']])
             ->add('position', 'hidden', ['default' => StoreCoupon::DEFAULT_POSITION, 'attr' => ['class' => 'coupon-position']])
+            ->add('inStore', 'checkbox', ['label' => 'in store coupon', 'required' => false])
         ;
     }
 
