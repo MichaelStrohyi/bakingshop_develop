@@ -34,7 +34,7 @@ class StoreCouponController extends Controller
 
         if ($form->isValid()) {
             $this->handleLogo($store, $request);
-            $this->persistItems($store);
+            $this->persistCoupons($store);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -72,7 +72,7 @@ class StoreCouponController extends Controller
      * 
      * @author Michael Strohyi
      **/
-    private function persistItems(Store $store)
+    private function persistCoupons(Store $store)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
 

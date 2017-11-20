@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CouponRepository")
- * @ORM\HasLifecycleCallbacks 
+ * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"store" = "StoreCoupon"})
@@ -207,9 +207,23 @@ class Coupon
      **/
     public function transformLoadedData()
     {
-        if (is_resource($this->link) && get_resource_type($this->link) == 'stream') {
-            $this->link = stream_get_contents($this->link, -1, 0);
+        $this->link = $this->transformData($this->link);
+    }
+
+    /**
+     * Try to ransform given $data from stream into string and return this result. If failed return original $data.
+     * @param resource $data
+     *
+     * @return mixed
+     * @author Michael Strohyi
+     **/
+    public function transformData($data)
+    {
+        if (is_resource($data) && get_resource_type($data) == 'stream') {
+            return stream_get_contents($data, -1, 0);
         }
+
+        return $data;
     }
 
     /**
@@ -449,6 +463,17 @@ class Coupon
         }
 
         return $this->expireDate->format('Y-m-d');
+    }
+
+    /**
+     * Set current date into UpdatedAt property
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function setJustVerified()
+    {
+        $this->setVerifiedAt(new \DateTimeImmutable());
     }
 
 }

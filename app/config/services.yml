@@ -25,3 +25,8 @@ services:
         arguments: [ %web_dir%]
         tags:
             - { name: twig.extension }
+
+    flush.listener:
+        class: AdminBundle\Service\onFlushListener
+        tags:
+            -  {name: doctrine.event_listener, event: onFlush}
