@@ -101,10 +101,10 @@ class Coupon
      * @var Operator
      *
      * @ORM\OneToOne(targetEntity="Operator")
-     * @ORM\JoinColumn(name="verifiedBy", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="addedBy", referencedColumnName="id", nullable=true)
      *
      */
-    private $verifiedBy;
+    private $addedBy;
 
     /**
      * @var \DateTime
@@ -119,6 +119,13 @@ class Coupon
      * @ORM\Column(name="subtype", type="string", nullable=true)
      */
     private $subtype;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="discount", type="string", nullable=true)
+     */
+    private $discount;
 
     /**
      * Get id
@@ -378,26 +385,26 @@ class Coupon
     }
 
     /**
-     * Set verifiedBy
+     * Set addedBy
      *
-     * @param CouponImage $verifiedBy
+     * @param CouponImage $addedBy
      * @return Coupon
      */
-    public function setVerifiedBy($verifiedBy)
+    public function setAddedBy($addedBy)
     {
-        $this->verifiedBy = $verifiedBy;
+        $this->addedBy = $addedBy;
 
         return $this;
     }
 
     /**
-     * Get verifiedBy
+     * Get addedBy
      *
      * @return CouponImage
      */
-    public function getVerifiedBy()
+    public function getAddedBy()
     {
-        return $this->verifiedBy;
+        return $this->addedBy;
     }
 
     /**
@@ -421,6 +428,29 @@ class Coupon
     public function getSubtype()
     {
         return $this->subtype;
+    }
+
+    /**
+     * Set discount
+     *
+     * @param string $discount
+     * @return Coupon
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * Get discount
+     *
+     * @return string 
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
     }
 
     /**
@@ -475,5 +505,4 @@ class Coupon
     {
         $this->setVerifiedAt(new \DateTimeImmutable());
     }
-
 }
