@@ -20,6 +20,9 @@ class Coupon
 {
     const DEFAULT_POSITION = 10000;
     const DEFAULT_ACTIVITY = 1;
+    const VERIVIED_TODAY = 'today';
+    const VERIVIED_YESTERDAY = 'yesterday';
+    const VERIVIED_DAYS_AGO = ' days ago';
     /**
      * @var integer
      *
@@ -504,5 +507,67 @@ class Coupon
     public function setJustVerified()
     {
         $this->setVerifiedAt(new \DateTimeImmutable());
+    }
+
+    /**
+     * Get encrypted code for production
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    function getEncryptedCode()
+    {
+        $key = 'uspromocodes.com';
+        $code = $this->getCode();
+        if (empty($this->getCode()) || empty($key)) {
+            return;
+        }
+
+        $code_len = strlen($code);
+        $code_pos = 0;
+        $key_len = strlen($key);
+        $key_pos = -1;
+        $chars_array = str_split($code);
+
+        foreach($chars_array as &$char) {
+            $char_code = ord($char);
+            $key_pos = ++$key_pos < $key_len ? $key_pos : 0;
+            $char_key = ord($key[$key_pos]);
+            $char = chr($char_code ^ $char_key);
+            $char = "\x" . strtoupper(dechex(ord($char)));
+        }
+
+        return implode('', $chars_array);
+    }
+
+    /**
+     * Return string with info when coupon was verified concerning today
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function getWhenVerified()
+    {
+        $verifiedAt = $this->getVerifiedAt();
+        if (empty($verifiedAt)) {
+            return null;
+        }
+
+        $interval = date_diff($this->getVerifiedAt(), new \DateTimeImmutable())->format('%d');
+        switch ($interval) {
+            case '0':
+                $interval = self::VERIVIED_TODAY;
+                break;
+
+            case '1':
+                $interval = self::VERIVIED_YESTERDAY;
+                break;
+
+            default:
+                $interval .= self::VERIVIED_DAYS_AGO;
+                break;
+        }
+
+        return $interval;
     }
 }
