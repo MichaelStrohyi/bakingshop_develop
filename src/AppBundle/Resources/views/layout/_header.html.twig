@@ -11,8 +11,8 @@
 <div class="top-menu-section">
     <div class="top-menu-pattern-top"></div>
     <div class="top-menu-section-header">
-        <div class="top-menu-text main-page">
             {% if article is defined %}
+                <div class="top-menu-text main-page">
                 {% if article.type == 'info' %}
                     Information
                 {% else %}
@@ -25,7 +25,8 @@
                     </div>
                 {% endif %}
             {% else %}
-                Coupons
+                <div class="top-menu-text">
+                500,000+ Coupons for 50,000 Stores
             {% endif %}
         </div>
     </div>

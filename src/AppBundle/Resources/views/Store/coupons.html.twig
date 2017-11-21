@@ -21,20 +21,38 @@
             {% if store_coupon.actual %}
                 <div class="coupons-block-item">
                     <div class="coupon-block-item-left">
-                        <div class="coupon-block-item-logo">
+                        <div class="coupon-block-item-logo {{ store_coupon.discount == 'FREE Shipping' ? 'shipping' : ''}}">
                             {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
                                 <a href="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}"></a>
+                            {% elseif store_coupon.discount == 'FREE Shipping' %}
+                                    FREE Shipping
+                            {% elseif store_coupon.discount is not empty %}
+                                    <span>{{ store_coupon.discount }}</span> OFF
                             {% endif %}
                         </div>
-                        <div class="coupon-block-item-details"><a href="#">See details &gt;&gt;</a></div>
                     </div>
                     <div class="coupon-block-item-right">
-                        <div class="coupon-block-item-title">In store coupon</div>
+                        {% if store_coupon.inStore %}
+                            <div class="coupon-block-item-title">In store coupon</div>
+                        {% endif %}
                         <div class="coupon-block-item-descr">
                             <div class="coupon-block-item-label">{{ store_coupon.label }}</div>
-                            <div class="coupon-block-item-code"><a href="#"><span>{{ store_coupon.code is not empty ? store_coupon.code : 'ShowCoupon' }}</span></a></div>
+                            <div class="coupon-block-item-code">
+                                {% if store_coupon.encryptedCode is not empty %}
+                                    <a href="{{ store_coupon.link }}" ec="{{ store_coupon.encryptedCode }}"><span>ShowCoupon CODE</span></a>
+                            {% else %}
+                                    <a href="{{ store_coupon.link }}"><span>ShowCoupon</span></a>
+                            {% endif %}
+                            </div>
                         </div>
-                        <div class="coupon-block-item-verify">Verified 2 days ago Added by dealsaver</div>
+                        <div class="coupon-block-item-verify">
+                            {% if store_coupon.whenVerified is not empty %}
+                               Verified {{ store_coupon.whenVerified }}.
+                            {% endif %}
+                            {% if store_coupon.addedBy is not empty and store_coupon.addedBy.name is not empty %}
+                               Added by {{ store_coupon.addedBy.name }}
+                            {% endif %}
+                        </div>
                     </div>                                    
                 </div>
             {% endif %}

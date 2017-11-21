@@ -357,7 +357,7 @@ $additional-text-color: #663333;
 }
 .coupon-block-item-title {
     letter-spacing: .02em;
-    margin-top: 12px;
+    margin: 12px 0 -27px 0;
     text-transform: capitalize;
 
 }
@@ -375,6 +375,9 @@ $additional-text-color: #663333;
     img {
         max-height: 100px;
         max-width: 110px
+    }
+    &.shipping {
+        font-size: 26px;
     }
 }
 .coupon-block-item-details {
@@ -396,6 +399,7 @@ $additional-text-color: #663333;
     line-height: 29px;
     display: flex;
     padding-right: 190px;
+    margin-top: 27px;
     position: relative;
 }
 .coupon-block-item-label {
