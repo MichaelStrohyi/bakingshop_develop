@@ -15,6 +15,7 @@ class onFlushListener
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             if (get_class($entity) == 'AppBundle\Entity\StoreCoupon') {
                 $entity->setJustVerified();
+                $entity->setMaxDiscount();
                 $entity->setAddedBy($em->getRepository('AppBundle:Operator')->getRandomName());
                 $uow->recomputeSingleEntityChangeSet($classMetadata, $entity);
             }
@@ -63,6 +64,11 @@ class onFlushListener
                 
                 case 'position':
                     break;
+
+                case 'label':
+                    $coupon->setMaxDiscount();
+                    $just_verified = true;
+                    break 2;
 
                 default:
                     $just_verified = true;

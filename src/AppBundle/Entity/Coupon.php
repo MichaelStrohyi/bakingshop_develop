@@ -570,4 +570,25 @@ class Coupon
 
         return $interval;
     }
+
+    /**
+     * Find maximum discount in coupon's label and set it into discount property
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function setMaxDiscount()
+    {
+        preg_match_all('/[0-9]+%/', $this->getLabel(), $matches);
+        if (!empty($matches[0])) {
+            $this->setDiscount(max($matches[0]));
+            return;
+        }
+
+        $label = 'Get 25% OFF Any Order, free shipping on $50+ Socks Order or FREE shipping on any $100+ Order';
+        $pattern = '/free shipping/i';
+        if (preg_match('/free shipping/i', $this->getLabel()) != 0) {
+            $this->setDiscount('FREE Shipping');
+        }
+    }
 }
