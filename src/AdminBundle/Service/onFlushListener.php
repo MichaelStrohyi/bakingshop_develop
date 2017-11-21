@@ -15,6 +15,7 @@ class onFlushListener
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             if (get_class($entity) == 'AppBundle\Entity\StoreCoupon') {
                 $entity->setJustVerified();
+                $entity->setAddedBy($em->getRepository('AppBundle:Operator')->getRandomName());
                 $uow->recomputeSingleEntityChangeSet($classMetadata, $entity);
             }
         }
@@ -60,7 +61,7 @@ class onFlushListener
                     }
                     break;
                 
-                case 'position':                
+                case 'position':
                     break;
 
                 default:

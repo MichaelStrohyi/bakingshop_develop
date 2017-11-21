@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Operator
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\OperatorRepository")
  */
 class Operator
 {
