@@ -1,3 +1,5 @@
 <section class="footer-menu-block">
-    {{ render(controller('AppBundle:Page:menu', {'name': 'footer', 'prefix': amp_prefix})) }}
+    {% for menu in menus %}
+        {{ menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') ? render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
+    {% endfor %}
 </section>

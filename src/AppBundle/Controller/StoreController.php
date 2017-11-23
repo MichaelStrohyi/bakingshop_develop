@@ -33,9 +33,11 @@ class StoreController extends Controller
             $crosslink = $this->generateUrl('homepage', [], true) . trim($amp_prefix, '/') . $path;
         }
 
+        $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName();
         $parameters = [
             'store' => $store,
-            'crosslink' =>$crosslink
+            'crosslink' =>$crosslink,
+            'menus' => $menus,
         ];
 
         # if prefix is not set render html page else render amp-html page

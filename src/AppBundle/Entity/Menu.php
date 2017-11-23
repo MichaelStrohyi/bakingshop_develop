@@ -19,6 +19,7 @@ class Menu
     const TYPE_TOP = 'top';
     const TYPE_SIDE = 'side';
     const TYPE_BOTTOM = 'bottom';
+    const PROD_COLORS = ['red', 'blue', 'yellow'];
 
     /**
      * @var integer

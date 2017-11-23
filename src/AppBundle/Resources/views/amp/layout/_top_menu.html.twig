@@ -1,6 +1,7 @@
 <nav>
     <ul class="top-menu">
-        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-articles', 'prefix': amp_prefix, 'type': 'top'})) }}
-        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-recipies', 'prefix': amp_prefix, 'type': 'top'})) }}
+        {% for menu in menus %}
+            {{ menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') ? render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix, 'type': 'top'})) }}
+        {% endfor %}
     </ul>
 </nav>
