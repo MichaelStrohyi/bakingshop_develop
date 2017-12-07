@@ -274,7 +274,7 @@ $additional-text-color: #663333;
         border-color: $main-green-color;
     }
 }
-.content-coupons-block :last-child {
+.content-coupons-block > div:last-child {
     margin-bottom: 0;
 }
 .coupons-block-header {
@@ -427,11 +427,11 @@ $additional-text-color: #663333;
             left: 8px solid $coupons-block-item-bg;
         }
     }
-    font-size: 18px;
-        span {
-            vertical-align: -2px;
-        }
+    span {
+        vertical-align: -2px;
+    }
     a {
+        font-size: 18px;
         padding-left: 22px;
         height: 30px;
         text-decoration: none;
@@ -446,6 +446,12 @@ $additional-text-color: #663333;
     right: -10px;
     top: 24px;
     letter-spacing: .02em;
+}
+.coupon-block-item-expire {
+    padding-left: 22px;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 2px;
 }
 .content-offers-block {
     padding: 12px 10px 0 10px;
