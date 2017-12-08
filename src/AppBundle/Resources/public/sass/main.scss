@@ -357,7 +357,7 @@ $additional-text-color: #663333;
 }
 .coupon-block-item-title {
     letter-spacing: .02em;
-    margin: 12px 0 -27px 0;
+    margin: 12px 0 0 0;
     text-transform: capitalize;
 
 }
@@ -393,18 +393,16 @@ $additional-text-color: #663333;
     }
 }
 .coupon-block-item-descr {
-    min-height: 56px;
+    min-height: 30px;
     color: #000;
     font-size: 21px;
     line-height: 29px;
-    display: flex;
     padding-right: 190px;
     margin-top: 27px;
     position: relative;
 }
 .coupon-block-item-label {
     display: inline-block;
-    align-self: flex-end;
 }
 .coupon-block-item-verify {
     padding-top: 6px;
@@ -444,7 +442,7 @@ $additional-text-color: #663333;
 .coupon-block-item-code {
     width: 192px;
     right: -10px;
-    top: 24px;
+    top: 0;
     letter-spacing: .02em;
 }
 .coupon-block-item-expire {
