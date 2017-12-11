@@ -97,6 +97,16 @@ class Article
      **/
     private $logo;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=10, max=200)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     */
+    private $description;
+
 
     /**
      * Get id
@@ -370,5 +380,28 @@ class Article
         $this->logo = null;
 
         return $this;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Article
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }
