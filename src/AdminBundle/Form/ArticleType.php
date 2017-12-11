@@ -32,6 +32,7 @@ class ArticleType extends AbstractType
                 },
                 'choices_as_values' => true,
             ])
+            ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\ArticleLogo', 'label' => false])
             ->add('body', 'ckeditor')
             ->add('is_homepage', null, ['label' => 'Use as Homepage'])
         ;

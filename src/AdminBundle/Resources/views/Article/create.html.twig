@@ -6,9 +6,14 @@
     <header>
         <h1>New Article</h1>
     </header>
-
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
+    {{ form_row(form.header) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.author) }}
+    {{ form_row(form.type) }}
+    {{ form_widget(form.logo) }}
+    {{ form_row(form.body) }}
+    {{ form_row(form.is_homepage) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Create</button>
             <a href="{{ path('admin_article_index') }}" class="btn btn-default">Cancel</a>

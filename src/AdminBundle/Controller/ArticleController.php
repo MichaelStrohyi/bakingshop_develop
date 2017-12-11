@@ -73,6 +73,7 @@ class ArticleController extends PageController
         $form = $this->createArticleForm($article, $request);
 
         if ($form->isValid()) {
+            $this->handleLogo($article, $request);
             $this->persistArticle($article);
 
             return $this->redirectToRoute("admin_article_index");
@@ -179,5 +180,21 @@ class ArticleController extends PageController
 
         $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
         $article_repo->resetHomepage($article);
+    }
+
+    /**
+     * Remove article logo if crrent logo was deleted and new logo was not selected
+     *
+     * @param Article $article
+     * @param Request $request
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function handleLogo(Article $article, Request $request)
+    {
+        if (null === $request->request->get('current_logo') && (null === $article->getLogo() || null === $article->getLogo()->getImageFile())) {
+            $article->removeLogo();
+        }
     }
 }

@@ -15,9 +15,10 @@ parameters:
         store:
             entity: 'AppBundle:Store'
             controller: 'AppBundle:Store:coupons'
-    store_logo_prefix: '/images/logos'
-    coupon_image_prefix: '/images/coupons'
-    all_images_prefix: '/images'
+    store_logo_prefix: '%images_prefix%/logos/stores'
+    article_logo_prefix: '%images_prefix%/logos/articles'
+    coupon_image_prefix: '%images_prefix%/logos/coupons'
+    images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
 
@@ -52,6 +53,7 @@ twig:
     globals:
         store_logo_prefix: '%store_logo_prefix%'
         coupon_image_prefix: '%coupon_image_prefix%'
+        article_logo_prefix: '%article_logo_prefix%'
         amp_prefix: "%amp_prefix%"
 
 # Assetic Configuration
@@ -140,11 +142,15 @@ vich_uploader:
             uri_prefix:         '%store_logo_prefix%'
             upload_destination: '%kernel.root_dir%/../web%store_logo_prefix%'
             namer:              vich_uploader.namer_uniqid
+        article_logo:
+            uri_prefix:         '%article_logo_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%article_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
         coupon_image:
             uri_prefix:         '%coupon_image_prefix%'
             upload_destination: '%kernel.root_dir%/../web%coupon_image_prefix%'
             namer:              vich_uploader.namer_uniqid
         all_images:
-            uri_prefix:         '%all_images_prefix%'
-            upload_destination: '%kernel.root_dir%/../web%all_images_prefix%'
+            uri_prefix:         '%images_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%images_prefix%'
             namer:              vich_uploader.namer_uniqid

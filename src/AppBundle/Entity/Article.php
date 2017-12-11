@@ -88,6 +88,15 @@ class Article
      */
     private $ampBody;
 
+    /**
+     * @var ArticleLogo
+     *
+     * @ORM\OneToOne(targetEntity="ArticleLogo", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="logo", referencedColumnName="id", nullable=true)
+     * @Assert\Valid
+     **/
+    private $logo;
+
 
     /**
      * Get id
@@ -324,6 +333,41 @@ class Article
             'img_max_fixed_layout_width' => '100'
             ]);
         $this->ampBody = $amp->convertToAmpHtml();
+
+        return $this;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param ArticleLogo $logo
+     * @return Article
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return ArticleLogo 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Remove logo
+     *
+     * @return Article
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
 
         return $this;
     }
