@@ -21,7 +21,7 @@ class Article
     const PAGE_TYPE = 'article';
     const PAGE_SUBTYPE_ARTICLE = 'article';
     const PAGE_SUBTYPE_RECIPE = 'recipe';
-    const PAGE_SUBTYPE_INFO = 'info';
+    const PAGE_SUBTYPE_INFO = 'information';
 
     /**
      * @var integer

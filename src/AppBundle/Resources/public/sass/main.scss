@@ -33,6 +33,9 @@ $additional-text-color: #663333;
     padding-right: 0;
     padding-left: 0;
 }
+a {
+    text-decoration: none;
+}
 .header {
     position: relative;
 }
@@ -135,7 +138,6 @@ $additional-text-color: #663333;
     }
     a {
         color: $main-green-color;
-        text-decoration: none;
     }
     &.active {
         position: relative;
@@ -398,7 +400,7 @@ $additional-text-color: #663333;
     font-size: 21px;
     line-height: 29px;
     padding-right: 190px;
-    margin-top: 27px;
+    margin-top: 17px;
     position: relative;
 }
 .coupon-block-item-label {
@@ -432,7 +434,6 @@ $additional-text-color: #663333;
         font-size: 18px;
         padding-left: 22px;
         height: 30px;
-        text-decoration: none;
         color: $headers-text-color;
         display: block;
         box-sizing: border-box;
@@ -463,7 +464,7 @@ $additional-text-color: #663333;
    
     font-size: 24px;
 }
-.offers-block-header, .coupons-block-header-title, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2 {
+.offers-block-header, .coupons-block-header-title, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2, .article-preview h1 {
     position: relative;
     text-align: center;
     letter-spacing: -.025em;
@@ -570,7 +571,6 @@ $additional-text-color: #663333;
     }
     li {
         a {
-            text-decoration: none;
             color: #000;
         }
         img {
@@ -633,7 +633,6 @@ a img {
     li {
         display: inline;
         a {
-            text-decoration: none;
             color: #000;
         }
     }
@@ -688,11 +687,7 @@ a:active {
 .top-menu-text-sign {
     top: 100%;
 }
-.content-article-block{
-    overflow: hidden;
-    position: relative;
-    padding-bottom: 112px;
-    border-color: $article-block-red-color;
+.content-article-block, .article-preview {
     h1, h2 {
         display: block;
         font-weight: bold;
@@ -705,6 +700,14 @@ a:active {
         margin: 0 0 10px;
         font-size: 24px;
         letter-spacing: 0.025em;
+    }
+}
+.content-article-block{
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 112px;
+    border-color: $article-block-red-color;
+    h1 {
         & + p {
             & > img {
                 float: none;
@@ -850,6 +853,103 @@ a:active {
         padding-right: 18px;
     }
     &:after {
+        border-left: 8px solid $background-color;
+    }
+}
+.article-preview {
+    margin: 10px;
+    width: 310px;
+    height: 260px;
+    float: left;
+    border: 2px solid $main-red-color;
+    padding: 5px;
+    box-sizing: border-box;
+    h1 {
+        height: 56px;
+        padding: 0 18px;
+        display: block;
+        overflow: hidden;
+        background-color: $main-red-color;
+        &:after, &:before {
+            border-top: 28px solid transparent;
+            border-bottom: 28px solid transparent;
+        }
+        &:after {
+            right: 0;
+            border-right: 14px solid $background-color;
+        }
+        &:before {
+            left: 0;
+            border-left: 14px solid $background-color;
+        }
+    }
+}
+.article-preview-image {
+    height: 145px;
+    width: 145px;
+    margin-right: 6px;
+    box-sizing: border-box;
+    float: left;
+    text-align: center;
+    line-height: 145px;
+    vertical-align: middle;
+    img {
+        border-radius: 8px;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+.article-previews:after, .article-preview-content:after {
+    content:'';
+    clear: both;
+    display: block;
+    height: 0;
+}
+.article-preview-content {
+    height: 145px;
+    overflow: hidden;
+    p {
+        margin: 6px 0;
+        color: #663333;
+        font-family: 'Droid Sans', sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        letter-spacing: 0.02em;
+    }
+}
+.show-recipe-block {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin: 5px 0 5px 7px;
+    padding-left: 18px;
+    display: block;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        weight: bold;
+        size: 17px;
+    }
+    letter-spacing: .03em;
+    line-height: 28px;
+    text-align: center;
+    color: $background-color;
+    box-sizing: border-box;
+    background-color: #669999;
+    span {
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+    &:after{
+        position: absolute;
+        content:'';
+        left: 0;
+        top: 0;
+        height: 0;
+        width: 0;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
         border-left: 8px solid $background-color;
     }
 }

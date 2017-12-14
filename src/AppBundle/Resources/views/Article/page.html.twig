@@ -8,7 +8,7 @@
     <h1><span>{{ article.header }}</span></h1>
     {{ article.body|raw }}
 
-    {% if article.type != 'info' %}
+    {% if article.type != constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
         <div class="content-article-block-sign">
             {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
         </div>

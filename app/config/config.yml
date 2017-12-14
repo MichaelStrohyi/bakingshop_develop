@@ -18,6 +18,8 @@ parameters:
     store_logo_prefix: '%images_prefix%/logos/stores'
     article_logo_prefix: '%images_prefix%/logos/articles'
     coupon_image_prefix: '%images_prefix%/logos/coupons'
+    article_default_logo: 'article_logo.png'
+    recipe_default_logo: 'recipe_logo.png'
     images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
@@ -55,6 +57,8 @@ twig:
         coupon_image_prefix: '%coupon_image_prefix%'
         article_logo_prefix: '%article_logo_prefix%'
         amp_prefix: "%amp_prefix%"
+        article_default_logo: '%article_default_logo%'
+        recipe_default_logo: '%recipe_default_logo%'
 
 # Assetic Configuration
 assetic:

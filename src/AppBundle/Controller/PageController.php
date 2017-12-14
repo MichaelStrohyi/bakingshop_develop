@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Menu;
+use AppBundle\Entity\Article;
 
 class PageController extends Controller
 {
@@ -79,5 +80,59 @@ class PageController extends Controller
         # if prefix is set render menu for amp-html page
         $parameters['prefix'] = $prefix;
         return $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("/{prefix}{slug}/list", name="list_page",
+     *     requirements={"slug": ".+", "prefix": "amp/|"},
+     *     defaults={"prefix": ""},
+     * )
+     *
+     * @Template()
+     */
+    public function listAction($slug, Request $request)
+    {
+        if (!in_array($slug, Article::getTypes())) {
+            throw $this->createNotFoundException();
+        }
+
+        $route_params = $request->attributes->get('_route_params');
+        $prefix = $route_params['prefix'];
+        $amp_prefix = $this->container->getParameter('amp_prefix');
+        $path = $request->getPathInfo();
+        # create crosslink to link apm-html page with html page
+        if  (!empty($prefix)) {
+            $path = substr($path, strlen($prefix));
+            $crosslink = $this->generateUrl('homepage', [], true) . ltrim($path, '/');
+        } else {
+            $crosslink = $this->generateUrl('homepage', [], true) . trim($amp_prefix, '/') . $path;
+        }
+
+        switch ($slug) {
+            case Article::PAGE_SUBTYPE_ARTICLE:
+                $type = $slug;
+                $type_title = 'Articles';
+                break;
+            case Article::PAGE_SUBTYPE_RECIPE:
+                $type = $slug;
+                $type_title = 'Recipies';
+                break;
+            case Article::PAGE_SUBTYPE_INFO:
+                $type = $slug;
+                $type_title = 'Information';
+                break;
+            default:
+                $type = '';
+                $type_title = '';
+                break;
+        }
+
+        $parameters['articles'] = $this->getDoctrine()->getRepository('AppBundle:Article')->findAllByType($slug);
+        $parameters['type'] = $type;
+        $parameters['type_title'] = $type_title;
+        $parameters['crosslink'] = $crosslink;
+        $parameters['menus'] = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAll();
+
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }
 }

@@ -11,18 +11,19 @@
 <div class="top-menu-section">
     <div class="top-menu-pattern-top"></div>
     <div class="top-menu-section-header">
-            {% if article is defined %}
+            {% if type is defined %}
                 <div class="top-menu-text main-page">
-                {% if article.type == 'info' %}
-                    Information
+                {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
+                    {{ type_title }}
                 {% else %}
-                    {% if article.type == 'article' %}
-                        Articles
-                    {% elseif article.type == 'recipe' %}
-                        Recipies
+                    {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_ARTICLE') %}
+                        {{ type_title }}
+                    {% elseif type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') %}
+                        {{ type_title }}
                     {% endif %}
-                    <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
-                    </div>
+                    {% if article is defined %}
+                        <div class="top-menu-text-sign">{{ type|capitalize }} by: <span>{{ article.author }}</span></div>
+                    {% endif %}
                 {% endif %}
             {% else %}
                 <div class="top-menu-text">
