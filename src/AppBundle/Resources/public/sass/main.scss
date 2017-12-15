@@ -882,6 +882,17 @@ a:active {
             left: 0;
             border-left: 14px solid $background-color;
         }
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            &:before {
+                content: '';
+                display: inline-block;
+                height: 100%;
+                width: 1%;
+                vertical-align: middle;
+            }
+        }
     }
 }
 .article-preview-image {

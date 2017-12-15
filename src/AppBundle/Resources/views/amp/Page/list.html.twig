@@ -1,4 +1,4 @@
-{% extends 'AppBundle::layout.html.twig' %}
+{% extends 'AppBundle:amp:layout.html.twig' %}
 
 {% block title %} Our {{ type_title|capitalize }} | {{ parent() }}{% endblock %}
 
@@ -11,15 +11,16 @@
             <div class="article-preview-content">
                 <div class="article-preview-image">
                     {% if article.logo is not null and article.logo.filename is not null %}
-                        <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
+                        <amp-img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}" width="{{ article.logo.width }}" height="{{ article.logo.height }}" layout="responsive"></amp-img>
                     {% else %}
-                        <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
+                        <amp-img alt src="{{ article_logo_prefix }}/{{ article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
                     {% endif %}
                 </div>
                 <p>{{ article.description }}</p>
             </div>
-            <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}<span></a>
+            <a class="show-recipe-block" href="{{ path(article, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}<span></a>
         </div>
     {% endfor %}
 </div>
+
 {% endblock %}
