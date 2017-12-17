@@ -60,7 +60,7 @@ class PageController extends Controller
      * @param string $type
      *
      */
-    public function menuAction($name, $prefix = null, $type = null)
+    public function menuAction($name, $prefix = null)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
@@ -70,7 +70,6 @@ class PageController extends Controller
             $menu = null;
         }
         $parameters['menu'] = $menu;
-        $parameters['menu_type'] = $type;
 
         # if prefix is not set render menu for html page
         if (empty($prefix)) {
