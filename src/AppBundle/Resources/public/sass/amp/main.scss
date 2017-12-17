@@ -10,7 +10,7 @@ $menu-hover-bg: #f3e1d9;
 $menu-pattern-height: 21px;
 body {
     background: {
-        image: url("/bundles/app/img/main-bg.png");
+        image: url("/bundles/app/img/amp-main-bg.png");
         color: #f2f2f2;
     }
 }
@@ -232,7 +232,7 @@ a {
         position: top center;
         repeat: repeat;
     }
-    background-image: url("/bundles/app/img/top-menu-pattern-rotated.png");
+    background-image: url("/bundles/app/img/amp-top-menu-pattern-rotated.png");
 }
 .footer {        
     text-align: center;
