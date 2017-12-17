@@ -1,12 +1,14 @@
 <section class="footer-menu-block">
     {% for menu in menus %}
+        {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') %}
         <div class="footer-menu-block">
             <div><span>{{ menu.header }}</span></div>
             <nav>
                 <ul class="footer-menu">
-                    {{ menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') ? render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
+                    {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
                 </ul>
             </nav>
         </div>
+    {% endif %}
     {% endfor %}
 </section>
