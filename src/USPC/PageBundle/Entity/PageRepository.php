@@ -245,4 +245,25 @@ class PageRepository extends EntityRepository
         # if not alias url is found return error with mesage containinig this url, else return true
         return (empty($result)) ? true : ['error' => self::URL_IS_ALIAS, 'new_url' => $this->getUrlFromRes($result['url'])];
     }
+
+    /**
+     * Create crosslink to link apm-html page with html page for given $path as a local url
+     *
+     * @param string $prefix
+     * @param string $amp_prefix
+     * @param string path
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function createCrossLink($prefix, $amp_prefix, $path)
+    {
+        if  (!empty($prefix)) {
+            $path = substr($path, strlen($prefix));
+            $crosslink = ltrim($path, '/');
+        } else {
+            $crosslink = trim($amp_prefix, '/') . $path;
+        }
+
+        return $crosslink;
+    }
 }

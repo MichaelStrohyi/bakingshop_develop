@@ -89,24 +89,12 @@ class PageController extends Controller
      *
      * @Template()
      */
-    public function listAction($slug, Request $request)
+    public function listAction($slug, $prefix = null, Request $request)
     {
         if (!in_array($slug, Article::getTypes())) {
             throw $this->createNotFoundException();
         }
-
-        $route_params = $request->attributes->get('_route_params');
-        $prefix = $route_params['prefix'];
-        $amp_prefix = $this->container->getParameter('amp_prefix');
-        $path = $request->getPathInfo();
-        # create crosslink to link apm-html page with html page
-        if  (!empty($prefix)) {
-            $path = substr($path, strlen($prefix));
-            $crosslink = $this->generateUrl('homepage', [], true) . ltrim($path, '/');
-        } else {
-            $crosslink = $this->generateUrl('homepage', [], true) . trim($amp_prefix, '/') . $path;
-        }
-
+        
         switch ($slug) {
             case Article::PAGE_SUBTYPE_ARTICLE:
                 $type = $slug;
@@ -126,11 +114,13 @@ class PageController extends Controller
                 break;
         }
 
-        $parameters['articles'] = $this->getDoctrine()->getRepository('AppBundle:Article')->findAllByType($slug);
-        $parameters['type'] = $type;
-        $parameters['type_title'] = $type_title;
-        $parameters['crosslink'] = $crosslink;
-        $parameters['menus'] = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAll();
+        $parameters = [
+            'articles' => $this->getDoctrine()->getRepository('AppBundle:Article')->findAllByType($slug),
+            'type' => $type,
+            'type_title' => $type_title,
+            'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
+            ];
 
         return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }

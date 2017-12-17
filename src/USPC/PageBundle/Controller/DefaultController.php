@@ -60,6 +60,7 @@ class DefaultController extends Controller
 
         # add request into parameters
         $parameters['request'] = $request;
+        $parameters['prefix'] = $prefix;
         $response = $this->forward($controller, $parameters, $request->query->all());
 
         return $response;
