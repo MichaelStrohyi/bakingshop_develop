@@ -404,4 +404,31 @@ class Article
     {
         return $this->description;
     }
+
+    /**
+     * Return header for twig-template according to given $type
+     *
+     * @param string $type
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public static function getTypeTitle($type)
+    {
+        switch ($type) {
+            case self::PAGE_SUBTYPE_ARTICLE:
+                $type_title = 'Articles';
+                break;
+            case self::PAGE_SUBTYPE_RECIPE:
+                $type_title = 'Recipies';
+                break;
+            case self::PAGE_SUBTYPE_INFO:
+                $type_title = 'Information';
+                break;
+            default:
+                $type_title = '';
+                break;
+        }
+
+        return $type_title;
+    }
 }

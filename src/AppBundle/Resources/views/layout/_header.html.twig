@@ -13,18 +13,10 @@
     <div class="top-menu-section-header">
             {% if type is defined %}
                 <div class="top-menu-text main-page">
-                {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
                     {{ type_title }}
-                {% else %}
-                    {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_ARTICLE') %}
-                        {{ type_title }}
-                    {% elseif type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') %}
-                        {{ type_title }}
-                    {% endif %}
                     {% if article is defined %}
                         <div class="top-menu-text-sign">{{ type|capitalize }} by: <span>{{ article.author }}</span></div>
                     {% endif %}
-                {% endif %}
             {% else %}
                 <div class="top-menu-text">
                 500,000+ Coupons for 50,000 Stores

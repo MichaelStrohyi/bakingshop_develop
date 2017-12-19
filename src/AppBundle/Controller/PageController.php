@@ -26,8 +26,12 @@ class PageController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $parameters['request'] = $request;
-        $parameters['article'] = $article;
+        $parameters = [
+            'request' => $request,
+            'article' => $article,
+            'type' => $article->getType(),
+            'type_title' => $article->getTypeTitle($article->getType()),
+        ];
 
         return $this->forward('AppBundle:Article:page', $parameters);
     }
@@ -94,30 +98,11 @@ class PageController extends Controller
         if (!in_array($slug, Article::getTypes())) {
             throw $this->createNotFoundException();
         }
-        
-        switch ($slug) {
-            case Article::PAGE_SUBTYPE_ARTICLE:
-                $type = $slug;
-                $type_title = 'Articles';
-                break;
-            case Article::PAGE_SUBTYPE_RECIPE:
-                $type = $slug;
-                $type_title = 'Recipies';
-                break;
-            case Article::PAGE_SUBTYPE_INFO:
-                $type = $slug;
-                $type_title = 'Information';
-                break;
-            default:
-                $type = '';
-                $type_title = '';
-                break;
-        }
 
         $parameters = [
             'articles' => $this->getDoctrine()->getRepository('AppBundle:Article')->findAllByType($slug),
-            'type' => $type,
-            'type_title' => $type_title,
+            'type' => $slug,
+            'type_title' => Article::getTypeTitle($slug),
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
             ];

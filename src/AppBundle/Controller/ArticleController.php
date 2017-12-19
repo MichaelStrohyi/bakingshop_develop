@@ -26,6 +26,8 @@ class ArticleController extends Controller
             'article' => $article,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName(),
+            'type' => $article->getType(),
+            'type_title' => $article->getTypeTitle($article->getType()),
         ];
 
         # if prefix is not set render html page else render amp-html page
