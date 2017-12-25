@@ -14,9 +14,6 @@
             {% if type is defined %}
                 <div class="top-menu-text main-page">
                     {{ type_title }}
-                    {% if article is defined %}
-                        <div class="top-menu-text-sign">{{ type|capitalize }} by: <span>{{ article.author }}</span></div>
-                    {% endif %}
             {% else %}
                 <div class="top-menu-text">
                 500,000+ Coupons for 50,000 Stores
