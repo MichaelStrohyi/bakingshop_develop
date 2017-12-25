@@ -21,7 +21,7 @@
             {% if store_coupon.actual %}
                 <div class="coupons-block-item">
                     <div class="coupon-block-item-left">
-                        <div class="coupon-block-item-logo {{ store_coupon.discount == 'FREE Shipping' ? 'shipping' : ''}}">
+                        <div class="coupon-block-item-logo {{ store_coupon.discount == 'FREE Shipping' and store_coupon.logo is null ? 'shipping' : '' }}">
                             {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
                                 <a href="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}"></a>
                             {% elseif store_coupon.discount == 'FREE Shipping' %}
