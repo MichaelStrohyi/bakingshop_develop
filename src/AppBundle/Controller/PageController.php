@@ -17,7 +17,7 @@ class PageController extends Controller
      *     defaults={"prefix": ""},
      * )
      */
-    public function homepageAction(Request $request)
+    public function homepageAction($prefix, Request $request)
     {
         $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
 
@@ -31,6 +31,7 @@ class PageController extends Controller
             'article' => $article,
             'type' => $article->getType(),
             'type_title' => $article->getTypeTitle($article->getType()),
+            'prefix' => $prefix,
         ];
 
         return $this->forward('AppBundle:Article:page', $parameters);
