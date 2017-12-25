@@ -553,7 +553,7 @@ class Coupon
             return null;
         }
 
-        $interval = date_diff($this->getVerifiedAt(), new \DateTimeImmutable())->format('%d');
+        $interval = date_diff($this->getVerifiedAt(), new \DateTimeImmutable())->format('%a');
         switch ($interval) {
             case '0':
                 $interval = self::VERIVIED_TODAY;
