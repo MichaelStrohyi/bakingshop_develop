@@ -3,7 +3,12 @@
 {% for menu in menus %}
     {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') %}
         <div class="side-menu-section {{ colors_array[menu_num % colors_array|length]}}">
-           {{ render(controller('AppBundle:Page:menu', {'name': menu.name})) }}
+            <div class="menu-title"><span>{{ menu.header }}</span></div>
+            <nav class="menu-items">
+                <ul class="menu-list">
+                   {{ render(controller('AppBundle:Page:menu', {'name': menu.name})) }}
+                </ul>
+            </nav>
            {% set menu_num = menu_num + 1 %}
         </div>
     {% endif %}

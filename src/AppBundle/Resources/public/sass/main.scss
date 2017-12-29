@@ -113,51 +113,53 @@ a {
 .top-menu {
     z-index: 10;
     position: relative;
-    margin-top: 48px;
-}
-.top-menu-list {
-    list-style: none;
-    padding: 0;
-    display: table;
-    width: 100%;
-    line-height: 34px;
-    letter-spacing: -0.025em;
-    font: {
-        family: 'Rokkitt', serif;
-        size: 16px;
+/*    margin-top: 48px;*/
+    ul {
+        list-style: none;
+        padding: 0;
+        display: table;
+        width: 100%;
+        line-height: 34px;
+        letter-spacing: -0.025em;
+        font: {
+            family: 'Rokkitt', serif;
+            size: 16px;
+        }
     }
-}
-.top-menu-item {
-    display: table-cell;
-    width: 1%;
-    white-space: nowrap;
-    box-sizing: border-box;
-    text: {
-        align: center;
-        transform: uppercase;
-    }
-    a {
-        color: $main-green-color;
-    }
-    &.active {
-        position: relative;
+    li {
+        display: table-cell;
+        width: 1%;
+        white-space: nowrap;
+        box-sizing: border-box;
+        text: {
+            align: center;
+            transform: uppercase;
+        }
         a {
-            color: $main-red-color;
+            color: $main-green-color;
         }
-    }
-    &.active:after {
-        content: '';
-        position: absolute;
-        width: 48px;
-        height: 48px;
-        margin-left: -24px;
-        left: 50%;
-        bottom: 95%;
-        background: {
-            image: url("/bundles/app/img/top-menu-logo.png");
-            repeat: no-repeat;
-            position: bottom center;
+        &.active {
+            position: relative;
+            a {
+                color: $main-red-color;
+            }
         }
+/*
+        &.active:after {
+            content: '';
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            margin-left: -24px;
+            left: 50%;
+            bottom: 95%;
+            background: {
+                image: url("/bundles/app/img/top-menu-logo.png");
+                repeat: no-repeat;
+                position: bottom center;
+            }
+        }
+*/
     }
 }
 .top-menu-search {
@@ -654,7 +656,7 @@ a:active {
         align: left;
     }
     letter-spacing: .02em;
-    margin: 16px 0 32px 112px;
+    margin: 16px 0 10px 112px;
     &:after {
         content: '';
         position: absolute;

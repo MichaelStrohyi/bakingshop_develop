@@ -1,10 +1,5 @@
 {% if menu is not empty %}
-    <div class="menu-title"><span>{{ menu.header }}</span></div>
-    <nav class="menu-items">
-        <ul class="menu-list">
-            {% for menu_item in menu.items %}
-                <li class="menu-item"><a href="{{ path(menu_item) }}">{{ menu_item.title }}</a></li>
-            {% endfor %}
-        </ul>
-    </nav>
+    {% for menu_item in menu.items %}
+        <li class="menu-item{{ pathInfo == menu_item.url ? ' active' : '' }}"><a href="{{ path(menu_item) }}">{{ menu_item.title }}</a></li>
+    {% endfor %}
 {% endif %}

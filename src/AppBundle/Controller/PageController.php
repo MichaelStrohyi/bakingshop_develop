@@ -65,7 +65,7 @@ class PageController extends Controller
      * @param string $type
      *
      */
-    public function menuAction($name, $prefix = null)
+    public function menuAction($name, $prefix = null, $pathInfo = null)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
@@ -75,6 +75,7 @@ class PageController extends Controller
             $menu = null;
         }
         $parameters['menu'] = $menu;
+        $parameters['pathInfo'] = $pathInfo;
 
         # if prefix is not set render menu for html page
         if (empty($prefix)) {
@@ -87,7 +88,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{prefix}{slug}/list", name="list_page",
+     * @Route("/{prefix}{slug}/list", name="article_list_page",
      *     requirements={"slug": ".+", "prefix": "amp/|"},
      *     defaults={"prefix": ""},
      * )

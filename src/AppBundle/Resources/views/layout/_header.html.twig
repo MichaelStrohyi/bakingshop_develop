@@ -29,5 +29,14 @@
             </form>
         </div>
     </div>#}
+    <div class="top-menu">
+        <ul class="top-menu-list">
+            {% for menu in menus %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') %}
+                       {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="top-menu-pattern-bottom"></div>
 </div>
-<div class="top-menu-pattern-bottom"></div>

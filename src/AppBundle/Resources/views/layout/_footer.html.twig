@@ -3,7 +3,12 @@
     {% for menu in menus %}
         {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') %}
             <div class="footer-menu">
-                {{ render(controller('AppBundle:Page:menu', {'name': menu.name})) }}
+                <div class="menu-title"><span>{{ menu.header }}</span></div>
+                <nav class="menu-items">
+                    <ul class="menu-list">
+                        {{ render(controller('AppBundle:Page:menu', {'name': menu.name})) }}
+                    </ul>
+                </nav>
             </div>
         {% endif %}
     {% endfor %}
