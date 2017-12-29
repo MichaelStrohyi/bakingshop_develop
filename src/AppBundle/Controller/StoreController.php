@@ -29,4 +29,23 @@ class StoreController extends Controller
         # if prefix is not set render html page else render amp-html page
         return empty($prefix) ? $this->render('AppBundle:Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
     }
+
+    /**
+     * @Route("/{prefix}stores", name="store_list_page",
+     *     requirements={"prefix": "amp/|"},
+     *     defaults={"prefix": ""},
+     * )
+     */
+    public function listAction($prefix = null, Request $request)
+    {
+        $parameters = [
+            'stores' => $this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(),
+            'type' => 'store',
+            'type_title' => 'Stores',
+            'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
+            ];
+
+        return empty($prefix) ? $this->render('AppBundle:Store:list.html.twig', $parameters) : $this->render('AppBundle:amp/Store:list.html.twig', $parameters);
+    }
 }
