@@ -40,12 +40,13 @@ class PageController extends Controller
     /**
      * @Template()
      */
-    public function sidebarAction()
+    public function sidebarAction($pathInfo = null)
     {
         $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAll();
 
         return [
             'menus' => $menus,
+            'pathInfo' => $pathInfo,
         ];
     }
 

@@ -138,12 +138,6 @@ a {
         a {
             color: $main-green-color;
         }
-        &.active {
-            position: relative;
-            a {
-                color: $main-red-color;
-            }
-        }
 /*
         &.active:after {
             content: '';
@@ -647,6 +641,12 @@ a:hover {
 }
 a:active {
     opacity: .9;
+}
+li.active {
+    position: relative;
+    a {
+        color: $main-red-color;
+    }
 }
 .top-menu-text.main-page {
     position: relative;
