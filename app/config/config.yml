@@ -20,6 +20,7 @@ parameters:
     coupon_image_prefix: '%images_prefix%/logos/coupons'
     article_default_logo: 'article_logo.png'
     recipe_default_logo: 'recipe_logo.png'
+    store_default_logo: 'store_logo.png'
     default_logo_width: '161'
     default_logo_height: '161'
     images_prefix: '/images'
@@ -61,6 +62,7 @@ twig:
         amp_prefix: "%amp_prefix%"
         article_default_logo: '%article_default_logo%'
         recipe_default_logo: '%recipe_default_logo%'
+        store_default_logo: '%store_default_logo%'
         default_logo_width: '%default_logo_width%'
         default_logo_height: '%default_logo_height%'
 

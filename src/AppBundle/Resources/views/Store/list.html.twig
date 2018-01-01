@@ -13,7 +13,7 @@
                     {% if store.logo is not null and store.logo.filename is not null %}
                         <img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}">
                     {% else %}
-                        <img alt src="{{ store_logo_prefix }}/{{ article_default_logo }}">
+                        <img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}">
                     {% endif %}
                 </div>
                 <p>{{ store.description }}</p>

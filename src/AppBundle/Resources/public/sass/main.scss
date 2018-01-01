@@ -17,14 +17,14 @@ $additional-text-color: #663333;
         image: url("/bundles/app/img/main-bg.png");
         color: #f2f2f2;
     }
-    width: $site-width;
+    width: 100%;
     font-family: 'Rokkitt', serif;
     color: #000;
 }
 .content {
     background-color: $background-color;
     width: $content-width;
-    margin: 0 auto;
+    margin: 24px auto;
 }
 .row.no-expand {
     margin: 0;
@@ -249,20 +249,6 @@ a {
 .main-content {
     padding: 16px 8px 32px 10px;
     margin: 0;
-    position: relative;
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        right: 100%;
-        bottom: 0;
-        height: 90px;
-        width: $site-width * 0.1;
-        background-color: #f2f2f2;
-
-    }
-    &:after {
-        left: 100%;
-    }
 }
 .content-coupons-block, .content-article-block {
     padding: 10px 10px 10px 16px;
@@ -585,24 +571,11 @@ a img {
 }
 .footer {
     background-color: #f2f2f2;
-    position: relative;
     padding-bottom: 2px;
     text-align: center;
     font: {
         family: 'Droid Sans', sans-serif;
         size: 9px;
-    }
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        right: 100%;
-        bottom: 0;
-        height: 100%;
-        width: $site-width * 0.1;
-        background-color: #f2f2f2;
-    }
-    &:after {
-        left: 100%;
     }
 }
 .footer-top {
@@ -869,8 +842,9 @@ li.active {
     h1 {
         height: 56px;
         padding: 0 18px;
-        display: block;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: $main-red-color;
         &:after, &:before {
             border-top: 28px solid transparent;
@@ -885,15 +859,8 @@ li.active {
             border-left: 14px solid $background-color;
         }
         span {
-            display: inline-block;
-            vertical-align: middle;
-            &:before {
-                content: '';
-                display: inline-block;
-                height: 100%;
-                width: 1%;
-                vertical-align: middle;
-            }
+            max-height: 100%;
+            overflow: hidden;
         }
     }
 }

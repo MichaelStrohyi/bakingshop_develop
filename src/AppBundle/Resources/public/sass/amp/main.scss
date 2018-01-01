@@ -411,8 +411,9 @@ a {
     h1 {
         height: 56px;
         padding: 0 18px;
-        display: block;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: $main-red-color;
         &:after, &:before {
             border-top: 28px solid transparent;
@@ -426,15 +427,8 @@ a {
             border-left: 14px solid $background-color;
         }
         span {
-            display: inline-block;
-            vertical-align: middle;
-            &:before {
-                content: '';
-                display: inline-block;
-                height: 100%;
-                width: 1%;
-                vertical-align: middle;
-            }
+            max-height: 100%;
+            overflow: hidden;
         }
     }
 }
