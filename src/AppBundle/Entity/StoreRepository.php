@@ -23,4 +23,28 @@ class StoreRepository extends EntityRepository
         return $this->findBy([], ['name' => 'asc']);
     }
 
+    /**
+     * Get current url for $store from db
+     *
+     * @param Store $store
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function getUrlFromDB($store)
+    {
+        if (empty($store->getId())) {
+            return;
+        }
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.name FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $store->getId(),
+            ]);
+
+        return $store->convertNameToUrl($query->getOneOrNullResult()['name']);
+    }
 }

@@ -45,13 +45,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        $(document).on("change","input[name=pages_filter]",function(){
-            var pages_filter=$('[name="pages_filter"]:checked').val();
-            $('.page-type').show();
-            if (pages_filter !=='') {
-                $('.page-type').not($('.' + pages_filter + '-page')).hide();
-            }
-        });
-    </script>
+
+    {% javascripts filter="?jsqueeze" output="js/admin/article.js"
+        '@AppBundle/Resources/public/coffee/admin/article.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

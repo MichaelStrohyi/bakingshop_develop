@@ -82,4 +82,15 @@ class ArticleRepository extends EntityRepository
 
         return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['url']);
     }
+
+    /**
+     * Return list off all articles with given $type ordered by header
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function findAllByType($type)
+    {
+        return $this->findBy(['type' => $type], ['header' => 'asc']);
+    }
 }

@@ -8,8 +8,11 @@
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
-
+    {{ form_row(form.name) }}
+    {{ form_row(form.link) }}
+    {{ form_row(form.keywords) }}
+    {{ form_row(form.description) }}
+    {{ form_widget(form.logo) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Create</button>
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>

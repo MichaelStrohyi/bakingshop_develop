@@ -20,24 +20,14 @@ class ArticleController extends Controller
      * @ParamConverter("article", class="AppBundle:Article")
      * @Template()
      */
-    public function pageAction(Article $article, Request $request, $prefix = '')
+    public function pageAction(Article $article, Request $request, $prefix = null)
     {
-        $route_params = $request->attributes->get('_route_params');
-        $prefix = $route_params['prefix'];
-        $amp_prefix = $this->container->getParameter('amp_prefix');
-        $path = $request->getPathInfo();
-        
-        # create crosslink to link apm-html page with html page
-        if  (!empty($prefix)) {
-            $path = substr($path, strlen($prefix));
-            $crosslink = $this->generateUrl('homepage', [], true) . ltrim($path, '/');
-        } else {
-            $crosslink = $this->generateUrl('homepage', [], true) . trim($amp_prefix, '/') . $path;
-        }
-
         $parameters = [
             'article' => $article,
-            'crosslink' =>$crosslink
+            'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName(),
+            'type' => $article->getType(),
+            'type_title' => $article->getTypeTitle($article->getType()),
         ];
 
         # if prefix is not set render html page else render amp-html page

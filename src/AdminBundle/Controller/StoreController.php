@@ -13,7 +13,7 @@ use AdminBundle\Form\StoreType;
 /**
  * @Route("/store")
  */
-class StoreController extends Controller
+class StoreController extends PageController
 {
     /**
      * @Route("/", name="admin_store_index")
@@ -45,7 +45,7 @@ class StoreController extends Controller
         $form = $this->createStoreForm($store, $request);
 
         if ($form->isValid()) {
-            $this->persiststore($store);
+            $this->persistStore($store);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -73,7 +73,8 @@ class StoreController extends Controller
         $form = $this->createStoreForm($store, $request);
 
         if ($form->isValid()) {
-            $this->persiststore($store);
+            $this->handleLogo($store, $request);
+            $this->persistStore($store);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -104,9 +105,13 @@ class StoreController extends Controller
 
         if ($form->isValid()) {
             $entity_manager = $this->getDoctrine()->getEntityManager();
-
+            $store_id = $store->getId();
+            # delete store
             $entity_manager->remove($store);
             $entity_manager->flush();
+            # delete urls for current store from db and from menu-items
+            $this->deleteFromMenus(Store::PAGE_TYPE, $store, $store_id);
+            $this->deletePageUrls(Store::PAGE_TYPE, $store, $store_id);
 
             return $this->redirectToRoute("admin_store_index");
         }
@@ -128,9 +133,16 @@ class StoreController extends Controller
     private function persistStore(Store $store)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
-
+        # get old store url from db
+        $old_url = $entity_manager->getRepository('AppBundle:Store')->getUrlFromDB($store);
+        # save store into db
         $entity_manager->persist($store);
         $entity_manager->flush();
+        # add/update store url in database
+        $this->updatePageUrls(Store::PAGE_TYPE, $store);
+
+        # update store url in menus
+        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $store->getUrl());
     }
 
      /**
@@ -150,4 +162,19 @@ class StoreController extends Controller
             return $form;
     }
 
+    /**
+     * Remove store logo if crrent logo was deleted and new logo was not selected
+     *
+     * @param Store $store
+     * @param Request $request
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    private function handleLogo(Store $store, Request $request)
+    {
+        if (null === $request->request->get('current_logo') && (null === $store->getLogo() || null === $store->getLogo()->getImageFile())) {
+            $store->removeLogo();
+        }
+    }
 }

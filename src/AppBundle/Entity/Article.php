@@ -21,7 +21,7 @@ class Article
     const PAGE_TYPE = 'article';
     const PAGE_SUBTYPE_ARTICLE = 'article';
     const PAGE_SUBTYPE_RECIPE = 'recipe';
-    const PAGE_SUBTYPE_INFO = 'info';
+    const PAGE_SUBTYPE_INFO = 'information';
 
     /**
      * @var integer
@@ -87,6 +87,25 @@ class Article
      * @ORM\Column(name="amp_body", type="text", nullable=true)
      */
     private $ampBody;
+
+    /**
+     * @var ArticleLogo
+     *
+     * @ORM\OneToOne(targetEntity="ArticleLogo", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="logo", referencedColumnName="id", nullable=true)
+     * @Assert\Valid
+     **/
+    private $logo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=10, max=400)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     */
+    private $description;
 
 
     /**
@@ -326,5 +345,90 @@ class Article
         $this->ampBody = $amp->convertToAmpHtml();
 
         return $this;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param ArticleLogo $logo
+     * @return Article
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return ArticleLogo 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Remove logo
+     *
+     * @return Article
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
+
+        return $this;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Article
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Return header for twig-template according to given $type
+     *
+     * @param string $type
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public static function getTypeTitle($type)
+    {
+        switch ($type) {
+            case self::PAGE_SUBTYPE_ARTICLE:
+                $type_title = 'Articles';
+                break;
+            case self::PAGE_SUBTYPE_RECIPE:
+                $type_title = 'Recipies';
+                break;
+            case self::PAGE_SUBTYPE_INFO:
+                $type_title = 'Information';
+                break;
+            default:
+                $type_title = '';
+                break;
+        }
+
+        return $type_title;
     }
 }

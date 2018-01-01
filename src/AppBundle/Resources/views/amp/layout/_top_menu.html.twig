@@ -1,6 +1,17 @@
 <nav>
     <ul class="top-menu">
-        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-articles', 'prefix': amp_prefix, 'type': 'top'})) }}
-        {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-recipies', 'prefix': amp_prefix, 'type': 'top'})) }}
+        {% set i = 0 %}
+        {% for menu in menus if i < 2 %}
+            {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') %}
+                <li class="top-menu-item">
+                    <a href="{{ path('homepage', {'prefix': amp_prefix}) }}">{{ menu.header }}</a>
+                    <ul class="top-menu-submenu">
+                        {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
+                    </ul>
+                </li>
+                {% set i = i + 1 %}
+            {% endif %}
+        {% endfor %}
     </ul>
 </nav>
+<div class="top-menu-pattern-bottom"></div>

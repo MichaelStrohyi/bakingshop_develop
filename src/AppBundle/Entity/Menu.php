@@ -16,6 +16,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Menu
 {
+    const TYPE_TOP = 'top';
+    const TYPE_SIDE = 'side';
+    const TYPE_BOTTOM = 'bottom';
+    const PROD_COLORS = ['red', 'blue', 'yellow'];
+
     /**
      * @var integer
      *
@@ -52,6 +57,14 @@ class Menu
      * @Assert\Valid
      **/
     private $items;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=20, nullable=false, options={"default"=Menu::TYPE_SIDE})
+     * @Assert\NotBlank
+     */
+    private $type;
 
 
     public function __construct()
@@ -168,4 +181,42 @@ class Menu
         
         return $this;
     }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Menu
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get list of available types
+     *
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_TOP,
+            self::TYPE_SIDE,
+            self::TYPE_BOTTOM,
+        ];
+    }
+
 }

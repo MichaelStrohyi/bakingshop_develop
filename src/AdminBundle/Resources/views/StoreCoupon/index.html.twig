@@ -4,20 +4,67 @@
 
 {% block content %}
     <header>
-        <h1>Store coupons for &lt; {{ store.name }} &gt;</h1>
+        <h1>Coupons for &lt; {{ store.name }} &gt;</h1>
     </header>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-coupons'}}) }}
     
-    <ul class="store-coupons list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
+    <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
         {% for store_coupon in form.coupons %}
             <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
                 <div class="container">
-                    <div class="col-md-10">
-                        {{ form_errors(store_coupon) }}
-                        {{ form_widget(store_coupon) }}
+                    <div class="coupon-content col-sm-11">
+                        <div class="col-sm-8">
+                            {{ form_row(store_coupon.label) }}
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.code) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.code)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.code) }}
+                                    {{ form_errors(store_coupon.code) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.startDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.startDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.startDate) }}
+                                    {{ form_errors(store_coupon.startDate) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.link) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.link)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.link) }}
+                                    {{ form_errors(store_coupon.link) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.expireDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.expireDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.expireDate) }}
+                                    {{ form_errors(store_coupon.expireDate) }}
+                                </div>
+                            </div>
+
+                            {{ form_row(store_coupon.inStore) }}
+                        </div>
+                        <div class="col-sm-4{{ form_errors(store_coupon.logo) is not empty ? " has-error" : "" }}">
+                            {{ form_widget(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}
+                            {{ form_errors(store_coupon.logo) }}
+                            {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
+                                <div class="form-group">
+                                    {{ form_label(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3'})|raw }}
+                                    <div class="col-sm-9">
+                                        <a href="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></a>
+                                        <a href="#" class="btn btn-link" onclick="removeLogo(event, this);">Remove logo</a>
+                                        <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                            {{ form_widget(store_coupon.activity) }}
+                            {{ form_widget(store_coupon.position) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-sm-1">
                         <a href="#" class="couponActions firstLink">First</a></br>
                         <a href="#" class="couponActions lastLink">Last</a></br>
                         <a href="#" class="couponActions upLink">Up</a></br>
@@ -40,144 +87,11 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
-        var $collectionHolder;
-
-        // setup an "add a tag" link
-        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-md-offset-2">Add Coupon</a>');
-
-        jQuery(document).ready(function() {
-            // Get the ul that holds the collection of tags
-            $collectionHolder = $('ul.mutable-items');
-
-            // add the "add a tag" anchor and li to the tags ul
-            $collectionHolder.after($addItemLink);
-
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(".list-item").length);
-
-            $addItemLink.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // add a new tag form (see next code block)
-                addItemLink($collectionHolder);
-            });
-
-            // add actions links to all of the existing tag form li elements
-            $collectionHolder.find('li.list-item').each(function() {
-                addItemFormDeleteLink($(this));
-                addItemFormActivateLink($(this));
-                addItemFormMoveLinks($(this));
-            });
-
-            // add function for updating position before submit
-            $('#edit-coupons').on('submit', function(event) {
-                $collectionHolder.find('li.list-item .coupon-position').each(function(index) {
-                    $(this).val(index);
-                });
-            });
-        });
-
-        function addItemLink($collectionHolder) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
-            var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-            var newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a tag" link li
-            var $newFormLi = $('<li class="list-item"></li>').append(newForm);
-            $collectionHolder.append($newFormLi);
-
-            // add actions links to the new form
-            addItemFormDeleteLink($newFormLi);
-            addItemFormActivateLink($newFormLi);
-            addItemFormMoveLinks($newFormLi)
-        }
-
-        function addItemFormDeleteLink($itemFormLi) {
-            var $removeFormA = $itemFormLi.find('a.removeLink');
-
-            $removeFormA.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // remove the li for the tag form
-                $itemFormLi.remove();
-            });
-        }
-
-        function addItemFormActivateLink($itemFormLi) {
-            var $activateFormA = $itemFormLi.find('a.activateLink');
-
-            $activateFormA.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                $inputActivity = $itemFormLi.find('input.coupon-activity');   
-
-                // change coupon's class to change background color'
-                $itemFormLi.toggleClass("deactivated");
-
-                // if coupon is active
-                if ($inputActivity.val() == 1) {
-                    // set coupon activity into 0
-                    $inputActivity.val('0');
-
-                    // change link text to "Activate"
-                    $itemFormLi.find('a.activateLink').text('Activate');
-
-                    return;
-                }
-
-                // set coupon activity into 1
-                $inputActivity.val('1');
-
-                // change link text to "Deactivate"
-                $itemFormLi.find('a.activateLink').text('Deactivate');
-            });
-        }
-
-        function addItemFormMoveLinks($itemFormLi) {
-            $itemFormLi.find('a.upLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertBefore($itemFormLi.prev());
-            });
-
-            $itemFormLi.find('a.downLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertAfter($itemFormLi.next());
-            });
-
-            $itemFormLi.find('a.firstLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertBefore($('li.list-item').first());
-            });
-
-            $itemFormLi.find('a.lastLink').on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-                // change current li position
-                $itemFormLi.insertAfter($('li.list-item').last());
-            });
-        }
-
-
-        $("ul.store-coupons").sortable();
-    </script>
+    {% javascripts filter="?jsqueeze" output="js/admin/coupons.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+        '@AppBundle/Resources/public/coffee/admin/coupon.coffee'
+        '@AppBundle/Resources/public/coffee/admin/sortable.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

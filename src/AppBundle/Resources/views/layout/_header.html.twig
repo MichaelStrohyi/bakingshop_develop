@@ -11,17 +11,12 @@
 <div class="top-menu-section">
     <div class="top-menu-pattern-top"></div>
     <div class="top-menu-section-header">
-        <div class="top-menu-text main-page">
-            {% if article.type == 'info' %}
-                Information
+            {% if type is defined %}
+                <div class="top-menu-text main-page">
+                    {{ type_title }}
             {% else %}
-                {% if article.type == 'article' %}
-                    Articles
-                {% elseif article.type == 'recipe' %}
-                    Recipies
-                {% endif %}
-                <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
-                </div>
+                <div class="top-menu-text">
+                500,000+ Coupons for 50,000 Stores
             {% endif %}
         </div>
     </div>
@@ -34,5 +29,14 @@
             </form>
         </div>
     </div>#}
+    <div class="top-menu">
+        <ul class="top-menu-list">
+            {% for menu in menus %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') %}
+                       {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="top-menu-pattern-bottom"></div>
 </div>
-<div class="top-menu-pattern-bottom"></div>

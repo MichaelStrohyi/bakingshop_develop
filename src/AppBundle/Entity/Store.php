@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Store
 {
+    const PAGE_TYPE = 'store';
     /**
      * @var integer
      *
@@ -39,13 +40,13 @@ class Store
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="blob", nullable=false)
+     * @ORM\Column(name="link", type="blob", nullable=false)
      * @Assert\NotBlank
      * @Assert\Url(
-     *    message = "The url '{{ value }}' is not a valid url",
+     *    message = "The link '{{ value }}' is not a valid url",
      * )
      */
-    private $url;
+    private $link;
 
     /**
      * @var string
@@ -69,6 +70,15 @@ class Store
      * @Assert\Valid
      **/
     private $coupons;
+
+    /**
+     * @var StoreLogo
+     *
+     * @ORM\OneToOne(targetEntity="StoreLogo", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="logo", referencedColumnName="id", nullable=true)
+     * @Assert\Valid
+     **/
+    private $logo;
 
     public function __construct()
     {
@@ -109,26 +119,26 @@ class Store
     }
 
     /**
-     * Set url
+     * Set link
      *
-     * @param string $url
+     * @param string $link
      * @return Store
      */
-    public function setUrl($url)
+    public function setLink($link)
     {
-        $this->url = $url;
+        $this->link = $link;
 
         return $this;
     }
 
     /**
-     * Get url
+     * Get link
      *
      * @return string 
      */
-    public function getUrl()
+    public function getLink()
     {
-        return $this->url;
+        return $this->link;
     }
 
     /**
@@ -146,8 +156,8 @@ class Store
      **/
     public function transformLoadedData()
     {
-        if (is_resource($this->url) && get_resource_type($this->url) == 'stream') {
-            $this->url = stream_get_contents($this->url, -1, 0);
+        if (is_resource($this->link) && get_resource_type($this->link) == 'stream') {
+            $this->link = stream_get_contents($this->link, -1, 0);
         }
     }
 
@@ -192,6 +202,16 @@ class Store
     }
 
     /**
+     * Return page name for local url, based on store name
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->convertNameToUrl($this->name);
+    }
+
+    /**
      * Add coupon
      *
      * @param StoreCoupon $coupon
@@ -223,5 +243,63 @@ class Store
     public function getCoupons()
     {
         return $this->coupons;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param StoreLogo $logo
+     * @return Store
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return StoreLogo 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Remove logo
+     *
+     * @return Store
+     */
+    public function removeLogo()
+    {
+        $this->logo = null;
+
+        return $this;
+    }
+
+    /**
+     * Return page name for local url, based on store name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function convertNameToUrl($name)
+    {
+        $pattern = [
+            "/&/",
+            "/['\"`()\[\]{}]/",
+            "/[\s]+/",
+            "/(?(?=[[:punct:]])[^.!:]|^$)+/",
+        ];
+        $replacement = [
+            "-and-",
+            "",
+            "-",
+            "-",
+        ];
+        return '/' . strtolower(trim(preg_replace($pattern, $replacement, $name), '-'));
     }
 }

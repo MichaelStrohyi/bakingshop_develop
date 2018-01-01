@@ -36,7 +36,6 @@ class MenuItem
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
      * @AppAssert\LocalURL
-     * @AppAssert\LocalURLExists
      */
     private $url;
 

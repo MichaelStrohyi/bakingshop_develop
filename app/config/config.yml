@@ -12,6 +12,18 @@ parameters:
         article:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
+        store:
+            entity: 'AppBundle:Store'
+            controller: 'AppBundle:Store:coupons'
+    store_logo_prefix: '%images_prefix%/logos/stores'
+    article_logo_prefix: '%images_prefix%/logos/articles'
+    coupon_image_prefix: '%images_prefix%/logos/coupons'
+    article_default_logo: 'article_logo.png'
+    recipe_default_logo: 'recipe_logo.png'
+    store_default_logo: 'store_logo.png'
+    default_logo_width: '161'
+    default_logo_height: '161'
+    images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
 
@@ -44,12 +56,21 @@ twig:
     form:
         resources: ['bootstrap_3_horizontal_layout.html.twig']
     globals:
+        store_logo_prefix: '%store_logo_prefix%'
+        coupon_image_prefix: '%coupon_image_prefix%'
+        article_logo_prefix: '%article_logo_prefix%'
         amp_prefix: "%amp_prefix%"
+        article_default_logo: '%article_default_logo%'
+        recipe_default_logo: '%recipe_default_logo%'
+        store_default_logo: '%store_default_logo%'
+        default_logo_width: '%default_logo_width%'
+        default_logo_height: '%default_logo_height%'
+
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ 'AppBundle' ]
+    bundles:        [ 'AppBundle', 'AdminBundle']
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -123,3 +144,23 @@ ivory_ck_editor:
                             <div class="col-sm-6">column 1</div>
                             <div class="col-sm-6">column 2</div>
                         </div>
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        store_logo:
+            uri_prefix:         '%store_logo_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%store_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
+        article_logo:
+            uri_prefix:         '%article_logo_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%article_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
+        coupon_image:
+            uri_prefix:         '%coupon_image_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%coupon_image_prefix%'
+            namer:              vich_uploader.namer_uniqid
+        all_images:
+            uri_prefix:         '%images_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%images_prefix%'
+            namer:              vich_uploader.namer_uniqid
