@@ -524,6 +524,12 @@ a {
     height: 120px;
     float: left;
     margin-top: -36px;
+    display: table;
+}
+.coupons-block-header-logo-wraper {
+    display: table-cell;
+    vertical-align: middle;
+
 }
 .coupons-block-header-title {
     background-color: $main-red-color;

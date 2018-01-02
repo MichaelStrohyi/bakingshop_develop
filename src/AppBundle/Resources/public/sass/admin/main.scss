@@ -18,16 +18,22 @@ ul.mutable-items  {
     line-height: 100px;
     vertical-align: center;
 }
-.form-group > label {
-    padding: 5px 7px 5px 5px !important;
-}
-.form-group input, .form-group select {
-    padding: 3px 5px;
-    height: 28px;
-}
-.form-group textarea {
-    padding: 3px 5px;
-    resize: none;
+.form-group {
+    & > label {
+        padding: 5px 7px 5px 5px !important;
+    }
+    input, select {
+        padding: 3px 5px;
+        height: 28px;
+
+    }
+    input[type=checkbox] {
+        margin-top: -3px !important;
+    }
+    textarea {
+        padding: 3px 5px;
+        resize: none;
+    }
 }
 .list-item div {
     padding: 0 !important;
