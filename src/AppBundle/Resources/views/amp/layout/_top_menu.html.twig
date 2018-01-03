@@ -2,7 +2,7 @@
     <ul class="top-menu">
         {% set i = 0 %}
         {% for menu in menus if i < 2 %}
-            {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') %}
+            {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
                 <li class="top-menu-item">
                     <a href="{{ path('homepage', {'prefix': amp_prefix}) }}">{{ menu.header }}</a>
                     <ul class="top-menu-submenu">

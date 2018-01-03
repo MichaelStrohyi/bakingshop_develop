@@ -32,7 +32,7 @@
     <div class="top-menu">
         <ul class="top-menu-list">
             {% for menu in menus %}
-                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
                        {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
                 {% endif %}
             {% endfor %}
