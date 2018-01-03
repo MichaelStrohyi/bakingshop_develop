@@ -10,11 +10,13 @@
             <h1><span>{{ store.name }}</span></h1>
             <div class="article-preview-content">
                 <div class="article-preview-image">
-                    {% if store.logo is not null and store.logo.filename is not null %}
-                        <amp-img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}" width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
-                    {% else %}
-                        <amp-img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
-                    {% endif %}
+                    <div class="logo-wraper">
+                        {% if store.logo is not null and store.logo.filename is not null %}
+                            <amp-img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}" width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
+                        {% else %}
+                            <amp-img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                        {% endif %}
+                    </div>
                 </div>
                 <p>{{ store.description }}</p>
             </div>

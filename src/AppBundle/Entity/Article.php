@@ -102,7 +102,7 @@ class Article
      *
      * @ORM\Column(name="description", type="text", nullable=false)
      * @Assert\NotBlank
-     * @Assert\Length(min=10, max=400)
+     * @Assert\Length(min=10)
      * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $description;
