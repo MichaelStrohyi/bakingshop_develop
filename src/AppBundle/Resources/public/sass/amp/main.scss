@@ -441,9 +441,9 @@ a {
     box-sizing: border-box;
     amp-img {
         border-radius: 8px;
-        max-height: 100%;
     }
     float: left;
+    display: table;
 }
 .article-previews:after, .article-preview-content:after, .coupons-block-header:after {
     content:'';
@@ -526,10 +526,9 @@ a {
     margin-top: -36px;
     display: table;
 }
-.coupons-block-header-logo-wraper {
+.logo-wraper {
     display: table-cell;
     vertical-align: middle;
-
 }
 .coupons-block-header-title {
     background-color: $main-red-color;
