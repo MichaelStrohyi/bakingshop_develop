@@ -1,6 +1,6 @@
 <section class="footer-menu-block">
     {% for menu in menus %}
-        {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') %}
+        {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') and menu.items is not empty %}
         <div class="footer-menu-block">
             <div><span>{{ menu.header }}</span></div>
             <nav>

@@ -3,13 +3,13 @@
     <div class="main-menu-block">
         <ul class="main-menu">
             {% for menu in menus %}
-                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
                     {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
                 {% endif %}
             {% endfor %}
             {% set i = 0 %}
             {% for menu in menus%}
-                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
                     {% set i = i + 1 %}
                     {% if i > 2  %}
                         <li class="main-menu-item">
@@ -27,7 +27,7 @@
     </div>
     <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com" width="56px" height="56px" layout="fixed"></amp-img>
     <span>BAKINGSHOP.com</span></a>
-{#    <a href="{{ path('homepage') }}" id="search-link"><amp-img src="/bundles/app/img/search-icon.png" alt="Bakingshop.com" width="25px" height="22px" layout="fixed"></amp-img></a>#}
+    <a href="{{ path('homepage') }}" id="search-link"><amp-img src="/bundles/app/img/search-icon.png" alt="Bakingshop.com" width="25px" height="22px" layout="fixed"></amp-img></a>
 </div>
 <div class="header-menu-line">
     {% include 'AppBundle:amp/layout:_top_menu.html.twig' ignore missing %}

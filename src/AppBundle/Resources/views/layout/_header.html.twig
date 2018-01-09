@@ -5,34 +5,38 @@
         </div>      
 </div>
 <div class="main-logo">
-    <a href="/"><img src="{{ asset("bundles/app/img/logo.png") }}" alt="Bakingshop.com"></a>
+    <img src="{{ asset("bundles/app/img/logo-bg.png") }}" alt="Bakingshop.com">
+    <div class="main-logo-img">
+        <a href="{{ path('homepage') }}"><img src="{{ asset("bundles/app/img/logo.png") }}" alt="Bakingshop.com"></a>
+    </div>
 </div>
 
 <div class="top-menu-section">
     <div class="top-menu-pattern-top"></div>
     <div class="top-menu-section-header">
-            {% if type is defined %}
-                <div class="top-menu-text main-page">
-                    {{ type_title }}
-            {% else %}
-                <div class="top-menu-text">
-                500,000+ Coupons for 50,000 Stores
-            {% endif %}
+        {% if type is defined %}
+            <div class="top-menu-text">
+                <span>{{ type_title }}</span>
+            </div>
+        {% else %}
+            <div class="top-menu-text coupons-page">
+                <span>500,000+ Coupons for 50,000 Stores</span>
+            </div>
+        {% endif %}
+        <div class="top-menu-search">
+            <div class="top-menu-search-form">
+                <form name="search" method="post">
+                    <div class="top-menu-search-image"></div>
+                    <input type="text">
+                    <input type="submit" value=' '>
+                </form>
+            </div>
         </div>
     </div>
-
-{#        <div class="top-menu-search">
-        <div class="top-menu-search-form">
-            <form name="search" method="post">
-                <input type="text">
-                <input type="submit" value=' '>
-            </form>
-        </div>
-    </div>#}
     <div class="top-menu">
         <ul class="top-menu-list">
             {% for menu in menus %}
-                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
                        {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
                 {% endif %}
             {% endfor %}

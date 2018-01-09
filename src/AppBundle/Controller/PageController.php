@@ -73,8 +73,9 @@ class PageController extends Controller
         } elseif ($name instanceof Menu) {
             $menu = $name;
         } else {
-            $menu = null;
+            return;
         }
+        
         $parameters['menu'] = $menu;
         $parameters['pathInfo'] = $pathInfo;
 
