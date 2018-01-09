@@ -238,6 +238,7 @@ a {
     a {
         text-decoration: none;
         color: #000;
+        white-space: nowrap;
     }
 }
 .content-article-block, .article-preview, .coupons-block-header-title {
@@ -245,10 +246,13 @@ a {
         position: relative;
         text-align: center;
         letter-spacing: -.025em;
-        line-height: 28px;
+        line-height: 30px;
         display: block;
         font-weight: bold;
         padding: 0 12px;
+        span {
+            vertical-align: -4px;
+        }
         &:after, &:before {
             position: absolute;
             content:'';
@@ -260,14 +264,11 @@ a {
             border-bottom: 15px solid transparent;
             right: 0;
             border-right: 8px solid $background-color;
-        }
+        }            
         &:before {
             left: 0;
             border-right: none;
             border-left: 8px solid $background-color;
-        }
-        span {
-            vertical-align: -4px;
         }
     }
     h1 {
@@ -287,7 +288,7 @@ a {
     line-height: 1.15em;
 }
 .content-article-block {
-    padding-bottom: 50px;
+   padding-bottom: 50px;
     h1 {
         & + p > amp-img {
             max-width: 132px;
@@ -354,7 +355,7 @@ a {
         p {
             background-color: #eee8e9;
             margin: 0;
-            padding: 0;
+            padding: 0;            
         }
         td, th {
             width: 1%;
@@ -373,18 +374,21 @@ a {
     }
 }
 .content-article-block-sign {
-    bottom: 16px;
+    bottom: 14px;
     left: 60px;
     position: absolute;
     text-transform: none;
     color: #000;
     margin-top: -4px;
     line-height: 24px;
-    font-size: 17px;
-    font-weight: bold;
+    font: {
+        size: 17px;
+        weight: bold;
+    }
     letter-spacing: 0.06em;
     span {
         color: $main-red-color;
+        text-decoration: underline;
     }
     &:after {
         content: '';
@@ -402,10 +406,13 @@ a {
     right: 0;
     bottom: 14px;
 }
-
+.article-preview-item {
+    float: left;
+    width: 50%;
+    padding: 1px;
+    box-sizing: border-box;
+}
 .article-preview {
-    width: 280px;
-    height: 240px;
     margin: 3px auto;
     border: 2px solid $main-red-color;
     padding: 5px;
@@ -417,7 +424,7 @@ a {
         align-items: center;
         justify-content: center;
         background-color: $main-red-color;
-        &:after, &:before {
+        &:after, &:before {            
             border-top: 28px solid transparent;
             border-bottom: 28px solid transparent;
             right: 0;
@@ -437,6 +444,7 @@ a {
 .article-preview-image {
     height: 130px;
     width: 130px;
+    max-width: 40%;
     margin-right: 6px;
     box-sizing: border-box;
     amp-img {
@@ -445,14 +453,11 @@ a {
     float: left;
     display: table;
 }
-.article-previews:after, .article-preview-content:after, .coupons-block-header:after {
+.main-content-block:after, .article-preview-content:after, .coupons-block-header:after {
     content:'';
     clear: both;
     display: block;
     height: 0;
-}
-.article-previews {
-    margin: 0 auto;
 }
 .article-preview-content {
     height: 130px;
@@ -535,9 +540,7 @@ a {
     margin-bottom: 8px;
     color: $headers-text-color;
     margin-left: 125px;
-    font: {
-        size: 24px;
-    }
+    font-size: 24px;
     &.no-logo {
         margin-left: 0;
     }
@@ -679,16 +682,14 @@ a {
     text-align: center;
     margin-top: 2px;
 }
-
-@media screen and (min-width: 700px) {
-    .article-previews {
-        width: 680px;
+@media screen and (min-width: 800px) {
+    .content {
+        padding: 24px;
     }
+}
+@media screen and (min-width: 700px) {
     .article-preview {
         margin: 10px;
-        width: 320px;
-        height: 260px;
-        float: left;
     }
     .article-preview-image {
         height: 150px;
@@ -702,32 +703,16 @@ a {
     }
 }
 @media screen and (min-width: 620px) and (max-width: 699px) {
-    .article-previews {
-        width: 600px;
-    }
     .article-preview {
         margin: 10px;
-        width: 280px;
-        height: 240px;
-        float: left;
-    }
-    .article-preview-image {
-        height: 130px;
-        width: 130px;
     }
     .coupon-block-item-descr {
         padding-right: 194px;
     }
 }
 @media screen and (min-width: 540px) and (max-width: 619px) {
-    .article-previews {
-        width: 520px;
-    }
     .article-preview {
-        margin: 5px;
-        width: 250px;
-        height: 215px;
-        float: left;
+        margin: 3px;
         p {
             margin: 3px 0;
         }
@@ -754,8 +739,6 @@ a {
 }
 @media screen and (min-width: 340px) and (max-width: 539px) {
     .article-preview {
-        width: 320px;
-        height: 260px;
         margin: 5px auto;
     }
     .article-preview-image {
@@ -764,6 +747,12 @@ a {
     }
     .article-preview-content {
         height: 150px;
+    }
+    .article-preview-item {
+        float: none;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
     }
     .coupons-block-header-title {
         margin-left: 0;
@@ -798,6 +787,9 @@ a {
         padding: 6px 0;
         margin-bottom: -10px;
     }
+    .content-article-block-sign {
+        left: 50px;
+    }
 }
 @media screen and (max-width: 339px) {
     .coupons-block-header-title {
@@ -830,5 +822,9 @@ a {
     }
     .content-article-block-sign {
         left: 40px;
+    }
+    .article-preview-item {
+        float: none;
+        width: 100%;
     }
 }

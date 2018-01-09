@@ -4,8 +4,8 @@
 
 {% block main %}
 
-<div class="article-previews">
-    {% for store in stores %}
+{% for store in stores %}
+    <div class="article-preview-item">
         <div class="article-preview">
             <h1><span>{{ store.name }}</span></h1>
             <div class="article-preview-content">
@@ -22,7 +22,7 @@
             </div>
             <a class="show-recipe-block" href="{{ path(store, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>Coupons<span></a>
         </div>
-    {% endfor %}
-</div>
+    </div>
+{% endfor %}
 
 {% endblock %}

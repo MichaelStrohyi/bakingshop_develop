@@ -3,23 +3,24 @@
 {% block title %} Our {{ type_title|capitalize }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-
-<div class="article-previews">
-    {% for article in articles %}
-        <div class="article-preview">
-            <h1><span>{{ article.header }}</span></h1>
-            <div class="article-preview-content">
-                <div class="article-preview-image">
-                    {% if article.logo is not null and article.logo.filename is not null %}
-                        <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
-                    {% else %}
-                        <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
-                    {% endif %}
+    <div class="article-previews">
+        {% for article in articles %}
+            <div class="article-preview-item">
+                <div class="article-preview">
+                    <h1><span>{{ article.header }}</span></h1>
+                    <div class="article-preview-content">
+                        <div class="article-preview-image">
+                            {% if article.logo is not null and article.logo.filename is not null %}
+                                <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
+                            {% else %}
+                                <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
+                            {% endif %}
+                        </div>
+                        <p>{{ article.description }}</p>
+                    </div>
+                    <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}<span></a>
                 </div>
-                <p>{{ article.description }}</p>
             </div>
-            <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}<span></a>
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
 {% endblock %}
