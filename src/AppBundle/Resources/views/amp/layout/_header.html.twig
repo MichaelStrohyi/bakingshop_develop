@@ -12,7 +12,7 @@
                 {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
                     {% set i = i + 1 %}
                     {% if i > 2  %}
-                        <li class="main-menu-item">
+                        <li>
                             <a href="{{ path('homepage', {"prefix": amp_prefix}) }}" class="has-submenu" disabled>{{ menu.header }}</a>
                             <div class="main-submenu-block">
                                 <ul class="main-menu-submenu">
