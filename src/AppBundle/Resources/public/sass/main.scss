@@ -12,6 +12,7 @@ $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
 $additional-text-color: #663333;
+$menu-hover-bg: #f3e1d9;
 .container {
     background: {
         image: url("/bundles/app/img/main-bg.png");
@@ -290,6 +291,140 @@ a {
         repeat: no-repeat;
     }
 }
+/* coupons header */
+.header-logo-line {
+    text-align: center;
+    font: {
+        size: 14px;
+        family: 'Rokkitt', serif;
+        weight: bold;
+    }
+    padding: 1px 55px 1px 95px;
+    position: relative;
+    background-color: #f2f2f2;
+    img {
+        vertical-align: middle;
+        max-height: 56px;
+        width: auto;
+        height: auto;
+    }
+    a {
+        color: $main-red-color;
+        text-decoration: none;
+        &:focus {
+            outline: none;
+        }
+    }
+}
+#search-link {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    padding: 5px 7px;
+    background-color: #dfd3d5;
+    border-radius: 4px;
+    img {
+        max-height: 22px;
+        width: auto;
+        height: auto;
+    }
+}
+#menu-link {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #dfd3d5;
+    color: #000;
+    text-transform: uppercase;
+    font: {
+        size: 16px;
+        weight: bold;
+    }
+    &:before {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\f0c9\f0c9";
+        margin-right: 12px;
+        color: $headers-text-color;
+        letter-spacing: -0.6em;
+    }
+}
+.main-menu, .main-menu-submenu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    text-transform: capitalize;
+    border: 2px solid $main-red-color;
+    box-sizing: border-box;
+    text-align: left;
+    & > li {
+        position: relative;
+        min-width: 130px;
+    }
+    a {
+        color: #000;
+        text-decoration: none;
+        font-size: 20px;
+        display: block;
+        padding: 8px;
+        &:hover {
+            background-color: $menu-hover-bg;
+            opacity: 1;
+        }
+    }
+}
+.has-submenu:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f0c9\f0c9";
+    margin-right: 12px;
+    color: #000;
+    letter-spacing: -0.6em;
+}
+.header-menu-line {
+    background-color: $background-color;
+}
+.main-menu-block, .main-submenu-block {
+    position: absolute;
+    left: 0;
+    top: 41px;
+    padding: 10px;
+    visibility: hidden;
+    opacity: 0;
+    background-color: $background-color;
+    box-sizing: border-box;
+    z-index: 10;
+    #menu-link:hover ~ & {
+        transition: opacity 0.5s ease;
+        visibility: visible;
+        opacity: 1;
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.main-submenu-block {
+    left: 20px;
+    top: 0;
+    background-color: #f8f8f8;
+    min-width: 260px;
+    &:hover ~ a {
+        background-color: $menu-hover-bg;
+    }
+    .main-menu-block li:hover > & {
+        transition: opacity 0.5s ease;
+        visibility: visible;
+        opacity: 1;
+    }
+}
+@media screen and (min-width: 460px) {
+    .main-submenu-block {
+        min-width: 400px;
+    }
+}
+/**/
 .main-content {
     padding: 16px 9px;
     margin: 0;
