@@ -476,6 +476,34 @@ a {
     font-size: 14px;
     line-height: 1.43em;
 }
+.descr-details-open {
+    display: inline;
+    cursor: pointer;
+    color: blue;
+    font-weight: normal;
+}
+.descr-details-close {
+    display: block;
+    cursor: pointer;
+    color: blue;
+    font-weight: normal;
+    text-align: right;
+}
+.descr-details-text {
+    display: inline;
+}
+.coupons-block-header-descr input[type=checkbox] {
+    display: none;
+}
+.coupons-block-header-descr input[type=checkbox] + .descr-details-open + .descr-details-text {
+    display: none;
+}
+.coupons-block-header-descr input[type=checkbox]:checked + .descr-details-open {
+    display: none;
+}
+.coupons-block-header-descr input[type=checkbox]:checked + .descr-details-open + .descr-details-text {
+    display: inline;
+}
 .coupons-block-item {
     position: relative;
     width: 100%;

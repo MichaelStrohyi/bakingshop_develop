@@ -302,4 +302,34 @@ class Store
         ];
         return '/' . strtolower(trim(preg_replace($pattern, $replacement, $name), '-'));
     }
+
+    /**
+     * Return first 30 words of description
+     *
+     * @return string
+     */
+    public function getShortDescription()
+    {
+        $descr_array = explode(' ', $this->getDescription());
+        if (count($descr_array) > 40) {
+            return implode(' ', array_slice($descr_array, 0, 40));
+        }
+
+        return $this->getDescription();
+    }
+
+    /**
+     * Return rest of description (after first 30 words)
+     *
+     * @return string
+     */
+    public function getRestDescription()
+    {
+        $descr_array = explode(' ', $this->getDescription());
+        if (count($descr_array) > 40) {
+            return implode(' ', array_slice($descr_array, 40));
+        }
+
+        return null;
+    }
 }
