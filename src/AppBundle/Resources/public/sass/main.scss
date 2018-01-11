@@ -38,6 +38,9 @@ $menu-hover-bg: #f3e1d9;
 }
 a {
     text-decoration: none;
+    &.disabled, &.disabled:hover {
+       pointer-events: none;
+    }
 }
 .header {
     position: relative;
