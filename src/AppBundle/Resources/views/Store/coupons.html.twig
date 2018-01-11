@@ -16,7 +16,15 @@
                 </div>
             </div>
             <div class="coupons-block-header-descr">
-                <span>{{ store.description }}</span>
+                {{ store.shortDescription }}
+                {% if store.shortDescription|length < store.description|length %}
+                    <input type="checkbox" id="descr-details">
+                    <label class="descr-details-open" for="descr-details">... more</label>
+                    <span class="descr-details-text">
+                        {{ store.restDescription }}
+                        <label class="descr-details-close" for="descr-details">less</label>
+                    </span>
+                {% endif %}
             </div>
         </div>
         {% for store_coupon in store.coupons %}
