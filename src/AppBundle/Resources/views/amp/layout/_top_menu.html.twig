@@ -4,7 +4,7 @@
         {% for menu in menus if i < 2 %}
             {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
                 <li class="top-menu-item">
-                    <a href="{{ path('homepage', {'prefix': amp_prefix}) }}">{{ menu.header }}</a>
+                    <a class="disabled">{{ menu.header }}</a>
                     <ul class="top-menu-submenu">
                         {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
                     </ul>
