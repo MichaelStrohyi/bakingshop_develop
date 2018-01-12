@@ -431,4 +431,53 @@ class Article
 
         return $type_title;
     }
+
+    /**
+     * Return $html, parsed to pass html5-validation.
+     *
+     * @param string $html
+     * @return string
+     * @author Michael Strohyi
+     **/
+    private function parseHtml($html)
+    {
+        if (empty($html)) {
+            return;
+        }
+        $dochtml = new \DOMDocument();
+        $dochtml->loadHTML($html);
+        $table_tags = $dochtml->getElementsByTagName('table');
+        foreach ($table_tags as $tag) {
+            $attributes = null;
+            foreach ($tag->attributes as $attr) {
+                $attributes[] = $attr->nodeName;
+            }
+
+            foreach ($attributes as $attr) {
+                $tag->removeAttribute($attr);
+            }
+        }
+        return $dochtml->saveHTML();
+    }
+
+    /**
+     * Return body, parsed to pass html5-validation.
+     *
+     * @return string
+     */
+    public function getParsedBody()
+    {
+        return $this->parseHtml($this->getBody());
+    }
+
+    /**
+     * Return ampBody, parsed to pass html5-validation.
+     *
+     * @return string
+     */
+    public function getParsedAmpBody()
+    {
+        return $this->parseHtml($this->getAmpBody());
+    }
+
 }
