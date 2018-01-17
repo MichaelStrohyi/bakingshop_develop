@@ -625,6 +625,10 @@ a {
         box-sizing: border-box;
         background-color: $main-blue-color;
         text-decoration: none;
+        &.yellow {
+            background-color: $main-yellow-color;
+            color: #333;
+        }
     }
 }
 .coupon-block-item-code {
