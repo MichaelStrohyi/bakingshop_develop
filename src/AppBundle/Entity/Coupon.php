@@ -534,7 +534,7 @@ class Coupon
             $key_pos = ++$key_pos < $key_len ? $key_pos : 0;
             $char_key = ord($key[$key_pos]);
             $char = chr($char_code ^ $char_key);
-            $char = "\x" . strtoupper(dechex(ord($char)));
+            $char = strlen(dechex(ord($char))) < 2 ? '\x0' . strtoupper(dechex(ord($char))) : '\x' . strtoupper(dechex(ord($char)));
         }
 
         return implode('', $chars_array);

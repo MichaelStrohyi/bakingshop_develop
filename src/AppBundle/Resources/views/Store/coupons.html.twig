@@ -57,9 +57,9 @@
                             </div>
                             <div class="coupon-block-item-code">
                                 {% if store_coupon.encryptedCode is not empty %}
-                                    <a href="{{ store_coupon.link }}" ec="{{ store_coupon.encryptedCode }}"><span>ShowCoupon CODE</span></a>
+                                    <a href="{{ store_coupon.link }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon CODE</span></a>
                                 {% else %}
-                                        <a href="{{ store_coupon.link }}"><span>ShowCoupon</span></a>
+                                        <a href="{{ store_coupon.link }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon</span></a>
                                 {% endif %}
                                 {% if store_coupon.expireDate is not empty %}
                                     <span class="coupon-block-item-expire">expires: {{ store_coupon.expireDateProd }}</span>

@@ -6,7 +6,7 @@
 
 <article class="content-article-block">
     <h1><span>{{ article.header }}</span></h1>
-    {{ article.body|raw }}
+    {{ article.parsedBody|raw }}
 
     {% if article.type != constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
         <div class="content-article-block-sign">
