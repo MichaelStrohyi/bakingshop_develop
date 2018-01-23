@@ -20,14 +20,21 @@ class StoreController extends Controller
      */
     public function couponsAction(Store $store, Request $request, $prefix = null)
     {
+        $amp_flag = $request->query->get('a');
+
         $parameters = [
             'store' => $store,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName(),
         ];
 
-        # if prefix is not set render html page else render amp-html page
-        return empty($prefix) ? $this->render('AppBundle:Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
+        # if prefix is not set render html page
+        if (empty($prefix)) {
+            return $this->render('AppBundle:Store:coupons.html.twig', $parameters);
+        }
+
+        # if amp_flag is set render amplified html page otherwise render amp-html page
+        return ($amp_flag == 'a') ? $this->render('AppBundle:amplified/Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
     }
 
     /**

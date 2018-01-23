@@ -3,59 +3,54 @@ log = (message) -> console.log message
 ah_string = '1a2b3d4s5f0e7g8k'
 site = 'uspromocodes.com'
 pt = 90000
-prepareL = null
-ps = false
-pw = false
-pn = ''
+prepareL = pn = urlParams =  null
+ps = pw = fa = ci = false
 
 window.onload = () ->
-  if ps
     prepareShow()
 
-ShowCode = (A, L) ->
+ShowCode = (A, O) ->
   hc = A.getAttribute 'hc'
   if not hc
     return
 
   if not pw
-    window.name = pageN()
-    window.open window.location.pathname + '#' + pageI(A), pn, pageF(), false
+    wo = window.opener
+    if O && wo
+      window.opener.name = pageN()
+      window.opener.location = A.getAttribute 'href'
+      window.location = window.location.pathname + pageQ() + '#' + pageI(A)
+      init()
+      prepareShow()
+      return
+
+    window.name = pageN();
+    nw = window.open window.location.pathname + pageQ() + '#' + pageI(A)
+    if not nw
+      alert "Please, allow pop-ups from Bakingshop.com to have ability copy and paste Coupons OR you will need to keep in mind this Coupon Code: " + check_index(eval "'" + A.getAttribute('hc') + "'" )
+
   else
     pr = pageN()
     A.focus()
     A.blur()
-    link = A.href
     if hc
-#        s = document.createElement 'span'
-#        s.innerHTML = 'Code: ' + check_index eval("'" + A.getAttribute('hc') + "'")
-#        A.parentNode.appendChild s
       A.innerHTML = '<span>' + check_index(eval("'" + A.getAttribute('hc') + "'")) + '</span>'
       A.className += ' disabled yellow'
       A.target = pr
       A.onclick = null
-#      A.parentNode.removeChild A
-    if L != false
-      window.open link.href, pr, pageF(), true
-      window.setTimeout ( ->
-        window.focus()
-        ), 300
   return
 
 pageN = () ->
   return 'parent_' + pn # return tmp_name of current page 'parent_{{store_name}}'
 
-pageF = () -> # return parameters for new window, width is constant, height is calculated. Need to calculate width too!!!!
-  h = 500
-  if typeof window.innerWidth is 'number'
-    h = window.innerHeight - 50
-  else if document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)
-    h = document.documentElement.clientHeight - 50
-  else if document.body && (document.body.clientWidth || document.body.clientHeight)
-    h = document.body.clientHeight - 50
-  return "width=1000,height=" + h + ",menubar=1,resizable=1,toolbar=1,scrollbars=1,status=1,titlebar=1,addressbar=1,address=1,location=1"
-
 pageI = (A) ->
   return atoh_str (new Date()).getTime() + ',' + A.id
+
+pageQ = () ->
+  if urlParams['a'] && urlParams['a'] != ''
+    return '?a=' + urlParams['a']
+
+  return ''
 
 atoh_str = (str) -> # encode given string into hash
   str_len = str.length
@@ -83,8 +78,15 @@ htoa_str = (str) -> # encode given hash into string
   return res
 
 prepareShow = () ->
+  if not ps
+    return
+
+  if ci
+    ShowCode document.getElementById(urlParams['i']), fa
+    return
+
   l = prepareL
-  ShowCode document.getElementById(l[1]), false
+  ShowCode document.getElementById(l[1]), fa
 
 check_index = (index) ->
   index_len = index.length
@@ -101,11 +103,33 @@ check_index = (index) ->
 
   return index_checked
 
-(() ->
+getUrlParams = () ->
+  params = {}
+  pl = /\+/g # Regex for replacing addition symbol with a space
+  search = /([^&=]+)=?([^&]*)/g
+  decode = (s) -> return decodeURIComponent s.replace(pl, " ")
+  query = window.location.search.substring(1)
+
+  while match = search.exec query
+     params[decode match[1]] = decode match[2]
+
+  return params
+
+init = () ->
+  pw = ps = fa = ci = false
   wlp = window.location.pathname # get uri
+  urlParams = getUrlParams()
   pn = wlp.split('/')[1].replace(/[-\.]/g, '_') # get store-name from uri
   l = prepareL = htoa_str(window.location.hash.substr(1)).split ','
   if l != '' && l[0] && l[0] != '' && (new Date()).getTime() - pt <= parseInt l[0]
     pw = true;
     ps = true;
-)()
+  if urlParams['a'] && urlParams['a'] != ''
+    fa = true
+    ps = true
+
+  if urlParams['i'] && urlParams['i'] != ''
+    ci = true
+    ps = true
+  return
+init()
