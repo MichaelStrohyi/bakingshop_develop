@@ -1,4 +1,4 @@
-{% extends 'AppBundle:amp:layout.html.twig' %}
+{% extends 'AppBundle:amplified:layout.html.twig' %}
 
 {% block title %}{{ store.name }} coupons | {{ parent() }}{% endblock %}
 
@@ -11,7 +11,7 @@
             {% if store.logo is not null and store.logo.filename is not null %}
                 <div class="coupons-block-header-logo">
                     <div class="logo-wraper">
-                        <amp-img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
+                        <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
                     </div>
                 </div>
             {% endif %}
@@ -33,7 +33,7 @@
                     <div class="coupon-block-item-left">
                         <div class="coupon-block-item-logo {{ store_coupon.logo is null and store_coupon.discount is null ? 'empty' : '' }} {{ store_coupon.logo is null and store_coupon.discount == 'FREE Shipping' ? 'shipping' : '' }}">
                             {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
-                                <amp-img src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" alt width="{{ store_coupon.logo.width }}" height="{{ store_coupon.logo.height }}" layout="responsive"></amp-img>
+                                <img src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" alt >
                             {% elseif store_coupon.discount == 'FREE Shipping' %}
                                     FREE Shipping
                             {% elseif store_coupon.discount is not empty %}
@@ -54,7 +54,11 @@
                                 {% endif %}
                             </div>
                             <div class="coupon-block-item-code">
-                                <a href="{{ path(store, {'prefix': amp_prefix, 'a': 'a', 'i': 'cp' ~ store_coupon.id}) }}" target="_blank" rel="nofollow"><span>ShowCoupon{{ store_coupon.code is not null ? ' CODE' : '' }}</span></a>
+                                {% if store_coupon.encryptedCode is not empty %}
+                                    <a href="{{ store_coupon.link }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon CODE</span></a>
+                                {% else %}
+                                        <a href="{{ store_coupon.link }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon</span></a>
+                                {% endif %}
                                 {% if store_coupon.expireDate is not null %}
                                     <span class="coupon-block-item-expire">expires: {{ store_coupon.expireDateProd }}</span>
                                 {% endif %}
