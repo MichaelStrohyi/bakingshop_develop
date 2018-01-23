@@ -12,4 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class CouponRepository extends EntityRepository
 {
+    /**
+     * Get link from db for coupon with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findLinkById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+        
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT c.link FROM AppBundle:Coupon c '
+                . 'WHERE c.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
+    }
 }

@@ -55,4 +55,29 @@ class StoreController extends Controller
 
         return empty($prefix) ? $this->render('AppBundle:Store:list.html.twig', $parameters) : $this->render('AppBundle:amp/Store:list.html.twig', $parameters);
     }
+
+    /**
+     * @Route("/go/{store_name},{type},{id}", name="out_link",
+     *     defaults={"coupon_id": null},
+     * )
+     */
+    public function goAction($type, $id)
+    {
+        switch ($type) {
+            case 'cp':
+                 $res = $this->getDoctrine()->getRepository('AppBundle:Coupon')->findLinkById($id);
+                break;
+            case 'st':
+                 $res = $this->getDoctrine()->getRepository('AppBundle:Store')->findLinkById($id);
+                break;
+            default:
+                $res = null;
+                break;
+        }
+        if (empty($res)) {
+            throw $this->createNotFoundException();
+        }
+
+        return  $this->redirect($res);
+    }
 }
