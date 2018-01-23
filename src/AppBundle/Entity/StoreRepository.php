@@ -47,4 +47,30 @@ class StoreRepository extends EntityRepository
 
         return $store->convertNameToUrl($query->getOneOrNullResult()['name']);
     }
+
+    /**
+     * Get link from db for store with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findLinkById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+        
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.link FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
+    }
 }

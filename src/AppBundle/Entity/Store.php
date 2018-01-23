@@ -208,7 +208,7 @@ class Store
      */
     public function getUrl()
     {
-        return $this->convertNameToUrl($this->name);
+        return '/' . $this->convertNameToUrl($this->name);
     }
 
     /**
@@ -286,8 +286,12 @@ class Store
      * @param string $name
      * @return string
      */
-    public function convertNameToUrl($name)
+    public function convertNameToUrl($name = null)
     {
+        if (empty($name)) {
+            $name = $this->getName();
+        }
+
         $pattern = [
             "/&/",
             "/['\"`()\[\]{}]/",
@@ -300,7 +304,7 @@ class Store
             "-",
             "-",
         ];
-        return '/' . strtolower(trim(preg_replace($pattern, $replacement, $name), '-'));
+        return strtolower(trim(preg_replace($pattern, $replacement, $name), '-'));
     }
 
     /**
