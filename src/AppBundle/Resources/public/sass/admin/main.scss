@@ -48,3 +48,52 @@ ul.mutable-items  {
 .container div:last-child {
     margin-bottom: 0 !important;
 }
+
+
+.content {
+    padding-top: 40px;
+}
+.admin-navigation-menu {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: #ECEAE0;
+    ul {
+        list-style: none;
+    }
+    li {
+        padding: 5px 10px;
+        display: inline-block;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        float: left;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-weight: bold;
+        text-align: center;
+        &:hover {
+            background-color: #E0DED7;
+        }
+        &.active {
+            z-index: 10;
+            position: relative;
+            background-color: #fff;
+            &:after, &:before {
+                position: absolute;
+                content: '';
+                height: 7px;
+                width: 7px;
+                bottom: 0;
+                right: 100%;
+                background-image: url("/bundles/app/img/tab-corner-bottom-left.png");
+            }
+            &:before {
+                left: 100%;
+                background-image: url("/bundles/app/img/tab-corner-bottom-right.png");
+
+            }
+        }
+    }
+}

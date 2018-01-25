@@ -10,6 +10,14 @@ use USPC\PageBundle\Entity\Page;
 class PageController extends Controller
 {
     /**
+     * @Route("/", name="admin_panel_index")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        return;
+    }
+    /**
      * Update page url in database
      *
      * @param string $type page type
