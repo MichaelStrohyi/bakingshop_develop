@@ -4,9 +4,19 @@
 
 {% block body %}
     <div class="container">
-        {% block navigation %}{% endblock %}
+        {% block navigation %}
+            <nav class="admin-navigation-menu">
+                <ul>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Article::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_article_index')}}">Edit Articles</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Menu::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_menu_index')}}">Edit Menus</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Store::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_store_index')}}">Edit Stores</a></li>
+                </ul>
+            </nav>
+            <div class="content">
+        {% endblock %}
         {% block content %}{% endblock %}
     </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}

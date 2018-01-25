@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Menu
 {
+    const PAGE_TYPE = 'menu';
     const TYPE_TOP = 'top';
     const TYPE_SIDE = 'side';
     const TYPE_BOTTOM = 'bottom';
