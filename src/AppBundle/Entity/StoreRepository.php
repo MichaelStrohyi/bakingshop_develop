@@ -73,4 +73,30 @@ class StoreRepository extends EntityRepository
 
         return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
     }
+
+    /**
+     * Return list off all stores, which have $subname in header
+     *
+     * @param string $subname
+     * @param int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findBySubname($subname, $limit = null)
+    {
+        if (strlen($subname) < 2) {
+            return [];
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s FROM AppBundle:Store s '
+                . 'WHERE s.name LIKE :subname '
+            )
+            ->setParameters([
+                'subname' => '%' . $subname . '%',
+            ])
+            ->setMaxResults($limit);
+        return $query->getResult();
+    }
 }

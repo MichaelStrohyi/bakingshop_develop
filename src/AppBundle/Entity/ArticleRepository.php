@@ -93,4 +93,30 @@ class ArticleRepository extends EntityRepository
     {
         return $this->findBy(['type' => $type], ['header' => 'asc']);
     }
+
+    /**
+     * Return list off all articles, which have $subname in header
+     *
+     * @param string $subname
+     * @param int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findBySubname($subname, $limit = null)
+    {
+        if (strlen($subname) < 2) {
+            return [];
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.header LIKE :subname '
+            )
+            ->setParameters([
+                'subname' => '%' . $subname . '%',
+            ])
+            ->setMaxResults($limit);
+        return $query->getResult();
+    }
 }
