@@ -53,7 +53,7 @@ class StoreController extends Controller
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
             ];
 
-        return empty($prefix) ? $this->render('AppBundle:Store:list.html.twig', $parameters) : $this->render('AppBundle:amp/Store:list.html.twig', $parameters);
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }
 
     /**
