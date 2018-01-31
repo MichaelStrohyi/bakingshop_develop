@@ -4,6 +4,9 @@
 
 {% block main %}
     {% if articles is defined %}
+        {% if needle is defined %}
+            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Articles:</div>
+        {% endif %}
         <div class="article-previews">
             {% for article in articles %}
                 <div class="article-preview-item">
@@ -28,6 +31,9 @@
 
     {% if stores is defined %}
         <div class="article-previews">
+            {% if needle is defined %}
+                <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
+            {% endif %}
             {% for store in stores %}
                 <div class="article-preview-item">
                     <div class="article-preview">

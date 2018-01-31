@@ -9,20 +9,19 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchController extends PageController
 {
     /**
-     * @Route("/{prefix}search", name="search_page_index",
-     *     requirements={"prefix": "amp/|"},
-     *     defaults={"prefix": ""},
-     * )
+     * @Route("/search", name="search_ajax")
      */
-    public function indexAction($prefix, Request $request)
+    public function indexAction(Request $request)
     {
-        $method = 'get';
-        $limit = $needle = $articles_all_count = $stores_all_count = null;
-        $articles = $stores = [];
-        if ($request->isMethod('POST')) {
-            $method = 'post';
-            $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-string')))));
-            $limit = 2;
+        if (!$request->isMethod('POST')) {
+            throw $this->createNotFoundException();
+        }
+
+        $articles_all_count = $stores_all_count = $articles = $stores = null;
+        $needle= trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-ajax')))));
+
+        if (!empty($needle)) {
+            $limit = 10;
             $articles = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle, $limit);
             $stores = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle, $limit);
             $articles_count = $articles_all_count = count($articles);
@@ -35,30 +34,26 @@ class SearchController extends PageController
                 } else {
                     $articles_count = $stores_count = $limit / 2;
                 }
-            }
 
-            $articles = array_slice($articles, 0, $articles_count);
-            $stores = array_slice($stores, 0, $stores_count);
+                $articles = array_slice($articles, 0, $articles_count);
+                $stores = array_slice($stores, 0, $stores_count);
+            }
         }
 
         $parameters = [
-            'type' => 'search',
-            'type_title' => 'Search',
-            'prefix' => $prefix,
-            'method' => $method,
             'articles' => $articles,
             'stores' => $stores,
+            'needle' => $needle,
             'articles_count' => $articles_all_count,
             'stores_count' => $stores_all_count,
-            'needle' => $needle,
         ];
 
         return $this->render('AppBundle:Page:search.html.twig', $parameters);
     }
 
     /**
-     * @Route("/{prefix}search/{slug}", name="search_page_full",
-     *     requirements={"slug": "article|store", "prefix": "amp/|"},
+     * @Route("/{prefix}search/{slug}", name="search_page",
+     *     requirements={"slug": "article|store|all", "prefix": "amp/|"},
      *     defaults={"prefix": ""},
      * )
      */
@@ -73,16 +68,22 @@ class SearchController extends PageController
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
             'needle' => $needle,
         ];
+
         switch ($slug) {
             case 'article':
                 $parameters['articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
-                return $this->render('AppBundle:Page:list.html.twig', $parameters);
+                break;
 
             case 'store':
                 $parameters['stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
-                return $this->render('AppBundle:Page:list.html.twig', $parameters);  
+                break;
+
+            case 'all':
+                $parameters['articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
+                $parameters['stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
+                break;
         }
-        
-        throw $this->createNotFoundException();
+
+        return $this->render('AppBundle:Page:list.html.twig', $parameters);
     }
 }

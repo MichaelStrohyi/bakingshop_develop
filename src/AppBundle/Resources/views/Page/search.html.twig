@@ -1,7 +1,3 @@
-{#<form name="search" method="post">
-    <input type="text" class="search-input" name="search-string">
-    <input type="submit" value='Search'>
-</form>#}
 {% if articles is not empty %}
     <li class="search-result-type">Results from articles:</li>
     {% set count = 0 %}
@@ -10,7 +6,7 @@
         {% set count = count + 1 %}
     {% endfor %}
     {% if articles_count > count %}
-        <li><a class="search-result-more" href="{{ path('search_page_full', {'prefix': prefix, 'slug': 'article', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
     {% endif %}
 {% endif %}
 {% if stores is not empty %}
@@ -21,6 +17,9 @@
         {% set count = count + 1 %}
     {% endfor %}
     {% if stores_count > count %}
-        <li><a class="search-result-more" href="{{ path('search_page_full', {'prefix': prefix, 'slug': 'store', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
     {% endif %}
+{% endif %}
+{% if stores is empty and  articles is empty %}
+    <li class="search-result-more">No results found for '{{ needle }}' </li>
 {% endif %}

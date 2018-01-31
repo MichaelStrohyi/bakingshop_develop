@@ -112,9 +112,11 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'SELECT a FROM AppBundle:Article a '
                 . 'WHERE a.header LIKE :subname '
+                . 'AND a.type != :type'
             )
             ->setParameters([
                 'subname' => '%' . $subname . '%',
+                'type' => Article::PAGE_SUBTYPE_INFO,
             ])
             ->setMaxResults($limit);
         return $query->getResult();

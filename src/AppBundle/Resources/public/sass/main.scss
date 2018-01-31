@@ -201,7 +201,10 @@ a {
     z-index: 11;
     width: 100%;
     text-align: center;
-    padding-right: 4px;
+    padding: {
+        right: 4px;
+        left: 42px;
+    }
     input {
         height: 46px;
         box-sizing: border-box;
@@ -234,7 +237,6 @@ a {
             }
         }
         &[type="text"] {
-            max-width: 380px;
             width: 100%;
             padding-left: 18px;
             padding-right: 66px;
@@ -252,7 +254,8 @@ a {
 .top-menu-search-form {
     position:relative;
     display: inline-block;
-    margin-left: 42px;
+    width: 100%;
+    max-width: 340px;
     &:before {
         position: absolute;
         content: '';
@@ -293,6 +296,22 @@ a {
         image: url("/bundles/app/img/search-logo.png");
         position: center;
         repeat: no-repeat;
+    }
+}
+.top-menu-search-loading {
+    position: absolute;
+    content: '';
+    top: 50%;
+    transform: translateY(-50%);
+    left: -42px;
+    width: 40px;
+    height: 40px;
+    display: none;
+    background: {
+        image: url("/bundles/app/img/loading.gif");
+        position: center;
+        repeat: no-repeat;
+        size: cover;
     }
 }
 /* coupons header */
@@ -1437,11 +1456,15 @@ li.active {
             height: 0;
         }
     }
-    .top-menu-search-form {
-        margin-left: 0;
+    .top-menu-search {
+        padding-left: 4px;
     }
     .top-menu-search-image {
         display: none;
+    }
+    .top-menu-search-loading {
+        width: 0;
+        height: 0;
     }
     .content-article-block-sign {
         left: 60px;

@@ -1,23 +1,27 @@
 search_str = ''
 $(() ->
-    $('.search-input').bind "change keyup input click", () ->
+    $('.search-input').bind "input", () ->
         search_str = this.value
+        $(".top-menu-search-result").html('').hide()
         if search_str.length >= 2
+            $(".top-menu-search-image").hide()
+            $(".top-menu-search-loading").show()
+            $(".top-menu-search-result").hide()
             $.ajax {
                 type: 'post',
                 url: "/search", 
-                data: {'search-string':search_str},
+                data: {'search-ajax':search_str},
                 response: 'text',
                 error: () ->
-                    $(".top-menu-search-result").hide()
+                    $(".top-menu-search-loading").hide()
+                    $(".top-menu-search-image").show()
                 ,
                 success: (data) ->
-                    $(".top-menu-search-result").html(data).fadeIn()
-                    if data == ''
-                        $(".top-menu-search-result").hide()
+                    if data
+                        $(".top-menu-search-result").html(data).fadeIn()
+                        $(".top-menu-search-loading").hide()
+                        $(".top-menu-search-image").show()
             }
-        else 
-            $(".top-menu-search-result").html('').hide()
         
     $(".top-menu-search-result").hover(() ->
         $(".search-input").blur()
