@@ -23,11 +23,14 @@
             </div> #}
             <div class="top-menu-search">
                 <div class="top-menu-search-form">
-                    <form name="search" method="post">
+                    <form name="search" method="get" action="{{ path('search_page', {'slug': 'all'}) }}">
                         <div class="top-menu-search-image"></div>
-                        <input type="text">
+                        <div class="top-menu-search-loading"></div>
+                        <input type="text" class="search-input" name="q" autocomplete="off">
                         <input type="submit" value=' '>
                     </form>
+                    <ul class="main-menu top-menu-search-result">
+                    </ul>
                 </div>
             </div>
         </div>

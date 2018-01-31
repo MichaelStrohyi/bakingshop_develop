@@ -3,24 +3,55 @@
 {% block title %} Our {{ type_title|capitalize }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-    <div class="article-previews">
-        {% for article in articles %}
-            <div class="article-preview-item">
-                <div class="article-preview">
-                    <h1><span>{{ article.header }}</span></h1>
-                    <div class="article-preview-content">
-                        <div class="article-preview-image">
-                            {% if article.logo is not null and article.logo.filename is not null %}
-                                <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
-                            {% else %}
-                                <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
-                            {% endif %}
+    {% if articles is defined %}
+        {% if needle is defined %}
+            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Articles:</div>
+        {% endif %}
+        <div class="article-previews">
+            {% for article in articles %}
+                <div class="article-preview-item">
+                    <div class="article-preview">
+                        <h1><span>{{ article.header }}</span></h1>
+                        <div class="article-preview-content">
+                            <div class="article-preview-image">
+                                {% if article.logo is not null and article.logo.filename is not null %}
+                                    <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
+                                {% else %}
+                                    <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
+                                {% endif %}
+                            </div>
+                            <p>{{ article.description }}</p>
                         </div>
-                        <p>{{ article.description }}</p>
+                        <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
                     </div>
-                    <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if stores is defined %}
+        <div class="article-previews">
+            {% if needle is defined %}
+                <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
+            {% endif %}
+            {% for store in stores %}
+                <div class="article-preview-item">
+                    <div class="article-preview">
+                        <h1><span>{{ store.name }}</span></h1>
+                        <div class="article-preview-content">
+                            <div class="article-preview-image">
+                                {% if store.logo is not null and store.logo.filename is not null %}
+                                    <img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}">
+                                {% else %}
+                                    <img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}">
+                                {% endif %}
+                            </div>
+                            <p>{{ store.description }}</p>
+                        </div>
+                        <a class="show-recipe-block" href="{{ path(store) }}">Show&nbsp;&nbsp;<span>Coupons</span></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

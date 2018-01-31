@@ -1,0 +1,25 @@
+{% if articles is not empty %}
+    <li class="search-result-type">Results from articles:</li>
+    {% set count = 0 %}
+    {% for article in articles %}
+        <li><a href="{{ path(article) }}">{{ article.header }}</a></li>
+        {% set count = count + 1 %}
+    {% endfor %}
+    {% if articles_count > count %}
+        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+    {% endif %}
+{% endif %}
+{% if stores is not empty %}
+    {% set count = 0 %}
+    <li class="search-result-type">Results from stores:</li>
+    {% for store in stores %}
+        <li><a href="{{ path(store) }}">{{ store.name }}</a></li>
+        {% set count = count + 1 %}
+    {% endfor %}
+    {% if stores_count > count %}
+        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+    {% endif %}
+{% endif %}
+{% if stores is empty and  articles is empty %}
+    <li class="search-result-more">No results found for '{{ needle }}' </li>
+{% endif %}
