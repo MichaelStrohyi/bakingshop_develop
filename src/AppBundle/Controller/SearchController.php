@@ -84,6 +84,6 @@ class SearchController extends PageController
                 break;
         }
 
-        return $this->render('AppBundle:Page:list.html.twig', $parameters);
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }
 }

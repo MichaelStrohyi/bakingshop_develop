@@ -54,15 +54,67 @@ a {
         }
     }
 }
-#search-link {
+.search-block {
+    z-index: 9;
     position: absolute;
-    top: 12px;
-    right: 10px;
-    padding: 5px 7px;
-    background-color: #dfd3d5;
-    border-radius: 4px;
+    top: 0;
+    right: 0;
+    padding: 14px 10px 0 100px;
+    width: 100%;
+    box-sizing: border-box;
+    form {
+        width: 100%;
+        text-align: right;
+        position: relative;
+    }
+    input[type=submit] {
+        z-index: 9;
+        position: relative;
+        box-sizing: content-box;
+        padding: 0;
+        background-color: #dfd3d5;
+        background-image: url("/bundles/app/img/search-icon.png");
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        border-radius: 4px;
+        border: none;
+        width: 34px;
+        height: 30px;
+        &:hover {
+            cursor: pointer;
+            & ~ input {
+                visibility: visible;
+                transition: opacity .9s ease;
+                opacity: 1;
+            }
+        }
+    }
+    input[type=search] {
+        z-index: 8;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+        padding: 0;
+        padding-right: 34px;
+        margin: 0;
+        border: 1px solid #dfd3d5;
+        outline: none;
+        color: $additional-text-color;
+        font-size: 16px;
+        font-family: 'Rokkitt', serif;
+        &:hover {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
 }
 #menu-link {
+    z-index: 10;
     position: absolute;
     top: 15px;
     left: 10px;
@@ -453,7 +505,7 @@ a {
     float: left;
     display: table;
 }
-.main-content-block:after, .article-preview-content:after, .coupons-block-header:after {
+.main-content-block:after, .article-preview-content:after, .coupons-block-header:after, .article-previews:after {
     content:'';
     clear: both;
     display: block;
@@ -710,6 +762,14 @@ a {
     text-align: center;
     margin-top: 2px;
 }
+.searched-for-alert {
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid $article-block-red-color;
+    padding: 4px;
+    margin: 10px;
+    background-color: #ffffe6;
+}
 @media screen and (min-width: 800px) {
     .content {
         padding: 24px;
@@ -763,6 +823,10 @@ a {
         a {
             font-size: 16px;
         }
+    }
+    .searched-for-alert {
+        margin-left: 3px;
+        margin-right: 3px;
     }
 }
 @media screen and (min-width: 340px) and (max-width: 539px) {
@@ -818,6 +882,10 @@ a {
     .content-article-block-sign {
         left: 50px;
     }
+    .searched-for-alert {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
 }
 @media screen and (max-width: 339px) {
     .coupons-block-header-title {
@@ -854,5 +922,9 @@ a {
     .article-preview-item {
         float: none;
         width: 100%;
+    }
+    .searched-for-alert {
+        margin-left: 2px;
+        margin-right: 2px;
     }
 }

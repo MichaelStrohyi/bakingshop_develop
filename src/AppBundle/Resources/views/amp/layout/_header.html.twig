@@ -27,7 +27,12 @@
     </div>
     <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com" width="56px" height="56px" layout="fixed"></amp-img>
     <span>BAKINGSHOP.com</span></a>
-    <a href="{{ path('homepage') }}" id="search-link"><amp-img src="/bundles/app/img/search-icon.png" alt="Bakingshop.com" width="25px" height="22px" layout="fixed"></amp-img></a>
+    <div class="search-block">
+        <form action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all'}) }}" target="_top">
+            <input type="submit" value=" ">
+            <input name="q" type="search" placeholder="Search" autocomplete="off">
+        </form>
+    </div>
 </div>
 <div class="header-menu-line">
     {% include 'AppBundle:amp/layout:_top_menu.html.twig' ignore missing %}
