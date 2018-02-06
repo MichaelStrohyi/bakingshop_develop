@@ -4,48 +4,58 @@
 
 {% block main %}
     {% if articles is defined %}
-        {% for article in articles %}
-            <div class="article-preview-item">
-                <div class="article-preview">
-                    <h1><span>{{ article.header }}</span></h1>
-                    <div class="article-preview-content">
-                        <div class="article-preview-image">
-                            <div class="logo-wraper">
-                                {% if article.logo is not null and article.logo.filename is not null %}
-                                    <amp-img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}" width="{{ article.logo.width }}" height="{{ article.logo.height }}" layout="responsive"></amp-img>
-                                {% else %}
-                                    <amp-img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
-                                {% endif %}
+        {% if needle is defined %}
+            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Articles:</div>
+        {% endif %}
+        <div class="article-previews">
+            {% for article in articles %}
+                <div class="article-preview-item">
+                    <div class="article-preview">
+                        <h1><span>{{ article.header }}</span></h1>
+                        <div class="article-preview-content">
+                            <div class="article-preview-image">
+                                <div class="logo-wraper">
+                                    {% if article.logo is not null and article.logo.filename is not null %}
+                                        <amp-img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}" width="{{ article.logo.width }}" height="{{ article.logo.height }}" layout="responsive"></amp-img>
+                                    {% else %}
+                                        <amp-img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                    {% endif %}
+                                </div>
                             </div>
+                            <p>{{ article.description }}</p>
                         </div>
-                        <p>{{ article.description }}</p>
+                        <a class="show-recipe-block" href="{{ path(article, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
                     </div>
-                    <a class="show-recipe-block" href="{{ path(article, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% if stores is defined %}
-        {% for store in stores %}
-            <div class="article-preview-item">
-                <div class="article-preview">
-                    <h1><span>{{ store.name }}</span></h1>
-                    <div class="article-preview-content">
-                        <div class="article-preview-image">
-                            <div class="logo-wraper">
-                                {% if store.logo is not null and store.logo.filename is not null %}
-                                    <amp-img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}" width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
-                                {% else %}
-                                    <amp-img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
-                                {% endif %}
+        {% if needle is defined %}
+            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
+        {% endif %}
+        <div class="article-previews">
+            {% for store in stores %}
+                <div class="article-preview-item">
+                    <div class="article-preview">
+                        <h1><span>{{ store.name }}</span></h1>
+                        <div class="article-preview-content">
+                            <div class="article-preview-image">
+                                <div class="logo-wraper">
+                                    {% if store.logo is not null and store.logo.filename is not null %}
+                                        <amp-img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}" width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
+                                    {% else %}
+                                        <amp-img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                    {% endif %}
+                                </div>
                             </div>
+                            <p>{{ store.description }}</p>
                         </div>
-                        <p>{{ store.description }}</p>
+                        <a class="show-recipe-block" href="{{ path(store, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>Coupons</span></a>
                     </div>
-                    <a class="show-recipe-block" href="{{ path(store, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>Coupons</span></a>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}

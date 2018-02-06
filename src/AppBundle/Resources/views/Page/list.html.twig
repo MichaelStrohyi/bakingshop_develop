@@ -30,10 +30,10 @@
     {% endif %}
 
     {% if stores is defined %}
+        {% if needle is defined %}
+            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
+        {% endif %}
         <div class="article-previews">
-            {% if needle is defined %}
-                <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
-            {% endif %}
             {% for store in stores %}
                 <div class="article-preview-item">
                     <div class="article-preview">
