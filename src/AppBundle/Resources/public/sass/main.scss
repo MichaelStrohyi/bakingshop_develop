@@ -14,10 +14,7 @@ $coupons-block-item-bg: #fff4ef;
 $additional-text-color: #663333;
 $menu-hover-bg: #f3e1d9;
 .container {
-    background: {
-        image: url("/bundles/app/img/main-bg.png");
-        color: #f2f2f2;
-    }
+    background: url("/bundles/app/img/main-bg.png") #f2f2f2;
     width: 100%;
     font-family: 'Rokkitt', serif;
     color: #000;
@@ -33,8 +30,10 @@ $menu-hover-bg: #f3e1d9;
     margin: 0;
 }
 .no-expand > [class*='col-'] {
-    padding-right: 0;
-    padding-left: 0;
+    padding: {
+        right: 0;
+        left: 0;
+    }
 }
 a {
     text-decoration: none;
@@ -98,10 +97,7 @@ a {
 .top-menu-pattern-top, .top-menu-pattern-bottom {
     height: $menu-pattern-height;
     width: 100%;
-    background: {
-        position: top center;
-        repeat: repeat;
-    }
+    background: top center repeat;
 }
 .top-menu-pattern-top {
     background-image: url("/bundles/app/img/top-menu-pattern.png");
@@ -135,17 +131,15 @@ a {
             left: -50px;
             top: 40%;
             transform: translateY(-50%);
-            background: {
-                image: url("/bundles/app/img/top-menu-logo.png");
-                repeat: no-repeat;
-                position: bottom center;
-            }
+            background: url("/bundles/app/img/top-menu-logo.png") bottom center no-repeat;
         }
     }
     &.coupons-page {
         letter-spacing: -.01em;
-        text-indent: -26px;
-        text-transform: none;
+        text: {
+            indent: -26px;
+            transform: none;
+        }
         span:after {
             width: 0;
             height: 0;
@@ -155,7 +149,6 @@ a {
 .top-menu {
     z-index: 10;
     position: relative;
-/*    margin: 48px 0 -40px;*/
     margin: 10px 0 -40px;
     text-align: center;
     ul {
@@ -213,8 +206,10 @@ a {
         border: 0;
         outline: none;
         color: $additional-text-color;
-        font-size: 18px;
-        font-family: 'Rokkitt', serif;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+        }
         &:focus {
             background-color: #f5f5f5;
         }
@@ -223,12 +218,7 @@ a {
             top: 0;
             right: 0;
             width: 66px;
-            background: {
-                color: $main-red-color;
-                image: url("/bundles/app/img/search-icon.png");
-                position: center;
-                repeat: no-repeat;
-            }
+            background: $main-red-color url("/bundles/app/img/search-icon.png") center no-repeat;
             &:hover {
                 opacity: .7;
             }
@@ -238,14 +228,16 @@ a {
         }
         &[type="text"] {
             width: 100%;
-            padding-left: 18px;
-            padding-right: 66px;
+            padding: {
+                left: 18px;
+                right: 66px;
+            }
             box-sizing: border-box;
             border: {
                 top: 4px;
                 bottom: 4px;
                 style: solid;
-                color:$main-red-color;
+                color: $main-red-color;
             }
         }
     }
@@ -292,11 +284,7 @@ a {
     left: -42px;
     width: 41px;
     height: 57px;
-    background: {
-        image: url("/bundles/app/img/search-logo.png");
-        position: center;
-        repeat: no-repeat;
-    }
+    background: url("/bundles/app/img/search-logo.png") center no-repeat;
 }
 .top-menu-search-loading {
     position: absolute;
@@ -307,14 +295,8 @@ a {
     width: 40px;
     height: 40px;
     display: none;
-    background: {
-        image: url("/bundles/app/img/loading.gif");
-        position: center;
-        repeat: no-repeat;
-        size: cover;
-    }
+    background: url("/bundles/app/img/loading.gif") center/cover no-repeat;
 }
-/* coupons header */
 .header-logo-line {
     text-align: center;
     font: {
@@ -447,7 +429,6 @@ a {
         min-width: 400px;
     }
 }
-/**/
 .main-content {
     padding: 16px 9px;
     margin: 0;
@@ -681,14 +662,15 @@ a {
 .offers-block-header {
     background-color: $main-yellow-color;
     color: $headers-text-color;
-   
     font-size: 24px;
 }
 .offers-block-header, .coupons-block-header-title h1, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2, .article-preview h1 {
     position: relative;
-    text-align: center;
     letter-spacing: -.025em;
-    text-transform: uppercase;
+    text: {
+        align: center;
+        transform: uppercase;
+    }
     line-height: 30px !important;
     span {
         vertical-align: -4px;
@@ -700,15 +682,19 @@ a {
         height: 100%;
         width: 8px;
         box-sizing: border-box;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
         right: 0;
-        border-right: 8px solid $background-color;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            right: 8px solid $background-color;
+        }
     }            
     &:before {
         left: 0;
-        border-right: none;
-        border-left: 8px solid $background-color;
+        border: {
+            right: none;
+            left: 8px solid $background-color;
+        }
     }
 }
 .offers-block-list {
@@ -748,11 +734,7 @@ a {
         height: 64px;
         left: -6px;
         top: -6px;
-        background: {
-            image: url("/bundles/app/img/right-column-logo.png");
-            repeat: no-repeat;
-            position: bottom center;
-        }
+        background: url("/bundles/app/img/right-column-logo.png") bottom center no-repeat;
     }
 }
 .side-menu-section {
@@ -914,8 +896,10 @@ li.active {
             }
         }
         &:after, &:before {
-            border-top: 16px solid transparent;
-            border-bottom: 16px solid transparent;
+            border: {
+                top: 16px solid transparent;
+                bottom: 16px solid transparent;
+            }
         }
     }
     h2 {
@@ -980,11 +964,7 @@ li.active {
             height: 28px;
             right: 0;
             bottom: -13px;
-            background: {
-                image: url("/bundles/app/img/article-table-corner.png");
-                repeat: no-repeat;
-                position: bottom center;
-            }
+            background: url("/bundles/app/img/article-table-corner.png") bottom center no-repeat;
         }
         font: {
             size: 14px;
@@ -1027,11 +1007,7 @@ li.active {
         height: 56px;
         left: -42px;
         top: -20px;
-        background: {
-            image: url("/bundles/app/img/article-sign-logo.png");
-            repeat: no-repeat;
-            position: bottom center;
-        }
+        background: url("/bundles/app/img/article-sign-logo.png") bottom center no-repeat;
     }
 }
 .content-article-block-enjoy  {
@@ -1067,8 +1043,10 @@ li.active {
         justify-content: center;
         background-color: $main-red-color;
         &:after, &:before {
-            border-top: 28px solid transparent;
-            border-bottom: 28px solid transparent;
+            border: {
+                top: 28px solid transparent;
+                bottom: 28px solid transparent;
+            }
         }
         &:after {
             right: 0;
@@ -1114,8 +1092,10 @@ li.active {
     p {
         margin: 6px 0;
         color: #663333;
-        font-family: 'Droid Sans', sans-serif;
-        font-size: 13px;
+        font: {
+            family: 'Droid Sans', sans-serif;
+            size: 13px;
+        }
         line-height: 20px;
         letter-spacing: 0.02em;
     }
@@ -1149,9 +1129,11 @@ li.active {
         top: 0;
         height: 0;
         width: 0;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
-        border-left: 8px solid $background-color;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            left: 8px solid $background-color;
+        }
     }
 }
 .top-menu-search-result {
@@ -1193,8 +1175,10 @@ li.active {
         text-align: right;
     }
     .no-expand > [class*='col-'] {
-        padding-right: 9px;
-        padding-left: 9px;
+        padding: {
+            right: 9px;
+            left: 9px;
+        }
     }
     .top-menu {
         ul {
@@ -1233,12 +1217,16 @@ li.active {
         height: 105px;
     }
     .no-expand > [class*='col-'] {
-        padding-right: 3px;
-        padding-left: 3px;
+        padding: {
+            right: 3px;
+            padding-left: 3px;
+        }
     }
     .main-content {
-        padding-right: 5px;
-        padding-left: 5px;
+        padding: {
+            right: 5px;
+            padding-left: 5px;
+        }
     }
     .coupons-block-header-title {
         margin-left: 0;
