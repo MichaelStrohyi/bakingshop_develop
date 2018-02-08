@@ -27,10 +27,28 @@
     </div>
     <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com" width="56px" height="56px" layout="fixed"></amp-img>
     <span>BAKINGSHOP.com</span></a>
-    <div class="search-block">
+    <div class="main-menu-search">
+        <amp-state id="searchResult" [src]="'{{ path('search_ajax', {"prefix": amp_prefix}) }}?search-ajax=' + searchString">
+            <script type="application/json">
+                {"items":[]}
+            </script>
+        </amp-state>
         <form action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all'}) }}" target="_top">
             <input type="submit" value=" ">
-            <input name="q" type="search" placeholder="Search" autocomplete="off">
+            <div class="main-menu-search-form">
+                <input name="q" type="search" placeholder="Search" autocomplete="off" on="input-debounced:AMP.setState({searchString: event.value})">
+                <amp-list width="auto"
+                    height="0"
+                    layout="fixed-height"
+                    src="{{ path('search_ajax', {"prefix": amp_prefix}) }}"
+                    [src]="searchResult.items" 
+                    [height]="searchResult.items.length * 28 + 2"
+                    class="main-menu-search-result">
+                    <template type="amp-mustache">
+                        <a href="{{ "{{url}}" }}" class="{{ "{{class}}" }}">{{ "{{name}}" }}</a>
+                    </template>
+                </amp-list>
+            </div>
         </form>
     </div>
 </div>

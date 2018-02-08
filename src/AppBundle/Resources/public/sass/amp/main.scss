@@ -51,8 +51,8 @@ a {
         }
     }
 }
-.search-block {
-    z-index: 9;
+.main-menu-search {
+    z-index: 10;
     position: absolute;
     top: 0;
     right: 0;
@@ -69,43 +69,83 @@ a {
         position: relative;
         box-sizing: content-box;
         padding: 0;
-        background-color: #dfd3d5;
-        background-image: url("/bundles/app/img/search-icon.png");
-        background-repeat: no-repeat;
-        background-position: bottom center;
+        background: #dfd3d5 url("/bundles/app/img/search-icon.png") bottom center no-repeat;
         border-radius: 4px;
         border: none;
         width: 34px;
         height: 30px;
         &:hover {
             cursor: pointer;
-            & ~ input {
+            & ~ .main-menu-search-form {
                 visibility: visible;
                 transition: opacity .9s ease;
                 opacity: 1;
             }
         }
     }
-    input[type=search] {
-        z-index: 8;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
+}
+.main-menu-search-form {
+    z-index: 8;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 34px 0 0;
+    margin: 0;
+    input {
         width: 100%;
         height: 30px;
         box-sizing: border-box;
-        padding: 0;
-        padding-right: 34px;
-        margin: 0;
-        border: 1px solid #dfd3d5;
+        border: 2px solid #dfd3d5;
         outline: none;
-        color: $additional-text-color;
-        font-size: 16px;
-        font-family: 'Rokkitt', serif;
+        color: #633;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+        }
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.main-menu-search-result {
+    position: absolute;
+    width: 100%;
+    background-color: $background-color;
+    text-align: left;
+    line-height: 20px;
+    display: none;
+    a {
+        border: {
+            left: 2px solid #dfd3d5;
+            right: 2px solid #dfd3d5;
+        }
+        &:last-of-type {
+            border-bottom: 2px solid #dfd3d5;
+        }
+        display: block;
+        white-space: nowrap;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+            weight: normal;
+        }
+        padding: 4px 4px 4px 12px;
+        color: #633;
+        &.search-result-more, &.search-result-type {
+            font-size: 14px;
+            padding: 4px 4px 4px 16px;
+            text-transform: none;
+        }
+        &.search-result-type {
+            padding-left: 4px;
+        }
         &:hover {
-            visibility: visible;
+            background-color: $menu-hover-bg;
             opacity: 1;
         }
     }
