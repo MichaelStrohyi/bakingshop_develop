@@ -75,6 +75,9 @@ class SearchController extends PageController
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
             'needle' => $needle,
+            'stores' => null,
+            'articles' => null,
+
         ];
         $articles_count = $stores_count = 0;
         switch ($slug) {
@@ -121,10 +124,13 @@ class SearchController extends PageController
 
         $items = [];
         if (!empty($articles)) {
-            $items[] = [
-                'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                'name' => 'Results from Articles', 'class' => 'search-result-type disabled',
-            ];
+            if (!empty($stores)) {
+                $items[] = [
+                    'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
+                    'name' => 'Results from Articles', 'class' => 'search-result-type disabled',
+                ];
+            }
+
             foreach ($articles as $article) {
                 $items[] = [
                     'url' => $this->generatePathForObj($article, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
@@ -132,6 +138,7 @@ class SearchController extends PageController
                     'class' => 'result',
                 ];
             }
+
             if ($articles_count > count($articles)) {
                $items[] = [
                    'url' => $this->generateUrl('search_page', ['slug' => 'article', 'prefix' => $prefix, 'q' => $needle]),
@@ -142,11 +149,14 @@ class SearchController extends PageController
         }
 
         if (!empty($stores)) {
-            $items[] = [
-                'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                'name' => 'Results from Stores', 
-                'class' => 'search-result-type disabled',
-            ];
+            if (!empty($articles)) {
+                $items[] = [
+                    'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
+                    'name' => 'Results from Stores',
+                    'class' => 'search-result-type disabled',
+                ];
+            }
+
             foreach ($stores as $store) {
                 $items[] = [
                     'url' => $this->generatePathForObj($store, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),

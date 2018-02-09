@@ -6,7 +6,6 @@ $(() ->
         if search_str.length >= 2
             $(".top-menu-search-image").hide()
             $(".top-menu-search-loading").show()
-            $(".top-menu-search-result").hide()
             $.ajax {
                 type: 'post',
                 url: "/search", 
