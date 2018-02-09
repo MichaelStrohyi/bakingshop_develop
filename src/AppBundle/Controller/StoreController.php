@@ -78,6 +78,6 @@ class StoreController extends Controller
             throw $this->createNotFoundException();
         }
 
-        return  $this->redirect($res);
+        return  $this->redirect($res, 301);
     }
 }
