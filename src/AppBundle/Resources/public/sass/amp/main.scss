@@ -981,4 +981,17 @@ a {
             right: 2px;
         }
     }
+    .main-menu-search-result {
+        input {font-size: 16px;}
+        a {
+            font-size: 16px;
+            line-height: 16px;
+            &.search-result-more, &.search-result-type {
+                font-size: 13px;
+            }
+        }
+    }
+    .main-menu-search-form input {
+        font-size: 16px;
+    }
 }
