@@ -3,9 +3,12 @@
 {% block title %} Our {{ type_title|capitalize }} | {{ parent() }}{% endblock %}
 
 {% block main %}
-    {% if articles is defined %}
-        {% if needle is defined %}
-            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Articles:</div>
+    {% if needle is defined and articles is empty and stores is empty %}
+        <div class="searched-for-alert">No results have been found for <b>'{{ needle }}'</b></div>
+    {% endif %}
+    {% if articles is defined and articles is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ stores is not empty ? ' in Articles' : '' }}:</div>
         {% endif %}
         <div class="article-previews">
             {% for article in articles %}
@@ -29,9 +32,9 @@
         </div>
     {% endif %}
 
-    {% if stores is defined %}
-        {% if needle is defined %}
-            <div class="searched-for-alert">You have searched <b>'{{ needle }}'</b> in Stores:</div>
+    {% if stores is defined and stores is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ articles is not empty ? ' in Stores' : '' }}:</div>
         {% endif %}
         <div class="article-previews">
             {% for store in stores %}

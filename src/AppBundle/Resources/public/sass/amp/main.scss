@@ -9,10 +9,7 @@ $additional-text-color: #673332;
 $menu-hover-bg: #f3e1d9;
 $menu-pattern-height: 21px;
 body {
-    background: {
-        image: url("/bundles/app/img/amp-main-bg.png");
-        color: #f2f2f2;
-    }
+    background: #f2f2f2 url("/bundles/app/img/amp-main-bg.png");
 }
 a {
     &:hover {
@@ -54,8 +51,8 @@ a {
         }
     }
 }
-.search-block {
-    z-index: 9;
+.main-menu-search {
+    z-index: 10;
     position: absolute;
     top: 0;
     right: 0;
@@ -72,49 +69,90 @@ a {
         position: relative;
         box-sizing: content-box;
         padding: 0;
-        background-color: #dfd3d5;
-        background-image: url("/bundles/app/img/search-icon.png");
-        background-repeat: no-repeat;
-        background-position: bottom center;
+        background: #dfd3d5 url("/bundles/app/img/search-icon.png") bottom center no-repeat;
         border-radius: 4px;
         border: none;
         width: 34px;
         height: 30px;
         &:hover {
             cursor: pointer;
-            & ~ input {
+            & ~ .main-menu-search-form {
                 visibility: visible;
                 transition: opacity .9s ease;
                 opacity: 1;
             }
         }
     }
-    input[type=search] {
-        z-index: 8;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
+}
+.main-menu-search-form {
+    z-index: 8;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 34px 0 0;
+    margin: 0;
+    input {
         width: 100%;
         height: 30px;
         box-sizing: border-box;
-        padding: 0;
-        padding-right: 34px;
-        margin: 0;
-        border: 1px solid #dfd3d5;
+        border: 2px solid #dfd3d5;
         outline: none;
-        color: $additional-text-color;
-        font-size: 16px;
-        font-family: 'Rokkitt', serif;
+        color: #633;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+        }
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.main-menu-search-result {
+    position: absolute;
+    width: 100%;
+    background-color: $background-color;
+    text-align: left;
+    display: none;
+    a {
+        border: {
+            left: 2px solid #dfd3d5;
+            right: 2px solid #dfd3d5;
+        }
+        &:last-of-type {
+            border-bottom: 2px solid #dfd3d5;
+        }
+        display: block;
+        font-weight: normal;
+        white-space: nowrap;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+            weight: normal;
+        }
+        line-height: 18px;
+        padding: 4px 4px 4px 12px;
+        color: #633;
+        &.search-result-more, &.search-result-type {
+            font-size: 14px;
+            padding: 4px 4px 4px 16px;
+            text-transform: none;
+        }
+        &.search-result-type {
+            padding-left: 4px;
+        }
         &:hover {
-            visibility: visible;
+            background-color: $menu-hover-bg;
             opacity: 1;
         }
     }
 }
 #menu-link {
-    z-index: 10;
+    z-index: 11;
     position: absolute;
     top: 15px;
     left: 10px;
@@ -148,7 +186,7 @@ a {
 .main-menu-block, .main-submenu-block {
     position: absolute;
     left: 0;
-    top: 41px;
+    top: 43px;
     padding: 10px;
     visibility: hidden;
     opacity: 0;
@@ -266,17 +304,15 @@ a {
     height: $menu-pattern-height;
     margin-top: -$menu-pattern-height * 0.5;
     width: 100%;
-    background: {
-        position: top center;
-        repeat: repeat;
-    }
-    background-image: url("/bundles/app/img/amp-top-menu-pattern-rotated.png");
+    background: url("/bundles/app/img/amp-top-menu-pattern-rotated.png") top center repeat;
 }
 .footer {        
     text-align: center;
     padding: 18px 0;
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 8px;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        size: 8px;
+    }
     letter-spacing: -0.03em;
     background-color: #f2f2f2;
 }
@@ -312,15 +348,19 @@ a {
             height: 100%;
             width: 8px;
             box-sizing: border-box;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
             right: 0;
-            border-right: 8px solid $background-color;
+            border: {
+                top: 15px solid transparent;
+                bottom: 15px solid transparent;
+                right: 8px solid $background-color;
+            }
         }            
         &:before {
             left: 0;
-            border-right: none;
-            border-left: 8px solid $background-color;
+            border: {
+                right: none;
+                left: 8px solid $background-color;
+            }
         }
     }
     h1 {
@@ -363,9 +403,11 @@ a {
         color: #000;
         margin: 7px 0;
         & ~ p {
-            font-size: 13px;
-            font-family: 'Rokkitt', serif;
-            font-weight: 500;
+            font: {
+                size: 13px;
+                family: 'Rokkitt', serif;
+                weight: 500;
+            }
             line-height: 20px;
             letter-spacing: -0.02em;
             padding: 4px 0;
@@ -385,24 +427,28 @@ a {
         background-color: $background-color;
         color: $additional-text-color;
         margin: 0;
-        font-family: 'Droid Sans', sans-serif;
-        font-weight: normal;
-        font-size: 14px;
+        font: {
+            family: 'Droid Sans', sans-serif;
+            weight: normal;
+            size: 14px;
+        }
     }
     table {
         display: block;
         position: relative;
-        border: 0;
         background-color: #eee8e9;
         color: $additional-text-color;
         line-height: 24px;
         width: 100%;
+        border: 0;
         border-radius: 15px;
         padding: 6px 0 16px 0;
         box-sizing: border-box;
         margin-top: 5px;
-        font-size: 14px;
-        font-family: 'Droid Sans', sans-serif;
+        font: {
+            size: 14px;
+            family: 'Droid Sans', sans-serif;
+        }
         overflow: hidden;
         p {
             background-color: #eee8e9;
@@ -449,9 +495,7 @@ a {
         height: 40px;
         left: -30px;
         top: -8px;
-        background-image: url("/bundles/app/img/amp-article-sign-logo.png");
-        background-repeat: no-repeat;
-        background-position: bottom center;
+        background: url("/bundles/app/img/amp-article-sign-logo.png") bottom center no-repeat
     }
 }
 .content-article-block-enjoy {
@@ -477,15 +521,19 @@ a {
         justify-content: center;
         background-color: $main-red-color;
         &:after, &:before {            
-            border-top: 28px solid transparent;
-            border-bottom: 28px solid transparent;
             right: 0;
-            border-right: 14px solid $background-color;
+            border: {
+                top: 28px solid transparent;
+                bottom: 28px solid transparent;
+                right: 14px solid $background-color;
+            }
         }
         &:before {
             left: 0;
-            border-right: none;
-            border-left: 14px solid $background-color;
+            border: {
+                right: none;
+                left: 14px solid $background-color;
+            }
         }
         span {
             max-height: 100%;
@@ -557,9 +605,11 @@ a {
         top: 0;
         height: 0;
         width: 0;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
-        border-left: 8px solid $background-color;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            left: 8px solid $background-color;
+        }
     }
 }
 
@@ -589,9 +639,8 @@ a {
 }
 .coupons-block-header-title {
     background-color: $main-red-color;
-    margin-bottom: 8px;
+    margin: 0 0 8px 125px;
     color: $headers-text-color;
-    margin-left: 125px;
     font-size: 24px;
     &.no-logo {
         margin-left: 0;
@@ -825,8 +874,10 @@ a {
         }
     }
     .searched-for-alert {
-        margin-left: 3px;
-        margin-right: 3px;
+        margin: {
+            left: 3px;
+            right: 3px;
+        }
     }
 }
 @media screen and (min-width: 340px) and (max-width: 539px) {
@@ -883,8 +934,10 @@ a {
         left: 50px;
     }
     .searched-for-alert {
-        margin-left: 2px;
-        margin-right: 2px;
+        margin: {
+            left: 2px;
+            right: 2px;
+        }
     }
 }
 @media screen and (max-width: 339px) {
@@ -924,7 +977,9 @@ a {
         width: 100%;
     }
     .searched-for-alert {
-        margin-left: 2px;
-        margin-right: 2px;
+        margin: {
+            left: 2px;
+            right: 2px;
+        }
     }
 }
