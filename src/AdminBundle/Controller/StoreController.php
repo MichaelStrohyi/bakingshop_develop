@@ -156,10 +156,10 @@ class StoreController extends PageController
      **/
     private function createStoreForm(Store $store, Request $request)
     {
-            $form = $this->createForm(new StoreType(), $store);
-            $form->handleRequest($request);
+        $form = $this->createForm(new StoreType(), $store);
+        $form->handleRequest($request);
 
-            return $form;
+        return $form;
     }
 
     /**

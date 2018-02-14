@@ -19,9 +19,10 @@ class PageController extends Controller
      */
     public function homepageAction($prefix, Request $request)
     {
+        #g find article with is_homepage flag
         $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
-
         $article = $article_repo->getHomepage();
+        # return error 404 if article is not fond
         if (!$article) {
             throw $this->createNotFoundException();
         }

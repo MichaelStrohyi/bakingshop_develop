@@ -446,7 +446,9 @@ class Article
         }
         $dochtml = new \DOMDocument();
         $dochtml->loadHTML($html);
+        # find all <table> tags
         $table_tags = $dochtml->getElementsByTagName('table');
+        #remove all atributes inside <table> tags
         foreach ($table_tags as $tag) {
             $attributes = null;
             foreach ($tag->attributes as $attr) {

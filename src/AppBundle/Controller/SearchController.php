@@ -17,20 +17,28 @@ class SearchController extends PageController
      */
     public function indexAction(Request $request, $prefix)
     {
+        # exit if prefix is not set and methos is not POST (GET method is only allowed for pages with prefix)
         if (!$request->isMethod('POST') && empty($prefix)) {
             throw $this->createNotFoundException();
         }
 
         $articles_all_count = $stores_all_count = $articles = $stores = $json_res = null;
+        # get search-string from parameters
         $needle= trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-ajax')))));
-
+        # if search-string is not empty
         if (!empty($needle)) {
+            #set max count of search results wich will be shown for user
             $limit = 10;
-            $articles = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle, $limit);
-            $stores = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle, $limit);
+            # get articles wich match search-string
+            $articles = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle, $limit + 1);
+            # get stores wich match search-string
+            $stores = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle, $limit + 1);
+            # get count of articles and stores
             $articles_count = $articles_all_count = count($articles);
             $stores_count = $stores_all_count = count($stores);
+            # if total count of stores and articles are more than limit
             if ($articles_count + $stores_count > $limit) {
+                # remove extra results of search
                 if ($stores_count < $limit / 2) {
                     $articles_count = $limit - $stores_count;
                 } elseif ($articles_count < $limit / 2) {
@@ -43,19 +51,19 @@ class SearchController extends PageController
                 $stores = array_slice($stores, 0, $stores_count);
             }
         }
-
+        # set parameters for twig template
         $parameters = [
             'needle' => $needle,
             'articles_count' => $articles_all_count,
             'stores_count' => $stores_all_count,
         ];
-
+        # if prefix is not set render search results as html
         if (empty($prefix)) {
             $parameters['articles'] = $articles;
             $parameters['stores'] = $stores;
             return $this->render('AppBundle:Page:search.html.twig', $parameters);
         }
-
+        # if prefix is set return search results as json
         return new Response($this->getJsonRes($articles, $stores, $needle, $articles_all_count, $stores_all_count, $request->getBaseUrl(), $prefix));
     }
 
@@ -67,7 +75,9 @@ class SearchController extends PageController
      */
     public function listAction($slug, $prefix = null, Request $request)
     {
+        # get search-string from parameters
         $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('q')))));
+        #set parameters for twig template
         $parameters = [
             'type' => 'search',
             'type_title' => 'Search',
@@ -80,6 +90,7 @@ class SearchController extends PageController
 
         ];
         $articles_count = $stores_count = 0;
+        # get articles and stores wich match search-string according to search type
         switch ($slug) {
             case 'article':
                 $parameters['articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
@@ -94,13 +105,14 @@ class SearchController extends PageController
                 $parameters['stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
                 break;
         }
-
+        # get articles and stores count
         $articles_count = array_key_exists('articles', $parameters) && !empty($parameters['articles']) ? count($parameters['articles']) : 0;
         $stores_count = array_key_exists('stores', $parameters) && !empty($parameters['stores']) ? count($parameters['stores']) : 0;
+        # if there is only one result of search make redirect to page of this result
         if ($articles_count + $stores_count == 1) {
             return $articles_count == 0 ? $this->redirect($this->generatePathForObj($parameters['stores'][0], ['baseUrl' => $request->getBaseUrl(), 'prefix' => $prefix]), 301) : $this->redirect($this->generatePathForObj($parameters['articles'][0], ['baseUrl' => $request->getBaseUrl(), 'prefix' => $prefix]), 301);
         }
-
+        # render result of search
         return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }
 
@@ -119,6 +131,7 @@ class SearchController extends PageController
     private function getJsonRes($articles, $stores, $needle, $articles_count, $stores_count, $baseUrl, $prefix = null)
     {
         $items = [];
+        # if stores and articles are empty return message "no results found"
         if (empty($articles) && empty($stores)) {
             $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
@@ -127,8 +140,9 @@ class SearchController extends PageController
                 ];
             return json_encode(["items" => $items]);
         }
-
+        # if articles are not empty
         if (!empty($articles)) {
+            # if stores are not empty add header with type of search result for articles
             if (!empty($stores)) {
                 $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
@@ -136,7 +150,7 @@ class SearchController extends PageController
                     'class' => 'search-result-type disabled',
                 ];
             }
-
+            # add each article into result
             foreach ($articles as $article) {
                 $items[] = [
                     'url' => $this->generatePathForObj($article, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
@@ -144,7 +158,7 @@ class SearchController extends PageController
                     'class' => 'result',
                 ];
             }
-
+            # add link to see all articles if some articles were removed from result by limit
             if ($articles_count > count($articles)) {
                $items[] = [
                    'url' => $this->generateUrl('search_page', ['slug' => 'article', 'prefix' => $prefix, 'q' => $needle]),
@@ -153,8 +167,9 @@ class SearchController extends PageController
                ]; 
             }
         }
-
+        # if stores are not empty
         if (!empty($stores)) {
+            # if articles are not empty add header with type of search result for store
             if (!empty($articles)) {
                 $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
@@ -162,7 +177,7 @@ class SearchController extends PageController
                     'class' => 'search-result-type disabled',
                 ];
             }
-
+            # add each store into result
             foreach ($stores as $store) {
                 $items[] = [
                     'url' => $this->generatePathForObj($store, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
@@ -170,7 +185,7 @@ class SearchController extends PageController
                     'class' => 'result',
                 ];
             }
-
+            # add link to see all stores if some store were removed from result by limit
             if ($stores_count > count($stores)) {
                $items[] = [
                    'url' => $this->generateUrl('search_page', ['slug' => 'store', 'prefix' => $prefix, 'q' => $needle]),
@@ -179,7 +194,7 @@ class SearchController extends PageController
                ]; 
             }
         }
-
+        #return result as json
         return json_encode(["items" => $items]);
     }
     /**

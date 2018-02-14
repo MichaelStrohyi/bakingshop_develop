@@ -20,6 +20,7 @@ class StoreController extends Controller
      */
     public function couponsAction(Store $store, Request $request, $prefix = null)
     {
+        # get from-amp flag from parameters
         $amp_flag = $request->query->get('a');
 
         $parameters = [

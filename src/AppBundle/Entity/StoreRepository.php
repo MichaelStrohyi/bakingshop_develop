@@ -84,6 +84,7 @@ class StoreRepository extends EntityRepository
      **/
     public function findBySubname($subname, $limit = null)
     {
+        # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
