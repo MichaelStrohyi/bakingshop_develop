@@ -60,15 +60,15 @@
         <a href="{{ path('homepage') }}"><img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com">
         <span>BAKINGSHOP.com</span></a>
         <div class="main-menu-search">
-                <form method="get" action="{{ path('search_page', {'slug': 'all'}) }}">
-                <div class="top-menu-search-loading coupons-page"></div>
-                    <input type="submit" value=" ">
-                    <div class="main-menu-search-form">
-                        <input class="search-input" name="q" type="search" placeholder="Search" autocomplete="off">
-                    <ul class="top-menu-search-result main-menu coupons-page">
-                    </ul>
-                    </div>
-                </form>
+            <form method="get" action="{{ path('search_page', {'slug': 'all'}) }}">
+            <div class="top-menu-search-loading coupons-page"></div>
+                <input type="submit" value=" ">
+                <div class="main-menu-search-form">
+                    <input class="search-input" name="q" type="search" placeholder="Search" autocomplete="off">
+                <ul class="top-menu-search-result main-menu coupons-page">
+                </ul>
+                </div>
+            </form>
         </div>
     </div>
 {% endif %}

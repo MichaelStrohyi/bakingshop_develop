@@ -118,16 +118,22 @@ class SearchController extends PageController
      **/
     private function getJsonRes($articles, $stores, $needle, $articles_count, $stores_count, $baseUrl, $prefix = null)
     {
+        $items = [];
         if (empty($articles) && empty($stores)) {
-            return '{"items":[]}';
+            $items[] = [
+                    'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
+                    'name' => "No results found for '" . $needle . "'",
+                    'class' => 'search-result-type disabled',
+                ];
+            return json_encode(["items" => $items]);
         }
 
-        $items = [];
         if (!empty($articles)) {
             if (!empty($stores)) {
                 $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                    'name' => 'Results from Articles', 'class' => 'search-result-type disabled',
+                    'name' => 'Results from Articles',
+                    'class' => 'search-result-type disabled',
                 ];
             }
 

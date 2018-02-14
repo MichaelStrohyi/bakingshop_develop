@@ -59,19 +59,70 @@ a {
         }
     }
 }
-#search-link {
+.main-menu-search {
+    z-index: 10;
     position: absolute;
-    top: 12px;
-    right: 10px;
-    padding: 5px 7px;
-    background-color: #dfd3d5;
-    border-radius: 4px;
-    img {
-        width: 25px;
-        height: 22px;
+    top: 0;
+    right: 0;
+    padding: 14px 10px 0 100px;
+    width: 100%;
+    box-sizing: border-box;
+    form {
+        width: 100%;
+        text-align: right;
+        position: relative;
+    }
+    input[type=submit] {
+        z-index: 9;
+        position: relative;
+        box-sizing: content-box;
+        padding: 0;
+        background: #dfd3d5 url("/bundles/app/img/search-icon.png") bottom center no-repeat;
+        border-radius: 4px;
+        border: none;
+        width: 34px;
+        height: 30px;
+        &:hover {
+            cursor: pointer;
+            & ~ .main-menu-search-form {
+                visibility: visible;
+                transition: opacity .9s ease;
+                opacity: 1;
+            }
+        }
+    }
+}
+.main-menu-search-form {
+    z-index: 8;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 34px 0 0;
+    margin: 0;
+    font-weight: normal;
+    input {
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+        border: 2px solid #dfd3d5;
+        outline: none;
+        color: #633;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+        }
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
     }
 }
 #menu-link {
+    z-index: 11;
     position: absolute;
     top: 15px;
     left: 10px;
@@ -105,7 +156,7 @@ a {
 .main-menu-block, .main-submenu-block {
     position: absolute;
     left: 0;
-    top: 41px;
+    top: 44px;
     padding: 10px;
     visibility: hidden;
     opacity: 0;
@@ -730,6 +781,42 @@ a {
     font-size: 14px;
     text-align: center;
     margin-top: 2px;
+}
+.top-menu-search-result {
+    z-index: 11;
+    position: absolute;
+    left: 0;
+    top: 44px;
+    display: none;
+    line-height: 18px;
+    background-color: $background-color;
+    li {
+        padding-left: 4px;
+        overflow: hidden;
+        &.search-result-type {
+            padding: {
+                top: 4px;
+                bottom: 4px;
+            }
+        }
+    }
+    a {
+        font-size: 18px;
+        padding: 4px 4px 4px 12px;
+        white-space: nowrap;
+        &.search-result-more {
+            font-size: 14px;
+            padding: 4px 4px 4px 16px;
+            text-transform: none;
+        }
+    }
+    &.coupons-page {
+        top: 30px;
+        border-color: #dfd3d5;
+        li, a {
+            color: #633;
+        }
+    }
 }
 @media screen and (min-width: 800px) {
     .content {

@@ -117,7 +117,6 @@ a {
     width: 100%;
     background-color: $background-color;
     text-align: left;
-    line-height: 20px;
     display: none;
     a {
         border: {
@@ -128,12 +127,14 @@ a {
             border-bottom: 2px solid #dfd3d5;
         }
         display: block;
+        font-weight: normal;
         white-space: nowrap;
         font: {
             size: 18px;
             family: 'Rokkitt', serif;
             weight: normal;
         }
+        line-height: 18px;
         padding: 4px 4px 4px 12px;
         color: #633;
         &.search-result-more, &.search-result-type {
@@ -980,18 +981,5 @@ a {
             left: 2px;
             right: 2px;
         }
-    }
-    .main-menu-search-result {
-        input {font-size: 16px;}
-        a {
-            font-size: 16px;
-            line-height: 16px;
-            &.search-result-more, &.search-result-type {
-                font-size: 13px;
-            }
-        }
-    }
-    .main-menu-search-form input {
-        font-size: 16px;
     }
 }

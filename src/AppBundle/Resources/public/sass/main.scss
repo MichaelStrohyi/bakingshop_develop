@@ -440,6 +440,7 @@ a {
     }
 }
 #menu-link {
+    z-index: 11;
     position: absolute;
     top: 15px;
     left: 10px;
@@ -498,7 +499,7 @@ a {
 .main-menu-block, .main-submenu-block {
     position: absolute;
     left: 0;
-    top: 41px;
+    top: 44px;
     padding: 10px;
     visibility: hidden;
     opacity: 0;
@@ -1648,7 +1649,17 @@ li.active {
             }
         }
     }
-    .main-menu-search {
-        padding-left: 10px;
+    .top-menu-search-result {
+        input {font-size: 16px;}
+        a {
+            font-size: 16px;
+            line-height: 16px;
+            &.search-result-more, &.search-result-type {
+                font-size: 13px;
+            }
+        }
+    }
+    .main-menu-search input {
+        font-size: 16px;
     }
 }

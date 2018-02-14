@@ -27,7 +27,16 @@
     </div>
     <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com">
     <span>BAKINGSHOP.com</span></a>
-    <a href="{{ path('homepage') }}" id="search-link"><img src="/bundles/app/img/search-icon.png" alt="Bakingshop.com"></a>
+    <div class="main-menu-search">
+        <form method="get" action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all'}) }}">
+            <input type="submit" value=" ">
+            <div class="main-menu-search-form">
+                <input class="search-input" name="q" type="search" placeholder="Search" autocomplete="off">
+            <ul class="top-menu-search-result main-menu coupons-page">
+            </ul>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="header-menu-line">
     {% include 'AppBundle:amplified/layout:_top_menu.html.twig' ignore missing %}
