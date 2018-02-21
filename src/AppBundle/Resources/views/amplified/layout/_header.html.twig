@@ -28,7 +28,7 @@
     <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com">
     <span>BAKINGSHOP.com</span></a>
     <div class="main-menu-search">
-        <form method="get" action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all'}) }}">
+        <form method="get" action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all', 'page': 1}) }}">
             <input type="submit" value=" ">
             <div class="main-menu-search-form">
                 <input class="search-input" name="q" type="search" placeholder="Search" autocomplete="off">

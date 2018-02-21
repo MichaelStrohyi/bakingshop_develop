@@ -58,7 +58,7 @@ class DefaultController extends Controller
 
         list($controller, $parameters) = $this->getPageController();
 
-        # add request into parameters
+        # add request and prefix into parameters
         $parameters['request'] = $request;
         $parameters['prefix'] = $prefix;
         $response = $this->forward($controller, $parameters, $request->query->all());

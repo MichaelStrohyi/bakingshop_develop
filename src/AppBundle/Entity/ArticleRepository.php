@@ -103,7 +103,8 @@ class ArticleRepository extends EntityRepository
      * @author Michael Strohyi
      **/
     public function findBySubname($subname, $limit = null)
-    {
+    {   
+        # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
@@ -112,13 +113,15 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'SELECT a FROM AppBundle:Article a '
                 . 'WHERE a.header LIKE :subname '
-                . 'AND a.type != :type'
+                . 'AND a.type != :type '
+                . 'ORDER by a.header ASC'
             )
             ->setParameters([
                 'subname' => '%' . $subname . '%',
                 'type' => Article::PAGE_SUBTYPE_INFO,
             ])
             ->setMaxResults($limit);
+            
         return $query->getResult();
     }
 }

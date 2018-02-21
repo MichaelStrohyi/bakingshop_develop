@@ -16,15 +16,21 @@ $(function() {
       return;
     }
     return globalTimeout = setTimeout(function() {
+      var ajax_url;
       globalTimeout = null;
       search_str = el.value;
       $(".top-menu-search-result").html('').hide();
       if (search_str.length >= 2) {
         $(".top-menu-search-image").hide();
         $(".top-menu-search-loading").show();
+        if (fa) {
+          ajax_url = "/search?a=a";
+        } else {
+          ajax_url = "/search";
+        }
         return $.ajax({
           type: 'post',
-          url: "/search",
+          url: ajax_url,
           data: {
             'search-ajax': search_str
           },

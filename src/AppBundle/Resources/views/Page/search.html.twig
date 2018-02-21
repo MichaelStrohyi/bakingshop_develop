@@ -4,11 +4,23 @@
     {% endif %}
     {% set count = 0 %}
     {% for article in articles %}
-        <li><a href="{{ path(article) }}">{{ article.header }}</a></li>
+        <li>
+            {% if amplified %}
+                <a href="{{ path(article, {'prefix': amp_prefix}) }}">{{ article.header }}</a>
+            {% else %}
+                <a href="{{ path(article) }}">{{ article.header }}</a>
+            {% endif %}
+        </li>
         {% set count = count + 1 %}
     {% endfor %}
     {% if articles_count > count %}
-        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+        <li>
+            {% if amplified %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
+            {% else %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle, 'page': 1}) }}">... more results for '{{ needle }}'</a>
+            {% endif %}
+        </li>
     {% endif %}
 {% endif %}
 {% if stores is not empty %}
@@ -17,11 +29,24 @@
         <li class="search-result-type">Results from stores:</li>
     {% endif %}
     {% for store in stores %}
-        <li><a href="{{ path(store) }}">{{ store.name }}</a></li>
+        <li>
+
+            {% if amplified %}
+                <a href="{{ path(store, {'prefix': amp_prefix}) }}">{{ store.name }}</a>
+            {% else %}
+            <a href="{{ path(store) }}">{{ store.name }}</a>
+            {% endif %}
+        </li>
         {% set count = count + 1 %}
     {% endfor %}
     {% if stores_count > count %}
-        <li><a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle}) }}">... more results for '{{ needle }}'</a></li>
+        <li>
+            {% if amplified %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
+            {% else %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle, 'page': 1}) }}">... more results for '{{ needle }}'</a>
+            {% endif %}
+        </li>
     {% endif %}
 {% endif %}
 {% if stores is empty and  articles is empty %}

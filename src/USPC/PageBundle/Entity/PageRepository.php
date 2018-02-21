@@ -14,6 +14,7 @@ class PageRepository extends EntityRepository
 {
     const URL_IS_ALIAS = 'alias';
     const URL_IS_INVALID = 'invalid';
+    const ARTICLES_PER_PAGE = 20;
     /**
      * Mark all unused object urls as alias
      *
@@ -265,5 +266,107 @@ class PageRepository extends EntityRepository
         }
 
         return $crosslink;
+    }
+
+    /**
+     * Return results from $items list for given $page, using $limit items per page. Also return navigation for pagination.
+     *
+     * @param array $items
+     * @param int $page
+     * @param  int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getResultsForPage($items, $page, $limit = self::ARTICLES_PER_PAGE)
+    {
+        if ($page == 0) {
+            return [$items, null];
+        }
+        # get articles and stores arrays from item
+        $articles = array_key_exists('articles', $items) && !empty($items['articles']) ? $items['articles'] : [];
+        $stores = array_key_exists('stores', $items) && !empty($items['stores']) ? $items['stores'] : [];
+        # return if  articles and stores are empty
+        if (empty($articles) && empty($stores)) {
+            return [$items, null];
+        }
+        # if articles and stores are in the items list return mixed list of articles and stores for given page with given items limit per page
+        if (!empty($articles) && !empty($stores)) {
+            return $this->getMixedResultsForPage($articles, $stores, $limit);
+        }
+        # find out either articles or stores list is not empty
+        $items = empty($articles) ? $stores : $articles;
+        $items_type = empty($articles) ? 'stores' : 'articles';
+        # create 404 exception if given page is too big and there are no items in articles/stores list for this page
+        if (($page - 1) * $limit >= count($items)) {
+            throw $this->createNotFoundException();
+        }
+
+        $navigation = [];
+        # add given page into pagination list
+        $nav_links[] = $page;
+        $last_nav_link = ceil(count($items)/$limit);
+        $offset = 0;
+        $run = true;
+        # add pages near given page into pagintation list if they exist (maximum 5 pages)
+        while (count($nav_links) < 5 && $run) {
+            $offset++;
+            $run = false;
+            # add lower page if it exists
+            if ($page - $offset > 0) {
+                array_unshift($nav_links, $page - $offset);
+                $run = true;
+            }
+            # add higher page if it exists
+            if ($page + $offset <= $last_nav_link) {
+                $nav_links[] = $page + $offset;
+                $run = true;
+            }
+        }
+        # create pagination menu if there are more than one page in pagination list
+        if (count($nav_links) != 1) {
+            # add prev link into pagination menu if prev page exists
+            if ($page != 1) {
+                $navigation['prev'] = $page - 1;
+            }
+            # add pagination list into pagination menu
+            $navigation['pages'] = $nav_links;
+            # add next link into pagination menu if next page exists
+            if ($page != $last_nav_link) {
+                $navigation['next'] = $page + 1;
+            }
+        }
+
+        return [[$items_type => array_slice($items, ($page - 1) * $limit, $limit)], $navigation];
+    }
+
+    /**
+     * Return results from $articles and $stores lists for given $page, using $limit items per page
+     *
+     * @param array $articles
+     * @param array $stores
+     * @param  int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getMixedResultsForPage($articles, $stores, $limit = self::ARTICLES_PER_PAGE)
+    {
+        $articles_count = $articles_all_count = count($articles);
+        $stores_count = $stores_all_count = count($stores);
+        # if total count of stores and articles are more than limit
+        if ($articles_count + $stores_count > $limit) {
+            # remove extra results of search
+            if ($stores_count < $limit / 2) {
+                $articles_count = $limit - $stores_count;
+            } elseif ($articles_count < $limit / 2) {
+                $stores_count = $limit - $articles_count;
+            } else {
+                $articles_count = $stores_count = $limit / 2;
+            }
+
+            $articles = array_slice($articles, 0, $articles_count);
+            $stores = array_slice($stores, 0, $stores_count);
+        }
+
+        return ['articles' => $articles, 'stores' => $stores, 'articles_count' => $articles_all_count, 'stores_count' => $stores_all_count];
     }
 }

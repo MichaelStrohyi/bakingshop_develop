@@ -84,6 +84,7 @@ class StoreRepository extends EntityRepository
      **/
     public function findBySubname($subname, $limit = null)
     {
+        # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
@@ -92,6 +93,7 @@ class StoreRepository extends EntityRepository
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
                 . 'WHERE s.name LIKE :subname '
+                . 'ORDER by s.name ASC'
             )
             ->setParameters([
                 'subname' => '%' . $subname . '%',

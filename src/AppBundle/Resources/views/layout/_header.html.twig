@@ -23,7 +23,7 @@
             </div> #}
             <div class="top-menu-search">
                 <div class="top-menu-search-form">
-                    <form name="search" method="get" action="{{ path('search_page', {'slug': 'all'}) }}">
+                    <form name="search" method="get" action="{{ path('search_page', {'slug': 'all', 'page': 1}) }}">
                         <div class="top-menu-search-image"></div>
                         <div class="top-menu-search-loading"></div>
                         <input type="text" class="search-input" name="q" autocomplete="off">
@@ -60,7 +60,7 @@
         <a href="{{ path('homepage') }}"><img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com">
         <span>BAKINGSHOP.com</span></a>
         <div class="main-menu-search">
-            <form method="get" action="{{ path('search_page', {'slug': 'all'}) }}">
+            <form method="get" action="{{ path('search_page', {'slug': 'all', 'page': 1}) }}">
             <div class="top-menu-search-loading coupons-page"></div>
                 <input type="submit" value=" ">
                 <div class="main-menu-search-form">
