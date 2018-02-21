@@ -113,7 +113,8 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'SELECT a FROM AppBundle:Article a '
                 . 'WHERE a.header LIKE :subname '
-                . 'AND a.type != :type'
+                . 'AND a.type != :type '
+                . 'ORDER by a.header ASC'
             )
             ->setParameters([
                 'subname' => '%' . $subname . '%',

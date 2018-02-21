@@ -93,6 +93,7 @@ class StoreRepository extends EntityRepository
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
                 . 'WHERE s.name LIKE :subname '
+                . 'ORDER by s.name ASC'
             )
             ->setParameters([
                 'subname' => '%' . $subname . '%',
