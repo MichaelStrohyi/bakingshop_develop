@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Menu;
 use AppBundle\Entity\Article;
+use AppBundle\Entity\Store;
 
 class PageController extends Controller
 {
@@ -91,26 +92,38 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{prefix}{slug}/list", name="article_list_page",
-     *     requirements={"slug": ".+", "prefix": "amp/|"},
-     *     defaults={"prefix": ""},
+     * @Route("/{prefix}{slug}/list/{page}", name="list_page",
+     *     requirements={"slug": ".+", "prefix": "amp/|", "page": "\d+"},
+     *     defaults={"prefix": "", "page": 1},
      * )
      *
      * @Template()
      */
-    public function listAction($slug, $prefix = null, Request $request)
+    public function listAction($slug, $prefix = null, $page, Request $request)
     {
-        if (!in_array($slug, Article::getTypes())) {
+        if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
             throw $this->createNotFoundException();
         }
 
+        $page_repo = $this->getDoctrine()->getRepository("USPCPageBundle:Page");
         $parameters = [
-            'articles' => $this->getDoctrine()->getRepository('AppBundle:Article')->findAllByType($slug),
-            'type' => $slug,
-            'type_title' => Article::getTypeTitle($slug),
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
+            'page' => $page,
+            'type' => $slug,
             ];
+
+        # get pagination links and articles or stores wich match search-string according to search type
+        if ($slug == Store::PAGE_TYPE) {
+            list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['stores' => $this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName()], $page);
+            $parameters['stores'] = $items['stores'];
+            $parameters['type_title'] = 'Stores';
+        }
+        else {
+            list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['articles' => $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByType($slug)], $page);
+            $parameters['articles'] = $items['articles'];
+            $parameters['type_title'] = Article::getTypeTitle($slug);
+        }
 
         return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
     }

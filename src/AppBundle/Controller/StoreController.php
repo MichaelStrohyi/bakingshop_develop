@@ -37,26 +37,7 @@ class StoreController extends Controller
         # if amp_flag is set render amplified html page otherwise render amp-html page
         return ($amp_flag == 'a') ? $this->render('AppBundle:amplified/Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
     }
-
-    /**
-     * @Route("/{prefix}stores", name="store_list_page",
-     *     requirements={"prefix": "amp/|"},
-     *     defaults={"prefix": ""},
-     * )
-     */
-    public function listAction($prefix = null, Request $request)
-    {
-        $parameters = [
-            'stores' => $this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(),
-            'type' => 'store',
-            'type_title' => 'Stores',
-            'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
-            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
-            ];
-
-        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
-    }
-
+    
     /**
      * @Route("/go/{store_name},{type},{id}", name="out_link",
      *     defaults={"coupon_id": null},

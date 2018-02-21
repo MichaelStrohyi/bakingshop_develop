@@ -33,7 +33,7 @@
                 {"items":[]}
             </script>
         </amp-state>
-        <form action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all'}) }}" target="_top">
+        <form action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all', 'page': 1}) }}" target="_top">
             <input type="submit" value=" ">
             <div class="main-menu-search-form">
                 <input name="q" type="search" placeholder="Search" autocomplete="off" on="input-debounced:AMP.setState({searchString: event.value})">

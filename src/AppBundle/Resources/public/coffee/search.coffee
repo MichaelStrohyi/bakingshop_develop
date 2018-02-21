@@ -24,10 +24,11 @@ $(() ->
                 # hide search image and show loading image
                 $(".top-menu-search-image").hide()
                 $(".top-menu-search-loading").show()
+                if fa then ajax_url = "/search?a=a" else ajax_url = "/search"
                 # make ajax request
                 $.ajax {
                     type: 'post',
-                    url: "/search",
+                    url: ajax_url,
                     data: {'search-ajax':search_str},
                     response: 'text',
                     error: () ->

@@ -7,8 +7,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SearchController extends PageController
+class SearchController extends Controller
 {
+    const RESULTS_LIMIT = 10;
     /**
      * @Route("/{prefix}search", name="search_ajax",
      *     requirements={"prefix": "amp/|"},
@@ -24,43 +25,36 @@ class SearchController extends PageController
 
         $articles_all_count = $stores_all_count = $articles = $stores = $json_res = null;
         # get search-string from parameters
-        $needle= trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-ajax')))));
+        $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-ajax')))));
+        $amplified = $request->get('a') == 'a' ? true : false;
         # if search-string is not empty
         if (!empty($needle)) {
             #set max count of search results wich will be shown for user
-            $limit = 10;
+            $limit = self::RESULTS_LIMIT;
             # get articles wich match search-string
             $articles = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle, $limit + 1);
             # get stores wich match search-string
             $stores = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle, $limit + 1);
-            # get count of articles and stores
-            $articles_count = $articles_all_count = count($articles);
-            $stores_count = $stores_all_count = count($stores);
-            # if total count of stores and articles are more than limit
-            if ($articles_count + $stores_count > $limit) {
-                # remove extra results of search
-                if ($stores_count < $limit / 2) {
-                    $articles_count = $limit - $stores_count;
-                } elseif ($articles_count < $limit / 2) {
-                    $stores_count = $limit - $articles_count;
-                } else {
-                    $articles_count = $stores_count = $limit / 2;
-                }
-
-                $articles = array_slice($articles, 0, $articles_count);
-                $stores = array_slice($stores, 0, $stores_count);
-            }
+            # get results from stores and articles limited by RESULT_LIMIT
+            $items = $this->getDoctrine()->getRepository("USPCPageBundle:Page")->getMixedResultsForPage($articles, $stores, $limit);
+            $articles = $items['articles'];
+            $stores = $items['stores'];
+            $articles_all_count = $items['articles_count'];
+            $stores_all_count = $items['stores_count'];
         }
-        # set parameters for twig template
-        $parameters = [
-            'needle' => $needle,
-            'articles_count' => $articles_all_count,
-            'stores_count' => $stores_all_count,
-        ];
+        
         # if prefix is not set render search results as html
         if (empty($prefix)) {
-            $parameters['articles'] = $articles;
-            $parameters['stores'] = $stores;
+            # set parameters for twig template
+            $parameters = [
+                'needle' => $needle,
+                'articles_count' => $articles_all_count,
+                'stores_count' => $stores_all_count,
+                'articles'=> $articles,
+                'stores' => $stores,
+                'amplified' => $amplified,
+            ];
+
             return $this->render('AppBundle:Page:search.html.twig', $parameters);
         }
         # if prefix is set return search results as json
@@ -68,12 +62,12 @@ class SearchController extends PageController
     }
 
     /**
-     * @Route("/{prefix}search/{slug}", name="search_page",
-     *     requirements={"slug": "article|store|all", "prefix": "amp/|"},
-     *     defaults={"prefix": ""},
+     * @Route("/{prefix}search/{slug}/{page}", name="search_page",
+     *     requirements={"slug": "article|store|all", "prefix": "amp/|", "page": "\d+"},
+     *     defaults={"prefix": "", "page": 0},
      * )
      */
-    public function listAction($slug, $prefix = null, Request $request)
+    public function listAction($slug, $page, $prefix = null, Request $request)
     {
         # get search-string from parameters
         $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('q')))));
@@ -81,35 +75,44 @@ class SearchController extends PageController
         $parameters = [
             'type' => 'search',
             'type_title' => 'Search',
-            'prefix' => $prefix,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
             'needle' => $needle,
             'stores' => null,
             'articles' => null,
+            'page' => $page,
+            'slug' => $slug,
 
         ];
         $articles_count = $stores_count = 0;
-        # get articles and stores wich match search-string according to search type
+        $page_repo = $this->getDoctrine()->getRepository("USPCPageBundle:Page");
+        # get articles and stores wich match search-string according to search type and pagination links
         switch ($slug) {
             case 'article':
-                $parameters['articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
+                list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['articles' => $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle)], $page);
+                $parameters['articles'] = $items['articles'];
                 break;
 
             case 'store':
-                $parameters['stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
+                list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['stores' => $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle)], $page);
+                $parameters['stores'] = $items['stores'];
                 break;
 
             case 'all':
-                $parameters['articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
-                $parameters['stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
+                $articles = $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle);
+                $stores = $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle);
+                $items = $this->getDoctrine()->getRepository("USPCPageBundle:Page")->getMixedResultsForPage($articles, $stores); 
+                $parameters['articles'] = $items['articles'];
+                $parameters['stores'] = $items['stores'];
+                $parameters['articles_count'] = $items['articles_count'];
+                $parameters['stores_count'] = $items['stores_count'];
                 break;
         }
         # get articles and stores count
         $articles_count = array_key_exists('articles', $parameters) && !empty($parameters['articles']) ? count($parameters['articles']) : 0;
         $stores_count = array_key_exists('stores', $parameters) && !empty($parameters['stores']) ? count($parameters['stores']) : 0;
         # if there is only one result of search make redirect to page of this result
-        if ($articles_count + $stores_count == 1) {
+        if ($articles_count + $stores_count == 1 && (!array_key_exists('navigation', $parameters) || empty($parameters['navigation']))) {
             return $articles_count == 0 ? $this->redirect($this->generatePathForObj($parameters['stores'][0], ['baseUrl' => $request->getBaseUrl(), 'prefix' => $prefix]), 301) : $this->redirect($this->generatePathForObj($parameters['articles'][0], ['baseUrl' => $request->getBaseUrl(), 'prefix' => $prefix]), 301);
         }
         # render result of search
@@ -133,11 +136,14 @@ class SearchController extends PageController
         $items = [];
         # if stores and articles are empty return message "no results found"
         if (empty($articles) && empty($stores)) {
-            $items[] = [
+            if (strlen($needle) > 1) {
+                $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
                     'name' => "No results found for '" . $needle . "'",
                     'class' => 'search-result-type disabled',
                 ];
+            }
+
             return json_encode(["items" => $items]);
         }
         # if articles are not empty
@@ -161,7 +167,7 @@ class SearchController extends PageController
             # add link to see all articles if some articles were removed from result by limit
             if ($articles_count > count($articles)) {
                $items[] = [
-                   'url' => $this->generateUrl('search_page', ['slug' => 'article', 'prefix' => $prefix, 'q' => $needle]),
+                   'url' => $this->generateUrl('search_page', ['slug' => 'article', 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
                    'name' => "... more results for '" . $needle . "'",
                    'class' => 'search-result-more',
                ]; 
@@ -188,7 +194,7 @@ class SearchController extends PageController
             # add link to see all stores if some store were removed from result by limit
             if ($stores_count > count($stores)) {
                $items[] = [
-                   'url' => $this->generateUrl('search_page', ['slug' => 'store', 'prefix' => $prefix, 'q' => $needle]),
+                   'url' => $this->generateUrl('search_page', ['slug' => 'store', 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
                    'name' => "... more results for '" . $needle . "'",
                    'class' => 'search-result-more'
                ]; 
