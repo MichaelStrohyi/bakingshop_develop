@@ -45,7 +45,8 @@ class Menu
      * @var string
      *
      * @ORM\Column(name="header", type="string", length=255, nullable=false)
-     * @Assert\Length(max=200)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=200)
      * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $header;
