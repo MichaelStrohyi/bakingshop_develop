@@ -25,6 +25,7 @@ class MenuController extends Controller
 
         return [
             'menu_list' => $menu_list,
+            'menu_types' => Menu::getTypes(),
         ];
     }
 
