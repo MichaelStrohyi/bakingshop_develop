@@ -419,7 +419,7 @@ class Article
                 $type_title = 'Articles';
                 break;
             case self::PAGE_SUBTYPE_RECIPE:
-                $type_title = 'Recipies';
+                $type_title = 'Recipes';
                 break;
             case self::PAGE_SUBTYPE_INFO:
                 $type_title = 'Information';
