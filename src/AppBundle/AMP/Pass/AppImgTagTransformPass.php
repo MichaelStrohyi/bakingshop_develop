@@ -2,6 +2,7 @@
 namespace AppBundle\AMP\Pass;
 
 use Lullabot\AMP\Pass\ImgTagTransformPass;
+use Lullabot\AMP\Validate\CssLengthAndUnit;
 use Lullabot\AMP\Validate\Scope;
 use Lullabot\AMP\Utility\ActionTakenLine;
 use Lullabot\AMP\Utility\ActionTakenType;
@@ -115,6 +116,42 @@ class AppImgTagTransformPass extends ImgTagTransformPass
         }
 
         return $size;
+    }
+ /**
+     * @param DOMQuery $el
+     * @return bool
+     */
+    protected function setResponsiveImgHeightAndWidth(DOMQuery $el)
+    {
+        // Static cache
+        static $image_dimensions_cache = [];
+        $wcss = new CssLengthAndUnit($el->attr('width'), false);
+        $hcss = new CssLengthAndUnit($el->attr('height'), false);
+
+        if ($wcss->is_set && $wcss->is_valid && $hcss->is_set && $hcss->is_valid && $wcss->unit == $hcss->unit) {
+            return true;
+        }
+
+        $src = trim($el->attr('src'));
+        if (empty($src)) {
+            return false;
+        }
+
+        if (isset($image_dimensions_cache[$src])) {
+
+            $dimensions = $image_dimensions_cache[$src];
+        } else {
+            $dimensions = $this->getImageWidthHeight($src, $el);
+
+        }
+        if ($dimensions !== false) {
+            $image_dimensions_cache[$src] = $dimensions;
+            $el->attr('width', $dimensions['width']);
+            $el->attr('height', $dimensions['height']);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
