@@ -382,15 +382,23 @@ a {
 .content-article-block {
    padding-bottom: 50px;
     h1 {
-        & + p > amp-img {
-            max-width: 132px;
-            margin-left: 0;
-            &:first-of-type {
-                max-width: 200px;
+        & + p {
+            amp-img {
+                max-width: 132px;
+                margin-left: 0;
+                margin-top: 0;
+                &:last-of-type {
+                    margin-right: 0;
+                    float: none;
+                }
+                &:first-of-type {
+                    max-width: 200px;
+                    float: left;
+                    margin-right: 5px;
+                }
             }
-            &:last-of-type {
-                margin-right: 0;
-                float: none;
+            & + p + p {
+                clear: left;
             }
         }
     }
@@ -416,7 +424,7 @@ a {
     }
     amp-img {
         float: left;
-        margin: 0 5px 5px;
+        margin: 5px;
         vertical-align: top;
         max-width: 98%; 
         height: auto;

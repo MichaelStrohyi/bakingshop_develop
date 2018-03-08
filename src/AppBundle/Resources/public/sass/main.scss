@@ -969,36 +969,43 @@ li.active {
     h1 {
         & + p {
             & > img {
-                float: none;
+                float: left !important;
                 width: 19% !important;
                 max-width: 132px !important;
-                margin-left: 0;
+                margin: 0 10px 10px 0 !important;
+                display: block;
+                &:last-of-type {
+                    margin-right: 0 !important;
+                    float: none !important;
+                }
                 &:first-of-type {
                     width: 30% !important;
                     max-width: 200px !important;
-                    margin-left: 0;
-                }
-                &:last-of-type {
-                    margin-right: 0;
+                    float: left !important;
+                    margin-right: 10px !important;
                 }
             }
-            a {
-                img {
-                    width: 30% !important;
-                    max-width: 200px !important;
-                    margin-left: 0;
-                    }
+            a img {
+                width: 30% !important;
+                max-width: 200px !important;
+                margin: 0 10px 10px 0 !important;
+                float: left !important;
+                display: block;
             }
             a + a {
                 img {
-                    float: none;
-                    width: 19% !important;
                     max-width: 132px !important;
-                    margin-left: 0;
+                    width: 19% !important;
                 }
-                &:last-of-type img {
-                    margin-right: 0;
+                &:last-of-type  {
+                    img {
+                        margin-right: 0 !important;
+                        float: none !important;
+                    }
                 }
+            }
+            & + p + p {
+                clear: left !important;
             }
         }
         &:after, &:before {
@@ -1018,7 +1025,7 @@ li.active {
     }
     img {
         float: left;
-        margin: 0 10px 10px;
+        margin: 10px;
         vertical-align: top;
         max-width: 98% !important; 
         height: auto !important;

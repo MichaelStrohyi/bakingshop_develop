@@ -37,8 +37,13 @@ class AppImgTagTransformPass extends ImgTagTransformPass
             /** @var \DOMElement $dom_el */
             $dom_el = $el->get(0); 
 
-        // set isHeader flag if curent image is child of first <p>
-        $this->isHeader = $first_p_line === $dom_el->parentNode ? true : false;
+            // set isHeader flag if curent image is child of first <p>
+            $this->isHeader = false;
+            $cur_parent = $dom_el->parentNode;
+            while (!empty($cur_parent) && !$this->isHeader) {
+                $this->isHeader = $first_p_line === $cur_parent ? true : false;
+                $cur_parent = $cur_parent->parentNode;
+            }
 
             if ($this->isSvg($dom_el)) {
                 // @TODO This should be marked as a validation warning later?
@@ -160,7 +165,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
      * @param DOMQuery $el
      * @author Michael Strohyi
      **/
-    function setAddAttributes($el)
+    protected function setAddAttributes($el)
     {        
         if ($this->isHeader) { 
             $el->setAttribute('sizes', '(min-width: 320px) 20vw, 60px');
