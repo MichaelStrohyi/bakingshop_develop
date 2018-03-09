@@ -2,6 +2,7 @@
 namespace AppBundle\AMP\Pass;
 
 use Lullabot\AMP\Pass\ImgTagTransformPass;
+use Lullabot\AMP\Validate\CssLengthAndUnit;
 use Lullabot\AMP\Validate\Scope;
 use Lullabot\AMP\Utility\ActionTakenLine;
 use Lullabot\AMP\Utility\ActionTakenType;
@@ -36,8 +37,13 @@ class AppImgTagTransformPass extends ImgTagTransformPass
             /** @var \DOMElement $dom_el */
             $dom_el = $el->get(0); 
 
-        // set isHeader flag if curent image is child of first <p>
-        $this->isHeader = $first_p_line === $dom_el->parentNode ? true : false;
+            // set isHeader flag if curent image is child of first <p>
+            $this->isHeader = false;
+            $cur_parent = $dom_el->parentNode;
+            while (!empty($cur_parent) && !$this->isHeader) {
+                $this->isHeader = $first_p_line === $cur_parent ? true : false;
+                $cur_parent = $cur_parent->parentNode;
+            }
 
             if ($this->isSvg($dom_el)) {
                 // @TODO This should be marked as a validation warning later?
@@ -116,6 +122,42 @@ class AppImgTagTransformPass extends ImgTagTransformPass
 
         return $size;
     }
+ /**
+     * @param DOMQuery $el
+     * @return bool
+     */
+    protected function setResponsiveImgHeightAndWidth(DOMQuery $el)
+    {
+        // Static cache
+        static $image_dimensions_cache = [];
+        $wcss = new CssLengthAndUnit($el->attr('width'), false);
+        $hcss = new CssLengthAndUnit($el->attr('height'), false);
+
+        if ($wcss->is_set && $wcss->is_valid && $hcss->is_set && $hcss->is_valid && $wcss->unit == $hcss->unit) {
+            return true;
+        }
+
+        $src = trim($el->attr('src'));
+        if (empty($src)) {
+            return false;
+        }
+
+        if (isset($image_dimensions_cache[$src])) {
+
+            $dimensions = $image_dimensions_cache[$src];
+        } else {
+            $dimensions = $this->getImageWidthHeight($src, $el);
+
+        }
+        if ($dimensions !== false) {
+            $image_dimensions_cache[$src] = $dimensions;
+            $el->attr('width', $dimensions['width']);
+            $el->attr('height', $dimensions['height']);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Add additional attributes to $el
@@ -123,7 +165,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
      * @param DOMQuery $el
      * @author Michael Strohyi
      **/
-    function setAddAttributes($el)
+    protected function setAddAttributes($el)
     {        
         if ($this->isHeader) { 
             $el->setAttribute('sizes', '(min-width: 320px) 20vw, 60px');
