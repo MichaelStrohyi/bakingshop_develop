@@ -92,6 +92,9 @@ class AppImgTagTransformPass extends ImgTagTransformPass
 
         // Try obtaining image size without having to download the whole image
         $size = $this->fastimage->getImageSize($img_url);
+        if ($size === false) {
+            $size = [];
+        }
 
         // Try obtaining image size from element inline styles
         if (isset($el)) {
@@ -109,7 +112,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
                   list($css_att, $css_val) = explode(':',$item, 2);
                   $css[$css_att] = trim($css_val);
                 }
-                if (array_key_exists('width', $size) && array_key_exists('height', $size) && array_key_exists('width', $css) && array_key_exists('height', $css) && !empty($css['height']) && substr($css['height'], strlen($css['height']) - 2) == 'px' && !empty($css['width']) && substr($css['width'], strlen($css['width']) - 2) == 'px') {
+                if (array_key_exists('width', $css) && array_key_exists('height', $css) && !empty($css['height']) && substr($css['height'], strlen($css['height']) - 2) == 'px' && !empty($css['width']) && substr($css['width'], strlen($css['width']) - 2) == 'px') {
                     $imageWidth = substr($css['width'], 0, strlen($css['width'] - 2));
                     $imageHeight = substr($css['height'], 0, strlen($css['height'] - 2));
                     if (!empty($imageWidth) && !empty($imageHeight)) {
@@ -120,7 +123,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
             }
         }
 
-        return $size;
+        return empty($size) ? false : $size;
     }
  /**
      * @param DOMQuery $el
