@@ -2,12 +2,18 @@ ul.mutable-items  {
     li.list-item {
         margin: 10px 0;
         border: 1px solid #aaa;
-        background: #f0f0f0;
+        background-color: #f0f0f0;
         border-radius: 5px;
         padding: 5px 0 0 0;
     }
     li.deactivated {
-        background: #ccc;
+        background-color: #ccc;
+    }
+    li.auto-item {
+        background-color: #FCF8E3;
+    }
+    li.new-item {
+        background-color: #ECFAFB;
     }
 }
 .store-logo {

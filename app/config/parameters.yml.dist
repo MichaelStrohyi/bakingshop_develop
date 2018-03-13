@@ -22,3 +22,6 @@ parameters:
     bin: '/usr/local/bin/coffee'
     node: '/usr/local/bin/node'
     node_paths: '/usr/local/bin/node_modules'
+
+    #key for getting feeds
+    feeds_key: 2085815ca64bc882f85ebd0e6fd909f3

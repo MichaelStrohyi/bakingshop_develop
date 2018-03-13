@@ -37,4 +37,114 @@ class CouponRepository extends EntityRepository
 
         return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
     }
+
+    /**
+     * Remove coupons with autoupdateId in given $coupons_list. If list is empty remove all coupons which have autoupdateId
+     *
+     * @param array $coupons_list
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function removeAutoupdatedCoupons($coupons_list = [])
+    {
+        $q = 'DELETE FROM AppBundle:Coupon c WHERE c.autoupdateId ';
+        if (!empty($coupons_list)) {
+            $coupons_list = '(' . implode(', ', $coupons_list) . ')';
+            $q .= 'IN ' . $coupons_list;
+        } else {
+            $q .= 'IS NOT NULL';
+        }
+        $query = $this->getEntityManager()->createQuery($q);
+        $query->execute();
+
+    }
+
+    /**
+     * Insert coupons from the given array into db
+     *
+     * @param array $coupons
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function insertCouponsFromFeed($feed_coupons)
+    {
+       if (empty($feed_coupons)) {
+            return;
+        }
+
+        $em = $this->getEntityManager();
+        $operator_repo = $em->getRepository("AppBundle:Operator");
+        $operators =  $operator_repo->getAllOperators();
+        foreach ($feed_coupons as $feed_store_id => $feed_store_coupons) {
+            $store = $em->getRepository("AppBundle:Store")->getStoreByAutoupdateId($feed_store_id);
+            $coupons_added = false;
+            if (empty($store)) {
+                continue;
+            }
+
+            $last_code_pos = $store->getLastCodePosition();
+            $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
+            foreach ($feed_store_coupons as $feed_coupon) {
+                if ($feed_coupon['status'] != 'active' || $store->findCouponByCode($feed_coupon['code'])) {
+                    continue;
+                }
+
+                $new_coupon = new StoreCoupon();
+                $new_coupon
+                    ->setAutoupdateId($feed_coupon['id'])
+                    ->setLabel($feed_coupon['label'])
+                    ->setCode($feed_coupon['code'])
+                    ->setLink($feed_coupon['link'])
+                    ->setStore($store)
+                    ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
+                    ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
+                    ->setAddedBy($operator_repo->getRandomItem($operators))
+                    ->setJustVerified()
+                    ->setMaxDiscount()
+                ;
+                $cur_pos = empty($feed_coupon['code']) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
+                $store->insertCouponOnPosition($new_coupon, $cur_pos);
+                $coupons_added = true;
+            }
+            if ($coupons_added) {
+                $store->actualiseCouponsPosition();
+                $em->persist($store);
+                $em->flush();
+            }
+        }
+    }
+
+    /**
+     * Convert given $date string into DateTime object to store in db
+     *
+     * @param string $date
+     *
+     * @return DateTime|null
+     * @author Michael Strohyi
+     **/
+    private function convertDateFromFeed($date)
+    {
+        try {
+            $date = new \DateTime($date);
+            $cur_date = new \DateTimeImmutable();
+
+            return $date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3 ? null : $date;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Update coupons from the given array into db. Create coupon if it does not exist.
+     *
+     * @param array $coupons
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function updateCouponsFromFeed($feed_coupons)
+    {
+    }
 }

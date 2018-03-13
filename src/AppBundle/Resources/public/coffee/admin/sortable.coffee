@@ -44,7 +44,7 @@ addItemLink = ($collectionHolder) ->
     $collectionHolder.data 'index', index + 1
 
     # Display the form in the page in an li, before the "Add a tag" link li
-    $newFormLi = $('<li class="list-item"></li>').append newForm
+    $newFormLi = $('<li class="list-item new-item"></li>').append newForm
     $collectionHolder.append($newFormLi);
 
     # add actions links to the new form

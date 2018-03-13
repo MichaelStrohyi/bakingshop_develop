@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\StoreRepository")
  * @UniqueEntity("name", message="Store with this name already exists")
+ * @UniqueEntity("autoupdateId", message="This id is already set for other store")
  * @ORM\HasLifecycleCallbacks
  */
 class Store
@@ -79,6 +80,13 @@ class Store
      * @Assert\Valid
      **/
     private $logo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="autoupdate_id", type="integer", nullable=true)
+     */
+    private $autoupdateId;
 
     public function __construct()
     {
@@ -246,6 +254,18 @@ class Store
     }
 
     /**
+     * Set coupons
+     *
+     * @return self
+     */
+    public function setCoupons($coupons)
+    {
+        $this->coupons = $coupons;
+
+        return $this;
+    }
+
+    /**
      * Set logo
      *
      * @param StoreLogo $logo
@@ -266,6 +286,29 @@ class Store
     public function getLogo()
     {
         return $this->logo;
+    }
+
+    /**
+     * Get autoupdateId
+     *
+     * @return integer
+     */
+    public function getAutoupdateId()
+    {
+        return $this->autoupdateId;
+    }
+
+    /**
+     * Set autoupdateId
+     *
+     * @param integer $label
+     * @return Store
+     */
+    public function setAutoupdateId($autoupdateId)
+    {
+        $this->autoupdateId = $autoupdateId;
+
+        return $this;
     }
 
     /**
@@ -335,5 +378,82 @@ class Store
         }
 
         return null;
+    }
+
+    /**
+     * Search for coupon with given code. Return target coupon or null, if code does not exist
+     *
+     * @param string $code
+     *
+     * @return StoreCoupon|null
+     * @author Michael Strohyi
+     **/
+    public function findCouponByCode($code)
+    {
+        if (empty($code)) {
+            return false;
+        }
+
+        $coupons = $this->getCoupons();
+        foreach($coupons->getIterator() as $coupon) {
+            $exists = strtolower($coupon->getCode()) == strtolower($code) ? true : false;
+            if ($exists) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return position of last coupon with code. If no coupons have code return -1
+     *
+     * @return int
+     * @author Michael Strohyi
+     **/
+    public function getLastCodePosition()
+    {
+        $coupons = $this->getCoupons();
+        $last_code = -1;
+        foreach($coupons->getIterator() as $pos => $coupon) {
+            if (!empty($coupon->getCode())) {
+                $last_code = $pos;
+            }
+        }
+
+        return $last_code;
+    }
+
+    /**
+     * Insert coupon into coupons on given position
+     *
+     * @param StoreCoupon $coupon
+     * @param int $position
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function insertCouponOnPosition($coupon, $position)
+    {
+        $coupons = $this->getCoupons()->toArray();
+        array_splice($coupons, $position, 0, [$coupon]);
+        $this->setCoupons(new ArrayCollection($coupons));
+    }
+
+    /**
+     * Set new actual position for all coupons
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function actualiseCouponsPosition()
+    {
+        $coupons = $this->getCoupons()->toArray();
+        $pos = 0;
+        foreach ($coupons as $coupon) {
+           $coupon->setPosition($pos++);
+        }
+
+        $this->setCoupons(new ArrayCollection($coupons));
     }
 }
