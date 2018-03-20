@@ -125,14 +125,24 @@ class StoreController extends PageController
 
     /**
      * @Route("/autoupdate/{type}", name="admin_store_autoupdate",
-     *     requirements={"type": "all|new"},
+     *     requirements={"type": "all|new|job"},
      *     defaults={"type": "new"},
      * ))
      * @Template()
      */
     public function autoupdateAction($type)
     {
-        ini_set('MAX_EXECUTION_TIME', 3000);
+        ini_set('MAX_EXECUTION_TIME', 540);
+        if ($type == "job") {
+            $date = new \DateTimeImmutable();
+            $hours = $date->format('H');
+            if ($hours % 12 == 0) {
+                $type = "all";
+            } else {
+                $type = "new";
+            }
+        }
+
         $url = $this->getParameter('feeds_url');
         $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
         switch ($type) {

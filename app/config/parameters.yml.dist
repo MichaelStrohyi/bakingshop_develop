@@ -24,4 +24,4 @@ parameters:
     node_paths: '/usr/local/bin/node_modules'
 
     #key for getting feeds
-    feeds_key: 2085815ca64bc882f85ebd0e6fd909f3
+    feeds_key: key_for_feeds
