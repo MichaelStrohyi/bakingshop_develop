@@ -39,36 +39,35 @@ class CouponRepository extends EntityRepository
     }
 
     /**
-     * Remove coupons with autoupdateId in given $coupons_list. If list is empty remove all coupons which have autoupdateId
+     * Remove feed coupons from stores, which don't present in given $stores_list
      *
-     * @param array $coupons_list
+     * @param array $stores_list
      *
      * @return void
      * @author Michael Strohyi
      **/
-    public function removeAutoupdatedCoupons($coupons_list = [])
+    public function removeAutoupdatedCoupons($stores_list = [])
     {
-        $q = 'DELETE FROM AppBundle:Coupon c WHERE c.autoupdateId ';
-        if (!empty($coupons_list)) {
-            $coupons_list = '(' . implode(', ', $coupons_list) . ')';
-            $q .= 'IN ' . $coupons_list;
-        } else {
-            $q .= 'IS NOT NULL';
+        $q = 'DELETE FROM AppBundle:StoreCoupon c WHERE c.autoupdateId IS NOT NULL';
+        if (!empty($stores_list)) {
+            $stores_list = '(' . implode(', ', $stores_list) . ')';
+            $q .= ' AND c.store NOT IN ' . $stores_list;
         }
+
         $query = $this->getEntityManager()->createQuery($q);
         $query->execute();
 
     }
 
     /**
-     * Insert coupons from the given array into db
+     * Fetch coupons from the given array and save them into db
      *
      * @param array $coupons
      *
      * @return void
      * @author Michael Strohyi
      **/
-    public function insertCouponsFromFeed($feed_coupons)
+    public function fetchCouponsFromFeed($feed_coupons, $incr_mode = false)
     {
        if (empty($feed_coupons)) {
             return;
@@ -77,42 +76,78 @@ class CouponRepository extends EntityRepository
         $em = $this->getEntityManager();
         $operator_repo = $em->getRepository("AppBundle:Operator");
         $operators =  $operator_repo->getAllOperators();
+        $stores_list = [];
         foreach ($feed_coupons as $feed_store_id => $feed_store_coupons) {
             $store = $em->getRepository("AppBundle:Store")->getStoreByAutoupdateId($feed_store_id);
-            $coupons_added = false;
             if (empty($store)) {
                 continue;
             }
 
+            $stores_list[] = $store->getId();
+            $coupons_updated = false;
+            $coupons_list = [];
             $last_code_pos = $store->getLastCodePosition();
             $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
             foreach ($feed_store_coupons as $feed_coupon) {
-                if ($feed_coupon['status'] != 'active' || $store->findCouponByCode($feed_coupon['code'])) {
+                $store_coupon = $store->findCouponByAutoId($feed_coupon['id']);
+                if (strtolower($feed_coupon['status']) != "active") {
+                    if (!empty($store_coupon)) {
+                        $store->removeCoupon($store_coupon);
+                        $coupons_updated = true;
+                        $em->remove($store_coupon);
+                    }
+
                     continue;
                 }
 
-                $new_coupon = new StoreCoupon();
-                $new_coupon
-                    ->setAutoupdateId($feed_coupon['id'])
+                $code_exists = !empty($feed_coupon['code']) ? $store->findCouponByCode($feed_coupon['code'], $feed_coupon['id']) : null;
+                if (!empty($code_exists)) {
+                    if (!empty($store_coupon)) {
+                        $store->removeCoupon($store_coupon);
+                        $coupons_updated = true;
+                        $em->remove($store_coupon);
+                    }
+                    continue;
+                }
+
+                if (empty($store_coupon)) {
+                    $store_coupon = new StoreCoupon();
+                    $store_coupon
+                        ->setAutoupdateId($feed_coupon['id'])
+                        ->setStore($store)
+                        ->setAddedBy($operator_repo->getRandomItem($operators))
+                    ;
+                }
+
+                $store_coupon
                     ->setLabel($feed_coupon['label'])
                     ->setCode($feed_coupon['code'])
                     ->setLink($feed_coupon['link'])
-                    ->setStore($store)
                     ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
-                    ->setAddedBy($operator_repo->getRandomItem($operators))
                     ->setJustVerified()
                     ->setMaxDiscount()
                 ;
-                $cur_pos = empty($feed_coupon['code']) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
-                $store->insertCouponOnPosition($new_coupon, $cur_pos);
-                $coupons_added = true;
+
+                if (empty($store_coupon->getId())) {
+                    $cur_pos = empty($feed_coupon['code']) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
+                    $store->insertCouponOnPosition($store_coupon, $cur_pos);
+                }
+
+                $coupons_updated = true;
+                $coupons_list[] = $feed_coupon['id'];
             }
-            if ($coupons_added) {
+
+            $coupons_updated = !$incr_mode && $store->removeAutoupdatedCoupons($coupons_list) !== false ? true : $coupons_updated; //!!!
+            if ($coupons_updated) {
                 $store->actualiseCouponsPosition();
                 $em->persist($store);
                 $em->flush();
             }
+        }
+
+        if (!$incr_mode) {
+            $this->removeAutoupdatedCoupons($stores_list);
         }
     }
 
@@ -134,17 +169,5 @@ class CouponRepository extends EntityRepository
         } catch (\Exception $e) {
             return null;
         }
-    }
-
-    /**
-     * Update coupons from the given array into db. Create coupon if it does not exist.
-     *
-     * @param array $coupons
-     *
-     * @return void
-     * @author Michael Strohyi
-     **/
-    public function updateCouponsFromFeed($feed_coupons)
-    {
     }
 }

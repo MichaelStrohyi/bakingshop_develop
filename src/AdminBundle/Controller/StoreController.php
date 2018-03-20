@@ -135,17 +135,15 @@ class StoreController extends PageController
         ini_set('MAX_EXECUTION_TIME', 3000);
         $url = $this->getParameter('feeds_url');
         $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
-//        $url = "c:\appserv\www\api\api_json.txt";
         switch ($type) {
             case 'all':
                 $api_data = file_get_contents($url);
-                $coupon_repo->removeAutoupdatedCoupons();
-                $coupon_repo->insertCouponsFromFeed($this->grabCouponsFromApi($api_data));
+                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data));
                 break;
             case 'new':
                 $url .= "&incremental=1";
                 $api_data = file_get_contents($url);
-                $coupon_repo->updateCouponsFromFeed($this->grabCouponsFromApi($api_data));
+                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data), true);
                 break;
         }
 
@@ -217,7 +215,7 @@ class StoreController extends PageController
      * @return array
      * @author Michael Strohyi
      **/
-    private function grabCouponsFromApi($api_data)
+    private function parseCouponsFromApi($api_data)
     {
         $data = json_decode($api_data);
         if (empty($data)) {

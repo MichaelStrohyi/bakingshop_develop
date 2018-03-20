@@ -376,33 +376,30 @@ class Store
         if (count($descr_array) > 40) {
             return implode(' ', array_slice($descr_array, 40));
         }
-
-        return null;
     }
 
     /**
-     * Search for coupon with given code. Return target coupon or null, if code does not exist
+     * Search for coupon with given code and autoupdateId different from given aid. Return target coupon if it exists or null, if it does not exist
      *
      * @param string $code
+     * @param int $aid
      *
      * @return StoreCoupon|null
      * @author Michael Strohyi
      **/
-    public function findCouponByCode($code)
+    public function findCouponByCode($code, $aid = 0)
     {
         if (empty($code)) {
-            return false;
+            return;
         }
 
         $coupons = $this->getCoupons();
         foreach($coupons->getIterator() as $coupon) {
-            $exists = strtolower($coupon->getCode()) == strtolower($code) ? true : false;
+            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getAutoupdateId() !== $aid ? true : false;
             if ($exists) {
-                return true;
+                return $coupon;
             }
         }
-
-        return false;
     }
 
     /**
@@ -456,4 +453,51 @@ class Store
 
         $this->setCoupons(new ArrayCollection($coupons));
     }
+
+
+    /**
+     * Search for coupon with given autoupdateId. Return target coupon or null, if autoupdateId does not exist
+     *
+     * @param string $autoupdateId
+     *
+     * @return StoreCoupon|null
+     * @author Michael Strohyi
+     **/
+    public function findCouponByAutoId($autoupdateId)
+    {
+        if (empty($autoupdateId)) {
+            return;
+        }
+
+        $coupons = $this->getCoupons();
+        foreach($coupons->getIterator() as $coupon) {
+            $exists = $coupon->getAutoupdateId() == $autoupdateId ? true : false;
+            if ($exists) {
+                return $coupon;
+            }
+        }
+    }
+
+    /**
+     * Remove coupons, which have not null autoupdateId and are absent in given $coupons_list.
+     * Return true if any coupon has been removed, otherwise return false.
+     *
+     * @param array $coupons_list
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function removeAutoupdatedCoupons($coupons_list = [])
+    {
+        $res = false;
+        foreach($this->getCoupons()->getIterator() as $coupon) {
+            if (!empty($coupon->getAutoupdateId()) && !in_array($coupon->getAutoupdateId(), $coupons_list)) {
+                $this->removeCoupon($coupon);
+                $res = true;
+            }
+        }
+
+        return $res;
+    }
+
 }
