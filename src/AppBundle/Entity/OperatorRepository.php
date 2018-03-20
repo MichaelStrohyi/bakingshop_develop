@@ -18,21 +18,34 @@ class OperatorRepository extends EntityRepository
      * @return Operator|null
      * @author Michael Strohyi
      **/
-    public function getRandomName()
+    public function getRandomOperator()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('partial o.{id, name}')
-           ->from('AppBundle\Entity\Operator', 'o')
-           ->orderBy('o.id', 'asc');
-        $query = $qb->getQuery();
-        $operators = $query->getResult();
+        $operators = $this->getAllOperators();
 
-        $query = $this->getEntityManager()
-            ->createQuery(
-                'SELECT o.id FROM AppBundle:Operator o ORDER BY o.name ASC'
-            );
-        $names = $query->getResult();
-
-        return empty($operators) ? null : $operators[rand(0, count($operators) - 1)];
+        return $this->getRandomItem($operators);
     }
+
+    /**
+     * Return all operator's id from db
+     *
+     * @return array|null
+     * @author Michael Strohyi
+     **/
+    public function getAllOperators()
+    {
+        return $this->findAll();
+    }
+
+    /**
+     * Return random item from given array
+     *
+     * @param array $items
+     * @return Operator|null
+     * @author Michael Strohyi
+     **/
+    public function getRandomItem($items)
+    {
+        return empty($items) ? null : $items[rand(0, count($items) - 1)];
+    }
+
 }

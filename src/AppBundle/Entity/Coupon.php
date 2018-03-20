@@ -131,6 +131,13 @@ class Coupon
     private $discount;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="autoupdate_id", type="integer", nullable=true)
+     */
+    private $autoupdateId;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -501,12 +508,37 @@ class Coupon
     /**
      * Set current date into UpdatedAt property
      *
-     * @return void
+     * @return self
      * @author Michael Strohyi
      **/
     public function setJustVerified()
     {
         $this->setVerifiedAt(new \DateTimeImmutable());
+
+        return $this;
+    }
+
+    /**
+     * Get autoupdateId
+     *
+     * @return integer
+     */
+    public function getAutoupdateId()
+    {
+        return $this->autoupdateId;
+    }
+
+    /**
+     * Set autoupdateId
+     *
+     * @param integer $label
+     * @return Coupon
+     */
+    public function setAutoupdateId($autoupdateId)
+    {
+        $this->autoupdateId = $autoupdateId;
+
+        return $this;
     }
 
     /**
@@ -574,21 +606,35 @@ class Coupon
     /**
      * Find maximum discount in coupon's label and set it into discount property
      *
-     * @return void
+     * @return self
      * @author Michael Strohyi
      **/
     public function setMaxDiscount()
     {
-        preg_match_all('/[0-9]+%/', $this->getLabel(), $matches);
+        $this->setDiscount(self::findMaxDiscount($this->getLabel()));
+
+        return $this;
+    }
+
+    /**
+     * Find maximum discount in given label
+     *
+     * @param string $label
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public static function findMaxDiscount($label)
+    {
+        preg_match_all('/[0-9]+%/', $label, $matches);
         if (!empty($matches[0])) {
-            $this->setDiscount(max($matches[0]));
-            return;
+            return(max($matches[0]));
         }
 
-        $label = 'Get 25% OFF Any Order, free shipping on $50+ Socks Order or FREE shipping on any $100+ Order';
         $pattern = '/free shipping/i';
-        if (preg_match('/free shipping/i', $this->getLabel()) != 0) {
-            $this->setDiscount('FREE Shipping');
+        if (preg_match('/free shipping/i', $label) != 0) {
+            return 'FREE Shipping';
         }
+
+        return null;
     }
 }

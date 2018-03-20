@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Entity\Coupon;
 use AppBundle\Entity\Store;
 use AdminBundle\Form\StoreType;
 
@@ -123,6 +124,35 @@ class StoreController extends PageController
     }
 
     /**
+     * @Route("/autoupdate/{type}", name="admin_store_autoupdate",
+     *     requirements={"type": "all|new"},
+     *     defaults={"type": "new"},
+     * ))
+     * @Template()
+     */
+    public function autoupdateAction($type)
+    {
+        ini_set('MAX_EXECUTION_TIME', 3000);
+        $url = $this->getParameter('feeds_url');
+        $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
+        switch ($type) {
+            case 'all':
+                $api_data = file_get_contents($url);
+                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data));
+                break;
+            case 'new':
+                $url .= "&incremental=1";
+                $api_data = file_get_contents($url);
+                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data), true);
+                break;
+        }
+
+        return [
+            'type' => $type,
+        ];
+    }
+
+    /**
      * Save given store into database
      *
      * @param  Store  $store
@@ -176,5 +206,44 @@ class StoreController extends PageController
         if (null === $request->request->get('current_logo') && (null === $store->getLogo() || null === $store->getLogo()->getImageFile())) {
             $store->removeLogo();
         }
+    }
+    /**
+     * Convert string in JSON-format into array of coupons
+     *
+     * @param string $api_data
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    private function parseCouponsFromApi($api_data)
+    {
+        $data = json_decode($api_data);
+        if (empty($data)) {
+            return [];
+        }
+
+        $coupons = [];
+        $i = 0;
+        foreach ($data as $key => $value) {
+            if ($i > 40000) {
+                break;
+            }
+
+            $coupon = get_object_vars($value);
+            $i++;
+            $cur_coupon = [
+                'id' => $coupon['nCouponID'],
+                'label' => $coupon['cLabel'],
+                'code' => $coupon['cCode'],
+                'link' => $coupon['cAffiliateURL'],
+                'starts' => $coupon['dtStartDate'],
+                'expires' => $coupon['dtEndDate'],
+                'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
+                'status' => $coupon['cStatus'],
+            ];
+            $coupons[$coupon['nMerchantID']][] = $cur_coupon;
+        }
+
+        return $coupons;
     }
 }

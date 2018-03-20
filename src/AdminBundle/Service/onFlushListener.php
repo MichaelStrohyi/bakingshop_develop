@@ -16,7 +16,7 @@ class onFlushListener
             if (get_class($entity) == 'AppBundle\Entity\StoreCoupon') {
                 $entity->setJustVerified();
                 $entity->setMaxDiscount();
-                $entity->setAddedBy($em->getRepository('AppBundle:Operator')->getRandomName());
+                $entity->setAddedBy($em->getRepository('AppBundle:Operator')->getRandomOperator());
                 $uow->recomputeSingleEntityChangeSet($classMetadata, $entity);
             }
         }

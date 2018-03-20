@@ -11,7 +11,7 @@
     
     <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
         {% for store_coupon in form.coupons %}
-            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
+            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }} {{ store_coupon.vars.value.autoupdateId is empty ? '' : 'auto-item' }}  {{ store_coupon.vars.value.id is empty ? 'new-item' : '' }}">
                 <div class="container">
                     <div class="coupon-content col-sm-11">
                         <div class="col-sm-8">
@@ -44,8 +44,12 @@
                                     {{ form_errors(store_coupon.expireDate) }}
                                 </div>
                             </div>
-
-                            {{ form_row(store_coupon.inStore) }}
+                            <div class="form-group col-sm-12">
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(store_coupon.inStore) }}
+                                    </div>
+                            </div>
                         </div>
                         <div class="col-sm-4{{ form_errors(store_coupon.logo) is not empty ? " has-error" : "" }}">
                             {{ form_widget(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}

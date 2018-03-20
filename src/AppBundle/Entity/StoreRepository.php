@@ -101,4 +101,22 @@ class StoreRepository extends EntityRepository
             ->setMaxResults($limit);
         return $query->getResult();
     }
+
+    /**
+     * Return id of store with given autoupdateId
+     *
+     * @param int $autoupdateId
+     *
+     * @return Store
+     * @author Michael Strohyi
+     **/
+    public function getStoreByAutoupdateId($autoupdateId)
+    {
+        if (empty($autoupdateId)) {
+            return;
+        }
+
+        $store = $this->findBy(['autoupdateId' => $autoupdateId]);
+        return empty($store) ? null : $store[0];
+    }
 }
