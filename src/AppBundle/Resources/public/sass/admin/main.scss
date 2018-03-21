@@ -6,14 +6,14 @@ ul.mutable-items  {
         border-radius: 5px;
         padding: 5px 0 0 0;
     }
-    li.deactivated {
-        background-color: #ccc;
-    }
     li.auto-item {
         background-color: #FCF8E3;
     }
     li.new-item {
         background-color: #ECFAFB;
+    }
+    li.deactivated {
+        background-color: #ccc;
     }
 }
 .store-logo {
