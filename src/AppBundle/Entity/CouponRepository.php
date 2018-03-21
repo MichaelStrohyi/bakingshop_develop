@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class CouponRepository extends EntityRepository
 {
+    const COUPONS_LIMIT = 200;
     /**
      * Get link from db for coupon with given $id
      *
@@ -88,7 +89,11 @@ class CouponRepository extends EntityRepository
             $coupons_list = [];
             $last_code_pos = $store->getLastCodePosition();
             $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
+            $coupons_count = 0;
             foreach ($feed_store_coupons as $feed_coupon) {
+                if (++$coupons_count > self::COUPONS_LIMIT) {
+                    break;
+                }
                 $store_coupon = $store->findCouponByAutoId($feed_coupon['id']);
                 if (strtolower($feed_coupon['status']) != "active") {
                     if (!empty($store_coupon)) {
@@ -140,7 +145,7 @@ class CouponRepository extends EntityRepository
 
             $coupons_updated = !$incr_mode && $store->removeAutoupdatedCoupons($coupons_list) !== false ? true : $coupons_updated; //!!!
             if ($coupons_updated) {
-                $store->actualiseCouponsPosition();
+                $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
                 $em->persist($store);
                 $em->flush();
             }

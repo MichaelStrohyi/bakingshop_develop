@@ -438,16 +438,21 @@ class Store
     }
 
     /**
-     * Set new actual position for all coupons
+     * Set new actual position for all coupons, remove coupons with position > given limit
      *
      * @return void
      * @author Michael Strohyi
      **/
-    public function actualiseCouponsPosition()
+    public function actualiseCouponsPosition($limit = 0)
     {
         $coupons = $this->getCoupons()->toArray();
         $pos = 0;
         foreach ($coupons as $coupon) {
+           if ($limit > 0 && $pos >= $limit) {
+            $this->removeCoupon($coupon);
+            continue;
+           }
+
            $coupon->setPosition($pos++);
         }
 
