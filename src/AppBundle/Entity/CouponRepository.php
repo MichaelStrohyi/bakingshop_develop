@@ -127,7 +127,8 @@ class CouponRepository extends EntityRepository
                 $store_coupon
                     ->setLabel($feed_coupon['label'])
                     ->setCode($feed_coupon['code'])
-                    ->setLink($feed_coupon['link'])
+//                    ->setLink($feed_coupon['link'])
+                    ->setLink($store->getLink())
                     ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
                     ->setJustVerified()

@@ -92,13 +92,14 @@ class StoreRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
-                . 'WHERE s.name LIKE :subname '
+                . 'WHERE s.name LIKE :subname OR s.keywords LIKE :subname '
                 . 'ORDER by s.name ASC'
             )
             ->setParameters([
-                'subname' => '%' . $subname . '%',
+                'subname' => '%' . preg_replace(["/[\+]+/", "/[\s]+/", "/[-]+/", "/[%]+/"], "%", $subname) . '%',
             ])
             ->setMaxResults($limit);
+
         return $query->getResult();
     }
 
