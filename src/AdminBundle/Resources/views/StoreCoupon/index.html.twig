@@ -11,7 +11,7 @@
     
     <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
         {% for store_coupon in form.coupons %}
-            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }} {{ store_coupon.vars.value.autoupdateId is empty ? '' : 'auto-item' }}  {{ store_coupon.vars.value.id is empty ? 'new-item' : '' }}">
+            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }} {{ store_coupon.vars.value.feedId is empty ? '' : 'auto-item' }}  {{ store_coupon.vars.value.id is empty ? 'new-item' : '' }}">
                 <div class="container">
                     <div class="coupon-content col-sm-11">
                         <div class="col-sm-8">

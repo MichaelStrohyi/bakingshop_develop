@@ -133,9 +133,9 @@ class Coupon
     /**
      * @var integer
      *
-     * @ORM\Column(name="autoupdate_id", type="integer", nullable=true)
+     * @ORM\Column(name="feed_id", type="integer", nullable=true)
      */
-    private $autoupdateId;
+    private $feedId;
 
     /**
      * Get id
@@ -519,24 +519,24 @@ class Coupon
     }
 
     /**
-     * Get autoupdateId
+     * Get feedId
      *
      * @return integer
      */
-    public function getAutoupdateId()
+    public function getFeedId()
     {
-        return $this->autoupdateId;
+        return $this->feedId;
     }
 
     /**
-     * Set autoupdateId
+     * Set feedId
      *
      * @param integer $label
      * @return Coupon
      */
-    public function setAutoupdateId($autoupdateId)
+    public function setFeedId($feedId)
     {
-        $this->autoupdateId = $autoupdateId;
+        $this->feedId = $feedId;
 
         return $this;
     }

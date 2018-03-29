@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\StoreRepository")
  * @UniqueEntity("name", message="Store with this name already exists")
- * @UniqueEntity("autoupdateId", message="This id is already set for other store")
+ * @UniqueEntity("feedId", message="This id is already set for other store")
  * @ORM\HasLifecycleCallbacks
  */
 class Store
@@ -84,9 +84,9 @@ class Store
     /**
      * @var integer
      *
-     * @ORM\Column(name="autoupdate_id", type="integer", nullable=true)
+     * @ORM\Column(name="feed_id", type="integer", nullable=true)
      */
-    private $autoupdateId;
+    private $feedId;
 
     public function __construct()
     {
@@ -289,24 +289,24 @@ class Store
     }
 
     /**
-     * Get autoupdateId
+     * Get feedId
      *
      * @return integer
      */
-    public function getAutoupdateId()
+    public function getFeedId()
     {
-        return $this->autoupdateId;
+        return $this->feedId;
     }
 
     /**
-     * Set autoupdateId
+     * Set feedId
      *
      * @param integer $label
      * @return Store
      */
-    public function setAutoupdateId($autoupdateId)
+    public function setFeedId($feedId)
     {
-        $this->autoupdateId = $autoupdateId;
+        $this->feedId = $feedId;
 
         return $this;
     }
@@ -379,15 +379,15 @@ class Store
     }
 
     /**
-     * Search for coupon with given code and autoupdateId different from given aid. Return target coupon if it exists or null, if it does not exist
+     * Search for coupon with given code and f3eedId different from given feedId. Return target coupon if it exists or null, if it does not exist
      *
      * @param string $code
-     * @param int $aid
+     * @param int $feedId
      *
      * @return StoreCoupon|null
      * @author Michael Strohyi
      **/
-    public function findCouponByCode($code, $aid = 0)
+    public function findCouponByCode($code, $feedId = 0)
     {
         if (empty($code)) {
             return;
@@ -395,7 +395,7 @@ class Store
 
         $coupons = $this->getCoupons();
         foreach($coupons->getIterator() as $coupon) {
-            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getAutoupdateId() !== $aid ? true : false;
+            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() !== $feedId ? true : false;
             if ($exists) {
                 return $coupon;
             }
@@ -461,22 +461,22 @@ class Store
 
 
     /**
-     * Search for coupon with given autoupdateId. Return target coupon or null, if autoupdateId does not exist
+     * Search for coupon with given feedId. Return target coupon or null, if feedId does not exist
      *
-     * @param string $autoupdateId
+     * @param string $feedId
      *
      * @return StoreCoupon|null
      * @author Michael Strohyi
      **/
-    public function findCouponByAutoId($autoupdateId)
+    public function findCouponByFeedId($feedId)
     {
-        if (empty($autoupdateId)) {
+        if (empty($feedId)) {
             return;
         }
 
         $coupons = $this->getCoupons();
         foreach($coupons->getIterator() as $coupon) {
-            $exists = $coupon->getAutoupdateId() == $autoupdateId ? true : false;
+            $exists = $coupon->getFeedId() == $feedId ? true : false;
             if ($exists) {
                 return $coupon;
             }
@@ -484,7 +484,7 @@ class Store
     }
 
     /**
-     * Remove coupons, which have not null autoupdateId and are absent in given $coupons_list.
+     * Remove coupons, which have not null FeedId and are absent in given $coupons_list.
      * Return true if any coupon has been removed, otherwise return false.
      *
      * @param array $coupons_list
@@ -492,11 +492,11 @@ class Store
      * @return boolean
      * @author Michael Strohyi
      **/
-    public function removeAutoupdatedCoupons($coupons_list = [])
+    public function removeFeedCoupons($coupons_list = [])
     {
         $res = false;
         foreach($this->getCoupons()->getIterator() as $coupon) {
-            if (!empty($coupon->getAutoupdateId()) && !in_array($coupon->getAutoupdateId(), $coupons_list)) {
+            if (!empty($coupon->getFeedId()) && !in_array($coupon->getFeedId(), $coupons_list)) {
                 $this->removeCoupon($coupon);
                 $res = true;
             }
