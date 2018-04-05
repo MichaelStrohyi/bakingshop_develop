@@ -277,6 +277,7 @@ class StoreController extends PageController
             $stores_list[] = $store->getId();
             $coupons_updated = false;
             $coupons_list = [];
+            $new_coupons = [];
             $last_code_pos = $store->getLastCodePosition();
             $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
             $coupons_count = 0;
@@ -284,12 +285,18 @@ class StoreController extends PageController
                 if (++$coupons_count > self::COUPONS_LIMIT) {
                     break;
                 }
+
                 $store_coupon = $store->findCouponByFeedId($feed_coupon['id']);
                 if (strtolower($feed_coupon['status']) != "active") {
                     if (!empty($store_coupon)) {
                         $store->removeCoupon($store_coupon);
+                        if (empty($store_coupon->getCode())) {
+                            $last_coupon_offset--;
+                        } else {
+                            $last_code_pos--;
+                        }
+
                         $coupons_updated = true;
-                        $em->remove($store_coupon);
                     }
 
                     continue;
@@ -299,9 +306,15 @@ class StoreController extends PageController
                 if (!empty($code_exists)) {
                     if (!empty($store_coupon)) {
                         $store->removeCoupon($store_coupon);
+                        if (empty($store_coupon->getCode())) {
+                            $last_coupon_offset--;
+                        } else {
+                            $last_code_pos--;
+                        }
+
                         $coupons_updated = true;
-                        $em->remove($store_coupon);
                     }
+
                     continue;
                 }
 
@@ -326,8 +339,7 @@ class StoreController extends PageController
                 ;
 
                 if (empty($store_coupon->getId())) {
-                    $cur_pos = empty($feed_coupon['code']) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
-                    $store->insertCouponOnPosition($store_coupon, $cur_pos);
+                    $new_coupons[] = $store_coupon;
                 }
 
                 $coupons_updated = true;
@@ -335,6 +347,16 @@ class StoreController extends PageController
             }
 
             $coupons_updated = !$incr_mode && $store->removeFeedCoupons($coupons_list) !== false ? true : $coupons_updated; //!!!
+            if (!empty($new_coupons)) {
+                foreach ($new_coupons as $value) {
+                    $cur_pos = empty($value->getCode()) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
+                    $store->insertCouponOnPosition($value, $cur_pos);
+                }
+
+                unset($coupons);
+                $coupons_updated = true;
+            }
+
             if ($coupons_updated) {
                 $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
                 $em->persist($store);
