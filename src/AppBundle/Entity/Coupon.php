@@ -138,6 +138,13 @@ class Coupon
     private $feedId;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="rating", type="decimal", scale=3, precision=6, nullable=true)
+     */
+    private $rating;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -537,6 +544,29 @@ class Coupon
     public function setFeedId($feedId)
     {
         $this->feedId = $feedId;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return float
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set rating
+     *
+     * @param integer $label
+     * @return Coupon
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
 
         return $this;
     }

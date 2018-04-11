@@ -254,6 +254,7 @@ class StoreController extends PageController
                 'expires' => $coupon['dtEndDate'],
                 'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
                 'status' => $coupon['cStatus'],
+                'rating' => $coupon['fRating'],
             ];
             $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
         }
@@ -278,8 +279,6 @@ class StoreController extends PageController
             $coupons_updated = false;
             $coupons_list = [];
             $new_coupons = [];
-            $last_code_pos = $store->getLastCodePosition();
-            $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
             $coupons_count = 0;
             foreach ($feed_store_coupons as $feed_coupon) {
                 if (++$coupons_count > self::COUPONS_LIMIT) {
@@ -290,12 +289,6 @@ class StoreController extends PageController
                 if (strtolower($feed_coupon['status']) != "active") {
                     if (!empty($store_coupon)) {
                         $store->removeCoupon($store_coupon);
-                        if (empty($store_coupon->getCode())) {
-                            $last_coupon_offset--;
-                        } else {
-                            $last_code_pos--;
-                        }
-
                         $coupons_updated = true;
                     }
 
@@ -306,16 +299,16 @@ class StoreController extends PageController
                 if (!empty($code_exists)) {
                     if (!empty($store_coupon)) {
                         $store->removeCoupon($store_coupon);
-                        if (empty($store_coupon->getCode())) {
-                            $last_coupon_offset--;
-                        } else {
-                            $last_code_pos--;
-                        }
-
                         $coupons_updated = true;
                     }
 
                     continue;
+                }
+
+                if (!empty($store_coupon) && (strtolower($feed_coupon['code']) != strtolower($store_coupon->getCode() || $feed_coupon['rating'] != $store_coupon->getRating()))) {
+                    $store->removeCoupon($store_coupon);
+                    $store_coupon = null;
+                    $coupons_updated = true;
                 }
 
                 if (empty($store_coupon)) {
@@ -329,11 +322,12 @@ class StoreController extends PageController
 
                 $store_coupon
                     ->setLabel($feed_coupon['label'])
-                    ->setCode($feed_coupon['code'])
+                    ->setCode(empty($feed_coupon['code']) ? null : $feed_coupon['code'])
 //                    ->setLink($feed_coupon['link'])
                     ->setLink($store->getLink())
                     ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
+                    ->setRating($feed_coupon['rating'])
                     ->setJustVerified()
                     ->setMaxDiscount()
                 ;
@@ -346,11 +340,14 @@ class StoreController extends PageController
                 $coupons_list[] = $feed_coupon['id'];
             }
 
-            $coupons_updated = !$incr_mode && $store->removeFeedCoupons($coupons_list) !== false ? true : $coupons_updated; //!!!
+            $coupons_updated = !$incr_mode && $store->removeFeedCoupons($coupons_list) !== false ? true : $coupons_updated;
             if (!empty($new_coupons)) {
+                $last_code_pos = $store->getLastCodePosition();
+                $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
                 foreach ($new_coupons as $value) {
-                    $cur_pos = empty($value->getCode()) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
-                    $store->insertCouponOnPosition($value, $cur_pos);
+                    $max_pos = empty($value->getCode()) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
+                    $min_pos = empty($value->getCode()) ? $last_code_pos + 1 : 0;
+                    $store->insertCouponOnPosition($value, $store->findCouponPositionByRating($value->getRating(), $max_pos, $min_pos));
                 }
 
                 unset($coupons);

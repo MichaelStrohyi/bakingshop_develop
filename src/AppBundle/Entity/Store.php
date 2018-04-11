@@ -412,7 +412,9 @@ class Store
     {
         $coupons = $this->getCoupons();
         $last_code = -1;
-        foreach($coupons->getIterator() as $pos => $coupon) {
+        $pos = -1;
+        foreach($coupons->getIterator() as $coupon) {
+            $pos++;
             if (!empty($coupon->getCode())) {
                 $last_code = $pos;
             }
@@ -503,6 +505,46 @@ class Store
         }
 
         return $res;
+    }
+
+    /**
+     * Find position for coupon by given rating and type of coupon
+     *
+     * @param float $rating
+     * @param boolean $code
+     *
+     * @return int
+     * @author Michael Strohyi
+     **/
+    public function findCouponPositionByRating($rating, $max = 0, $min = 0)
+    {
+        $coupons = $this->getCoupons()->toArray();
+        $coupons_count = count($coupons);
+        if ($coupons_count == 0) {
+            return 0;
+        }
+
+        if ($max == 0) {
+            $max = $coupons_count;
+        }
+
+        $pos = -1;
+        foreach ($coupons as $coupon) {
+            $pos++;
+            if ($pos == $max) {
+                break;
+            }
+
+            if ($pos < $min || empty($coupon->getFeedId())) {
+                continue;
+            }
+
+            if ($coupon->getRating() <= $rating) {
+                return $pos;
+            }
+        }
+
+        return $max;
     }
 
 }
