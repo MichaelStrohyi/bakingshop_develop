@@ -104,20 +104,20 @@ class StoreRepository extends EntityRepository
     }
 
     /**
-     * Return id of store with given autoupdateId
+     * Return id of store with given feedId
      *
-     * @param int $autoupdateId
+     * @param int $feedId
      *
      * @return Store
      * @author Michael Strohyi
      **/
-    public function getStoreByAutoupdateId($autoupdateId)
+    public function getStoreByFeedId($feedId)
     {
-        if (empty($autoupdateId)) {
+        if (empty($feedId)) {
             return;
         }
 
-        $store = $this->findBy(['autoupdateId' => $autoupdateId]);
+        $store = $this->findBy(['feedId' => $feedId]);
         return empty($store) ? null : $store[0];
     }
 }

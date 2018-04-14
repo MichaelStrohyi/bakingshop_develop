@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Coupon;
 use AppBundle\Entity\Store;
+use AppBundle\Entity\StoreCoupon;
 use AdminBundle\Form\StoreType;
 
 /**
@@ -16,6 +17,8 @@ use AdminBundle\Form\StoreType;
  */
 class StoreController extends PageController
 {
+    const COUPONS_LIMIT = 200;
+
     /**
      * @Route("/", name="admin_store_index")
      * @Template()
@@ -147,13 +150,13 @@ class StoreController extends PageController
         $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
         switch ($type) {
             case 'all':
-                $api_data = file_get_contents($url);
-                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data));
+                $feed_data = file_get_contents($url);
+                $this->fetchCouponsFromFeed($feed_data);
                 break;
             case 'new':
                 $url .= "&incremental=1";
-                $api_data = file_get_contents($url);
-                $coupon_repo->fetchCouponsFromFeed($this->parseCouponsFromApi($api_data), true);
+                $feed_data = file_get_contents($url);
+                $this->fetchCouponsFromFeed($feed_data, true);
                 break;
         }
 
@@ -217,28 +220,29 @@ class StoreController extends PageController
             $store->removeLogo();
         }
     }
+
     /**
-     * Convert string in JSON-format into array of coupons
+     * Fetch coupons from the given JSON-string and save them into db
      *
-     * @param string $api_data
+     * @param string $feed_data
+     * @param boolean $incr_mode
      *
-     * @return array
+     * @return void
      * @author Michael Strohyi
      **/
-    private function parseCouponsFromApi($api_data)
+    private function fetchCouponsFromFeed($feed_data, $incr_mode = false)
     {
-        $data = json_decode($api_data);
+        $data = json_decode($feed_data);
         if (empty($data)) {
-            return [];
+            return;
         }
 
-        $coupons = [];
+        $feed_coupons = [];
         $i = 0;
         foreach ($data as $key => $value) {
-            if ($i > 40000) {
-                break;
+            if (!is_object($value)) {
+                continue;
             }
-
             $coupon = get_object_vars($value);
             $i++;
             $cur_coupon = [
@@ -250,10 +254,135 @@ class StoreController extends PageController
                 'expires' => $coupon['dtEndDate'],
                 'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
                 'status' => $coupon['cStatus'],
+                'rating' => $coupon['fRating'],
             ];
-            $coupons[$coupon['nMerchantID']][] = $cur_coupon;
+            $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
         }
 
-        return $coupons;
+       if (empty($feed_coupons)) {
+            return;
+        }
+
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
+        $coupon_repo = $doctrine->getRepository("AppBundle:Coupon");
+        $operator_repo = $doctrine->getRepository("AppBundle:Operator");
+        $operators =  $operator_repo->getAllOperators();
+        $stores_list = [];
+        foreach ($feed_coupons as $feed_store_id => $feed_store_coupons) {
+            $store = $doctrine->getRepository("AppBundle:Store")->getStoreByFeedId($feed_store_id);
+            if (empty($store)) {
+                continue;
+            }
+
+            $stores_list[] = $store->getId();
+            $coupons_updated = false;
+            $coupons_list = [];
+            $new_coupons = [];
+            $coupons_count = 0;
+            foreach ($feed_store_coupons as $feed_coupon) {
+                if (++$coupons_count > self::COUPONS_LIMIT) {
+                    break;
+                }
+
+                $store_coupon = $store->findCouponByFeedId($feed_coupon['id']);
+                if (strtolower($feed_coupon['status']) != "active") {
+                    if (!empty($store_coupon)) {
+                        $store->removeCoupon($store_coupon);
+                        $coupons_updated = true;
+                    }
+
+                    continue;
+                }
+
+                $code_exists = !empty($feed_coupon['code']) ? $store->findCouponByCode($feed_coupon['code'], $feed_coupon['id']) : null;
+                if (!empty($code_exists)) {
+                    if (!empty($store_coupon)) {
+                        $store->removeCoupon($store_coupon);
+                        $coupons_updated = true;
+                    }
+
+                    continue;
+                }
+
+                if (!empty($store_coupon) && (strtolower($feed_coupon['code']) != strtolower($store_coupon->getCode() || $feed_coupon['rating'] != $store_coupon->getRating()))) {
+                    $store->removeCoupon($store_coupon);
+                    $store_coupon = null;
+                    $coupons_updated = true;
+                }
+
+                if (empty($store_coupon)) {
+                    $store_coupon = new StoreCoupon();
+                    $store_coupon
+                        ->setFeedId($feed_coupon['id'])
+                        ->setStore($store)
+                        ->setAddedBy($operator_repo->getRandomItem($operators))
+                    ;
+                }
+
+                $store_coupon
+                    ->setLabel($feed_coupon['label'])
+                    ->setCode(empty($feed_coupon['code']) ? null : $feed_coupon['code'])
+//                    ->setLink($feed_coupon['link'])
+                    ->setLink($store->getLink())
+                    ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
+                    ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
+                    ->setRating($feed_coupon['rating'])
+                    ->setJustVerified()
+                    ->setMaxDiscount()
+                ;
+
+                if (empty($store_coupon->getId())) {
+                    $new_coupons[] = $store_coupon;
+                }
+
+                $coupons_updated = true;
+                $coupons_list[] = $feed_coupon['id'];
+            }
+
+            $coupons_updated = !$incr_mode && $store->removeFeedCoupons($coupons_list) !== false ? true : $coupons_updated;
+            if (!empty($new_coupons)) {
+                $last_code_pos = $store->getLastCodePosition();
+                $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
+                foreach ($new_coupons as $value) {
+                    $max_pos = empty($value->getCode()) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
+                    $min_pos = empty($value->getCode()) ? $last_code_pos + 1 : 0;
+                    $store->insertCouponOnPosition($value, $store->findCouponPositionByRating($value->getRating(), $max_pos, $min_pos));
+                }
+
+                unset($coupons);
+                $coupons_updated = true;
+            }
+
+            if ($coupons_updated) {
+                $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
+                $em->persist($store);
+                $em->flush();
+            }
+        }
+
+        if (!$incr_mode) {
+            $coupon_repo->removeFeedCoupons($stores_list);
+        }
+    }
+
+    /**
+     * Convert given $date string into DateTime object to store in db
+     *
+     * @param string $date
+     *
+     * @return DateTime|null
+     * @author Michael Strohyi
+     **/
+    private function convertDateFromFeed($date)
+    {
+        try {
+            $date = new \DateTime($date);
+            $cur_date = new \DateTimeImmutable();
+
+            return $date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3 ? null : $date;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

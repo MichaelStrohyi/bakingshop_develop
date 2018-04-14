@@ -6,7 +6,7 @@
     <header>
         <h1>Edit Article</h1>
     </header>
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-article'}}) }}
     {{ form_row(form.header) }}
     {{ form_row(form.url) }}
     {{ form_row(form.author) }}

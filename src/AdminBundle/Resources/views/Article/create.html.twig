@@ -6,7 +6,7 @@
     <header>
         <h1>New Article</h1>
     </header>
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-article'}}) }}
     {{ form_row(form.header) }}
     {{ form_row(form.url) }}
     {{ form_row(form.author) }}
@@ -20,4 +20,14 @@
             <a href="{{ path('admin_article_index') }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
