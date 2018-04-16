@@ -23,6 +23,12 @@
     {{ parent() }}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    {% javascripts filter="?jsqueeze" output="js/admin/main.js"
+        '@AppBundle/Resources/public/coffee/admin/main.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
 
 {% block stylesheets %}

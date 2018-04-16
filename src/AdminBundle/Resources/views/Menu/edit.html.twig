@@ -7,11 +7,21 @@
         <h1>Edit Menu</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
     {{ form_widget(form, {'attr': {'autocomplete': false}}) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Update</button>
             <a href="{{ path("admin_menu_show", {"id": menu.id}) }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/menu.js"
+        '@AppBundle/Resources/public/coffee/admin/menu.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

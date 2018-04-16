@@ -7,7 +7,7 @@
         <h1>New Store</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
     {{ form_row(form.name) }}
     {{ form_row(form.link) }}
     {{ form_row(form.keywords) }}
@@ -19,4 +19,14 @@
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

@@ -7,7 +7,7 @@
         <h1>Edit Store</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
     {{ form_row(form.name) }}
     {{ form_row(form.link) }}
     {{ form_row(form.keywords) }}

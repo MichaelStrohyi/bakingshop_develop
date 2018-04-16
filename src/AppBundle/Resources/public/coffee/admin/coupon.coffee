@@ -74,3 +74,17 @@ addItemFormMoveLinks = ($itemFormLi) ->
         # scroll page if new li position came out of screen
         if ($(document).scrollTop() + $(window).height() - $itemFormLi.outerHeight() < $itemFormLi.position().top)
             $(document).scrollTop $itemFormLi.position().top - $(window).height() + $itemFormLi.outerHeight()
+
+$(document).ready () ->
+    # add function for replacing some special symbols in labels and codes before submit
+    $("#edit-coupons").on 'submit', (event) ->
+        # cancel form submit event
+        event.preventDefault()
+        # search and replace some special symbols in labels
+        $('ul.mutable-items').find("li.list-item .coupon-label").each () ->
+            replaceSymbols $(this)
+        # search and replace some special symbols in codes
+        $('ul.mutable-items').find("li.list-item .coupon-code").each () ->
+            replaceSymbols $(this)
+        # submit form
+        $(this).unbind('submit').submit()
