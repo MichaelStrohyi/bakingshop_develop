@@ -66,3 +66,16 @@ addItemFormMoveLinks = function($itemFormLi) {
     }
   });
 };
+
+$(document).ready(function() {
+  return $("#edit-coupons").on('submit', function(event) {
+    event.preventDefault();
+    $('ul.mutable-items').find("li.list-item .coupon-label").each(function() {
+      return replaceSymbols($(this));
+    });
+    $('ul.mutable-items').find("li.list-item .coupon-code").each(function() {
+      return replaceSymbols($(this));
+    });
+    return $(this).unbind('submit').submit();
+  });
+});

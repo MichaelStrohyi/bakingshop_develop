@@ -12,8 +12,8 @@ class StoreCouponType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', 'textarea', ['attr' => ['rows' => '3']])
-            ->add('code', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('label', 'textarea', ['attr' => ['rows' => '3', 'class' => 'coupon-label']])
+            ->add('code', null, ['attr' => ['autocomplete' => 'off', 'class' => 'coupon-code']])
             ->add('link', null, ['attr' => ['autocomplete' => 'off']])
             ->add('startDate', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'Starts'])
             ->add('expireDate', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'Expires'])

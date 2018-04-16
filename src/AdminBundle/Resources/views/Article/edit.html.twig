@@ -6,7 +6,7 @@
     <header>
         <h1>Edit Article</h1>
     </header>
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-article'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
     {{ form_row(form.header) }}
     {{ form_row(form.url) }}
     {{ form_row(form.author) }}
@@ -35,7 +35,8 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+    {% javascripts filter="?jsqueeze" output="js/admin/article.js"
+        '@AppBundle/Resources/public/coffee/admin/article.coffee'
         '@AppBundle/Resources/public/coffee/admin/store.coffee'
     %}
         <script src="{{ asset_url }}"></script>

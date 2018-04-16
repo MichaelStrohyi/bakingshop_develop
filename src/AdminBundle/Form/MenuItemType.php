@@ -12,7 +12,7 @@ class MenuItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('title', null, ['attr' => ['autocomplete' => 'off', 'class' => 'item-title']])
             ->add('url', null, ['attr' => ['autocomplete' => 'off']])
             ->add('position', 'hidden', ['default' => MenuItem::DEFAULT_POSITION, 'attr' => ['class' => 'item-position']])
         ;

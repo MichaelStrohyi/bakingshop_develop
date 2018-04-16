@@ -7,3 +7,13 @@ $(document).on("change", "input[name=pages_filter]", function() {
     return $('.page-type').not($('.' + pages_filter + '-page')).hide();
   }
 });
+
+$(document).ready(function() {
+  return $("#edit-form").on('submit', function(event) {
+    event.preventDefault();
+    replaceSymbols($("#admin_article_description"));
+    replaceSymbols($("#admin_article_header"));
+    replaceSymbols($("#admin_article_author"));
+    return $(this).unbind('submit').submit();
+  });
+});

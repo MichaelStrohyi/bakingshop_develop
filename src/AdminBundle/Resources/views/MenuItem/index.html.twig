@@ -29,8 +29,8 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts filter="?jsqueeze" output="js/admin/menu.js"
-        '@AppBundle/Resources/public/coffee/admin/menu.coffee'
+    {% javascripts filter="?jsqueeze" output="js/admin/menu_item.js"
+        '@AppBundle/Resources/public/coffee/admin/menu_item.coffee'
         '@AppBundle/Resources/public/coffee/admin/sortable.coffee'
     %}
         <script src="{{ asset_url }}"></script>
