@@ -379,7 +379,7 @@ class Store
     }
 
     /**
-     * Search for coupon with given code and f3eedId different from given feedId. Return target coupon if it exists or null, if it does not exist
+     * Search for coupon with given code and feedId different from given feedId. Return target coupon if it exists or null, if it does not exist
      *
      * @param string $code
      * @param int $feedId
@@ -403,7 +403,7 @@ class Store
     }
 
     /**
-     * Return position of last coupon with code. If no coupons have code return -1
+     * Return position of last coupon with code in coupons array. If no coupons have code return -1
      *
      * @return int
      * @author Michael Strohyi
@@ -486,19 +486,19 @@ class Store
     }
 
     /**
-     * Remove coupons, which have not null FeedId and are absent in given $coupons_list.
+     * Remove coupons, which have not null FeedId and are absent in given $exclusions.
      * Return true if any coupon has been removed, otherwise return false.
      *
-     * @param array $coupons_list
+     * @param array $exclusions
      *
      * @return boolean
      * @author Michael Strohyi
      **/
-    public function removeFeedCoupons($coupons_list = [])
+    public function removeFeedCoupons($exclusions = [])
     {
         $res = false;
         foreach($this->getCoupons()->getIterator() as $coupon) {
-            if (!empty($coupon->getFeedId()) && !in_array($coupon->getFeedId(), $coupons_list)) {
+            if (!empty($coupon->getFeedId()) && !in_array($coupon->getFeedId(), $exclusions)) {
                 $this->removeCoupon($coupon);
                 $res = true;
             }
@@ -508,10 +508,11 @@ class Store
     }
 
     /**
-     * Find position for coupon by given rating and type of coupon
+     * Find position for coupon by given rating and possible range of positions
      *
      * @param float $rating
-     * @param boolean $code
+     * @param int $max
+     * @param int $min
      *
      * @return int
      * @author Michael Strohyi

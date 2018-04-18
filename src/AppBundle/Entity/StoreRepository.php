@@ -15,7 +15,7 @@ class StoreRepository extends EntityRepository
     /**
      * Return list aff all stores ordered by name
      *
-     * @return void
+     * @return Store
      * @author Michael Strohyi
      **/
     public function findAllByName()
@@ -119,5 +119,26 @@ class StoreRepository extends EntityRepository
 
         $store = $this->findBy(['feedId' => $feedId]);
         return empty($store) ? null : $store[0];
+    }
+
+    /**
+     * Return all stores with not null feedId if their feedIds are absent in given exclusions
+     *
+     * @param array $exclusions
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getAllFeedStores($exclusions = [])
+    {
+        $q = 'SELECT s FROM AppBundle:Store s WHERE s.feedId IS NOT NULL';
+        if (!empty($exclusions)) {
+            $exclusions = '(' . implode(', ', $exclusions) . ')';
+            $q .= ' AND s.feedId NOT IN ' . $exclusions;
+        }
+
+        $query = $this->getEntityManager()->createQuery($q);
+
+        return $query->getResult();
     }
 }

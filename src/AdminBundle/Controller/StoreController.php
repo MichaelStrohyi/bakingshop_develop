@@ -147,7 +147,6 @@ class StoreController extends PageController
         }
 
         $url = $this->getParameter('feeds_url');
-        $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
         switch ($type) {
             case 'all':
                 $feed_data = file_get_contents($url);
@@ -238,13 +237,11 @@ class StoreController extends PageController
         }
 
         $feed_coupons = [];
-        $i = 0;
         foreach ($data as $key => $value) {
             if (!is_object($value)) {
                 continue;
             }
             $coupon = get_object_vars($value);
-            $i++;
             $cur_coupon = [
                 'id' => $coupon['nCouponID'],
                 'label' => $coupon['cLabel'],
@@ -259,7 +256,7 @@ class StoreController extends PageController
             $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
         }
 
-       if (empty($feed_coupons)) {
+        if (empty($feed_coupons)) {
             return;
         }
 
@@ -275,7 +272,7 @@ class StoreController extends PageController
                 continue;
             }
 
-            $stores_list[] = $store->getId();
+            $stores_list[] = $store->getFeedId();
             $coupons_updated = false;
             $coupons_list = [];
             $new_coupons = [];
@@ -305,7 +302,7 @@ class StoreController extends PageController
                     continue;
                 }
 
-                if (!empty($store_coupon) && (strtolower($feed_coupon['code']) != strtolower($store_coupon->getCode() || $feed_coupon['rating'] != $store_coupon->getRating()))) {
+                if (!empty($store_coupon) && (empty($feed_coupon['code']) != empty($store_coupon->getCode()) || $feed_coupon['rating'] != $store_coupon->getRating())) {
                     $store->removeCoupon($store_coupon);
                     $store_coupon = null;
                     $coupons_updated = true;
@@ -350,20 +347,27 @@ class StoreController extends PageController
                     $store->insertCouponOnPosition($value, $store->findCouponPositionByRating($value->getRating(), $max_pos, $min_pos));
                 }
 
-                unset($coupons);
+                unset($new_coupons);
                 $coupons_updated = true;
             }
 
             if ($coupons_updated) {
                 $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
                 $em->persist($store);
-                $em->flush();
             }
         }
 
         if (!$incr_mode) {
-            $coupon_repo->removeFeedCoupons($stores_list);
+            $remove_stores = $doctrine->getRepository("AppBundle:Store")->getAllFeedStores($stores_list);
+            foreach ($remove_stores as $value) {
+                if ($value->removeFeedCoupons()) {
+                    $value->actualiseCouponsPosition();
+                    $em->persist($value);
+                }
+            }
         }
+
+        $em->flush();
     }
 
     /**
