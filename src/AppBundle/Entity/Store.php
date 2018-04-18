@@ -521,30 +521,34 @@ class Store
     {
         $coupons = $this->getCoupons()->toArray();
         $coupons_count = count($coupons);
+        # return 0 if there are no coupons in this store
         if ($coupons_count == 0) {
             return 0;
         }
-
+        # if max position is not set take the last coupon position instead of max
         if ($max == 0) {
             $max = $coupons_count;
         }
 
         $pos = -1;
+        # go through coupons array for this store
         foreach ($coupons as $coupon) {
+            # calculate position of current coupon
             $pos++;
+            # break if current pos is equal to max
             if ($pos == $max) {
                 break;
             }
-
+            # continue if current coupon is not feed-coupon or pos is lower, than min position
             if ($pos < $min || empty($coupon->getFeedId())) {
                 continue;
             }
-
+            # return current pos if rating of current coupon is not higher, than given rating
             if ($coupon->getRating() <= $rating) {
                 return $pos;
             }
         }
-
+        # return max if position was not found before
         return $max;
     }
 
