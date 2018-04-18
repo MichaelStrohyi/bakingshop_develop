@@ -147,7 +147,8 @@ class StoreController extends PageController
             }
         }
 
-        $url = $this->getParameter('feeds_url');
+//        $url = $this->getParameter('feeds_url');
+        $url = 'c:\AppServ\www\api\api_json.txt';
         # get feed-data from server according to run-mode
         switch ($type) {
             case 'all':
@@ -156,7 +157,7 @@ class StoreController extends PageController
                 $this->fetchCouponsFromFeed($feed_data);
                 break;
             case 'new':
-                $url .= "&incremental=1";
+//                $url .= "&incremental=1";
                 $feed_data = file_get_contents($url);
                 # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data, true);
@@ -318,6 +319,9 @@ class StoreController extends PageController
                         $coupons_updated = true;
                     }
 
+                    # set coupon with code of current feed-coupon as just verified
+                    $code_exists->setJustVerified();
+                    $coupons_updated = true;
                     # goto next feed-coupon
                     continue;
                 }
