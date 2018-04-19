@@ -145,6 +145,13 @@ class Coupon
     private $rating;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_updated", type="datetime", nullable=true)
+     */
+    private $lastUpdated;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -377,7 +384,6 @@ class Coupon
         return $this;
     }
 
-
     /**
      * Set verifiedAt
      *
@@ -513,7 +519,7 @@ class Coupon
     }
 
     /**
-     * Set current date into UpdatedAt property
+     * Set current date into VerifiedAt property
      *
      * @return self
      * @author Michael Strohyi
@@ -569,6 +575,29 @@ class Coupon
         $this->rating = $rating;
 
         return $this;
+    }
+
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     * @return Coupon
+     */
+    public function setLastUpdated($lastUpdated)
+    {
+        $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdated
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdated()
+    {
+        return $this->lastUpdated;
     }
 
     /**

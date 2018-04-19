@@ -147,8 +147,7 @@ class StoreController extends PageController
             }
         }
 
-//        $url = $this->getParameter('feeds_url');
-        $url = 'c:\AppServ\www\api\api_json.txt';
+        $url = $this->getParameter('feeds_url');
         # get feed-data from server according to run-mode
         switch ($type) {
             case 'all':
@@ -157,7 +156,7 @@ class StoreController extends PageController
                 $this->fetchCouponsFromFeed($feed_data);
                 break;
             case 'new':
-//                $url .= "&incremental=1";
+                $url .= "&incremental=1";
                 $feed_data = file_get_contents($url);
                 # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data, true);
@@ -260,6 +259,7 @@ class StoreController extends PageController
                 'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
                 'status' => $coupon['cStatus'],
                 'rating' => $coupon['fRating'],
+                'last_updated' =>$coupon['cLastUpdated'],
             ];
             # save current coupon into array of coupons, grouped by merchant id
             $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
@@ -332,6 +332,12 @@ class StoreController extends PageController
                     $store_coupon = null;
                     $coupons_updated = true;
                 }
+                # check if feed-coupon has been updated later than coupon-object from db
+                if (!empty($store_coupon) && $store_coupon->getLastUpdated() >= $this->convertDateFromFeed($feed_coupon['last_updated'], false)) {
+                    # add feed-coupon id into coupons list
+                    $coupons_list[] = $feed_coupon['id'];
+                    continue;
+                }
                 # if coupon-object for current feed-coupon exists (feed-coupon is new for store) create new coupon-object
                 if (empty($store_coupon)) {
                     $store_coupon = new StoreCoupon();
@@ -349,6 +355,7 @@ class StoreController extends PageController
                     ->setLink($store->getLink())
                     ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
+                    ->setLastUpdated($this->convertDateFromFeed($feed_coupon['last_updated'], false))
                     ->setRating($feed_coupon['rating'])
                     ->setJustVerified()
                     ->setMaxDiscount()
@@ -413,20 +420,23 @@ class StoreController extends PageController
     }
 
     /**
-     * Convert given $date string into DateTime object to store in db
+     * Convert given $date string into DateTime object to store in db (with converting timezone according to current server timezone)
      *
      * @param string $date
+     * @param boolean $limiter
      *
      * @return DateTime|null
      * @author Michael Strohyi
      **/
-    private function convertDateFromFeed($date)
+    private function convertDateFromFeed($date, $limiter = true)
     {
         try {
             $date = new \DateTime($date);
+            # convert imezone of given date to current server timezone)
+            $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));
             $cur_date = new \DateTimeImmutable();
             # return date or null, if year of date is more, than 3 years before/after current date
-            return $date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3 ? null : $date;
+            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3)? null : $date;
         } catch (\Exception $e) {
             return null;
         }
