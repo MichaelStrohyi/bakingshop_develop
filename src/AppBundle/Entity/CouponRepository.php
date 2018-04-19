@@ -37,25 +37,4 @@ class CouponRepository extends EntityRepository
 
         return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
     }
-
-    /**
-     * Remove feed coupons from stores, which don't present in given $stores_list
-     *
-     * @param array $stores_list
-     *
-     * @return void
-     * @author Michael Strohyi
-     **/
-    public function removeFeedCoupons($stores_list = [])
-    {
-        $q = 'DELETE FROM AppBundle:StoreCoupon c WHERE c.feedId IS NOT NULL';
-        if (!empty($stores_list)) {
-            $stores_list = '(' . implode(', ', $stores_list) . ')';
-            $q .= ' AND c.store NOT IN ' . $stores_list;
-        }
-
-        $query = $this->getEntityManager()->createQuery($q);
-        $query->execute();
-
-    }
 }

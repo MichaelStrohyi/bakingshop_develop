@@ -136,6 +136,7 @@ class StoreController extends PageController
     public function autoupdateAction($type)
     {
         ini_set('MAX_EXECUTION_TIME', 540);
+        # if it is cron-runned job select mode of autoupdate (all-mode once in 12 hours)
         if ($type == "job") {
             $date = new \DateTimeImmutable();
             $hours = $date->format('H');
@@ -147,15 +148,17 @@ class StoreController extends PageController
         }
 
         $url = $this->getParameter('feeds_url');
-        $coupon_repo = $this->getDoctrine()->getRepository("AppBundle:Coupon");
+        # get feed-data from server according to run-mode
         switch ($type) {
             case 'all':
                 $feed_data = file_get_contents($url);
+                # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data);
                 break;
             case 'new':
                 $url .= "&incremental=1";
                 $feed_data = file_get_contents($url);
+                # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data, true);
                 break;
         }
@@ -231,20 +234,21 @@ class StoreController extends PageController
      * @author Michael Strohyi
      **/
     private function fetchCouponsFromFeed($feed_data, $incr_mode = false)
-    {
+    {   
+        # get feed data from json-format
         $data = json_decode($feed_data);
         if (empty($data)) {
             return;
         }
 
         $feed_coupons = [];
-        $i = 0;
+        # run through data array to get coupons
         foreach ($data as $key => $value) {
             if (!is_object($value)) {
                 continue;
             }
+            # get necessary data for current coupon
             $coupon = get_object_vars($value);
-            $i++;
             $cur_coupon = [
                 'id' => $coupon['nCouponID'],
                 'label' => $coupon['cLabel'],
@@ -255,11 +259,13 @@ class StoreController extends PageController
                 'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
                 'status' => $coupon['cStatus'],
                 'rating' => $coupon['fRating'],
+                'last_updated' =>$coupon['cLastUpdated'],
             ];
+            # save current coupon into array of coupons, grouped by merchant id
             $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
         }
-
-       if (empty($feed_coupons)) {
+        # return if there was found no coupons in feed data
+        if (empty($feed_coupons)) {
             return;
         }
 
@@ -268,49 +274,71 @@ class StoreController extends PageController
         $coupon_repo = $doctrine->getRepository("AppBundle:Coupon");
         $operator_repo = $doctrine->getRepository("AppBundle:Operator");
         $operators =  $operator_repo->getAllOperators();
+        # reset stores list
         $stores_list = [];
+        # run through feed merchants array
         foreach ($feed_coupons as $feed_store_id => $feed_store_coupons) {
+            # get store-object with current merchant id
             $store = $doctrine->getRepository("AppBundle:Store")->getStoreByFeedId($feed_store_id);
+            # return if no store has current merchant id
             if (empty($store)) {
                 continue;
             }
-
-            $stores_list[] = $store->getId();
+            # save feedId of current store into stores list
+            $stores_list[] = $store->getFeedId();
+            # reset flag of updated coupons
             $coupons_updated = false;
+            # reset lists of coupons and new coupons for current store
             $coupons_list = [];
             $new_coupons = [];
             $coupons_count = 0;
+            # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
+                # break if coupons count for store is more, than limit
                 if (++$coupons_count > self::COUPONS_LIMIT) {
                     break;
                 }
-
+                # get coupon-object with given feed id from db
                 $store_coupon = $store->findCouponByFeedId($feed_coupon['id']);
+                # check if current feed-coupon has active status
                 if (strtolower($feed_coupon['status']) != "active") {
                     if (!empty($store_coupon)) {
+                        # if status is not active and exists coupon-object with this feed id delete this coupon-object
                         $store->removeCoupon($store_coupon);
                         $coupons_updated = true;
                     }
-
+                    # if status is not active goto next feed-coupon
                     continue;
                 }
-
+                # check if in current store exists other coupon with code of current feed-coupon
                 $code_exists = !empty($feed_coupon['code']) ? $store->findCouponByCode($feed_coupon['code'], $feed_coupon['id']) : null;
                 if (!empty($code_exists)) {
                     if (!empty($store_coupon)) {
+                        # if other coupon with code of current feed-coupon exists remove current coupon-object to prevent code duplication
                         $store->removeCoupon($store_coupon);
                         $coupons_updated = true;
                     }
 
+                    # set coupon with code of current feed-coupon as just verified
+                    $code_exists->setJustVerified();
+                    $coupons_updated = true;
+                    # goto next feed-coupon
                     continue;
                 }
-
-                if (!empty($store_coupon) && (strtolower($feed_coupon['code']) != strtolower($store_coupon->getCode() || $feed_coupon['rating'] != $store_coupon->getRating()))) {
+                # if coupon-object for current feed-coupon exists and type (code or simple coupon) or rating of coupon changed
+                if (!empty($store_coupon) && (empty($feed_coupon['code']) != empty($store_coupon->getCode()) || $feed_coupon['rating'] != $store_coupon->getRating())) {
+                    # delete this coupon-object
                     $store->removeCoupon($store_coupon);
                     $store_coupon = null;
                     $coupons_updated = true;
                 }
-
+                # check if feed-coupon has been updated later than coupon-object from db
+                if (!empty($store_coupon) && $store_coupon->getLastUpdated() >= $this->convertDateFromFeed($feed_coupon['last_updated'], false)) {
+                    # add feed-coupon id into coupons list
+                    $coupons_list[] = $feed_coupon['id'];
+                    continue;
+                }
+                # if coupon-object for current feed-coupon exists (feed-coupon is new for store) create new coupon-object
                 if (empty($store_coupon)) {
                     $store_coupon = new StoreCoupon();
                     $store_coupon
@@ -319,7 +347,7 @@ class StoreController extends PageController
                         ->setAddedBy($operator_repo->getRandomItem($operators))
                     ;
                 }
-
+                # fill information for new coupon-object from feed-coupon
                 $store_coupon
                     ->setLabel($feed_coupon['label'])
                     ->setCode(empty($feed_coupon['code']) ? null : $feed_coupon['code'])
@@ -327,60 +355,88 @@ class StoreController extends PageController
                     ->setLink($store->getLink())
                     ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
+                    ->setLastUpdated($this->convertDateFromFeed($feed_coupon['last_updated'], false))
                     ->setRating($feed_coupon['rating'])
                     ->setJustVerified()
                     ->setMaxDiscount()
                 ;
-
+                # if coupon-object is new add it into new coupons array
                 if (empty($store_coupon->getId())) {
                     $new_coupons[] = $store_coupon;
                 }
-
+                # set coupons updated flag
                 $coupons_updated = true;
+                # add feed-coupon id into coupons list
                 $coupons_list[] = $feed_coupon['id'];
             }
 
+            # if mode of autoupdate is not incremental remove from current store coupons, which are absent coupons list
+            # set coupons updated flag if any coupon has been removed
             $coupons_updated = !$incr_mode && $store->removeFeedCoupons($coupons_list) !== false ? true : $coupons_updated;
+            # check if new coupons array is not empty
             if (!empty($new_coupons)) {
+                # get positions of last code and last coupon offset from last code for current store
                 $last_code_pos = $store->getLastCodePosition();
                 $last_coupon_offset = count($store->getCoupons()) - 1 - $last_code_pos;
+                # run through new coupons array
                 foreach ($new_coupons as $value) {
+                    # find position interval for current coupon according to its type (code or simple coupon)
                     $max_pos = empty($value->getCode()) ? ++$last_coupon_offset + $last_code_pos : ++$last_code_pos;
                     $min_pos = empty($value->getCode()) ? $last_code_pos + 1 : 0;
+                    # insert coupon into store coupons list into position, calculated according to rating and position interval
                     $store->insertCouponOnPosition($value, $store->findCouponPositionByRating($value->getRating(), $max_pos, $min_pos));
                 }
-
-                unset($coupons);
+                # unset new coupons array to empty memory
+                unset($new_coupons);
+                # set coupons updated flag
                 $coupons_updated = true;
             }
-
+            # check if coupons updated flag is set
             if ($coupons_updated) {
+                # set position for all store coupons according to actual position in list
                 $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
+                # save store into db
                 $em->persist($store);
-                $em->flush();
             }
         }
-
+        # check if incremental mode is off and remove all feed coupons for stores, which are absent in stores list
         if (!$incr_mode) {
-            $coupon_repo->removeFeedCoupons($stores_list);
+            # get list of stores, which are absent in stores list and have not null feedId
+            $remove_stores = $doctrine->getRepository("AppBundle:Store")->getAllFeedStores($stores_list);
+            # go through remove stores list
+            foreach ($remove_stores as $value) {
+                # try to delete all feed coupons for current store
+                if ($value->removeFeedCoupons()) {
+                    # if any coupon was deleted set position for all store coupons according to actual position in list
+                    $value->actualiseCouponsPosition();
+                    # save store into db
+                    $em->persist($value);
+                }
+            }
+
         }
+
+        $em->flush();
     }
 
     /**
-     * Convert given $date string into DateTime object to store in db
+     * Convert given $date string into DateTime object to store in db (with converting timezone according to current server timezone)
      *
      * @param string $date
+     * @param boolean $limiter
      *
      * @return DateTime|null
      * @author Michael Strohyi
      **/
-    private function convertDateFromFeed($date)
+    private function convertDateFromFeed($date, $limiter = true)
     {
         try {
             $date = new \DateTime($date);
+            # convert imezone of given date to current server timezone)
+            $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));
             $cur_date = new \DateTimeImmutable();
-
-            return $date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3 ? null : $date;
+            # return date or null, if year of date is more, than 3 years before/after current date
+            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3)? null : $date;
         } catch (\Exception $e) {
             return null;
         }
