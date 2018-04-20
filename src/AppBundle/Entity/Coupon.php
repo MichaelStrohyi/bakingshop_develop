@@ -689,8 +689,7 @@ class Coupon
             return(max($matches[0]));
         }
 
-        $pattern = '/free shipping/i';
-        if (preg_match('/free shipping/i', $label) != 0) {
+        if (preg_match('/free[\w\s]{1,20}shipping/i', $label) != 0) {
             return 'FREE Shipping';
         }
 
