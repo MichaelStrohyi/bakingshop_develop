@@ -321,6 +321,18 @@ class StoreController extends PageController
 
                     # set coupon with code of current feed-coupon as just verified
                     $code_exists->setJustVerified();
+                    $code_exp_date = $code_exists->getExpireDate();
+                    $feed_exp_date =$this->convertDateFromFeed($feed_coupon['expires']);
+                    # check if feed-coupon expires later, than coupon-object
+                    if (!empty($code_exp_date) && $code_exp_date < $feed_exp_date) {
+                        # set expire date from feed-coupon
+                        $code_exists->setExpireDate($feed_exp_date);
+                        # if coupon object is deactivated as expired and has no start date in future, activate it
+                        if ($code_exists->getActivity() == 0 && $code_exp_date <= new \DateTimeImmutable()) {
+                            $code_exists->setActivity(1);
+                        }
+                    }
+
                     $coupons_updated = true;
                     # goto next feed-coupon
                     continue;
