@@ -447,8 +447,8 @@ class StoreController extends PageController
             # convert imezone of given date to current server timezone)
             $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));
             $cur_date = new \DateTimeImmutable();
-            # return date or null, if year of date is more, than 3 years before/after current date
-            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3)? null : $date;
+            # return date or null, if year of date is more, than 19 years after and 2 years before current date
+            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 19 || $date->format("Y") < $cur_date->format("Y") - 2) ? null : $date;
         } catch (\Exception $e) {
             return null;
         }
