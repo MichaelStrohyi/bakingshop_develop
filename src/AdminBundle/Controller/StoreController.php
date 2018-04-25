@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Coupon;
@@ -128,25 +129,13 @@ class StoreController extends PageController
 
     /**
      * @Route("/autoupdate/{type}", name="admin_store_autoupdate",
-     *     requirements={"type": "all|new|job"},
+     *     requirements={"type": "all|new"},
      *     defaults={"type": "new"},
      * ))
-     * @Template()
      */
     public function autoupdateAction($type)
     {
         ini_set('MAX_EXECUTION_TIME', 540);
-        # if it is cron-runned job select mode of autoupdate (all-mode once in 12 hours)
-        if ($type == "job") {
-            $date = new \DateTimeImmutable();
-            $hours = $date->format('H');
-            if ($hours % 12 == 0) {
-                $type = "all";
-            } else {
-                $type = "new";
-            }
-        }
-
         $url = $this->getParameter('feeds_url');
         # get feed-data from server according to run-mode
         switch ($type) {
@@ -163,9 +152,7 @@ class StoreController extends PageController
                 break;
         }
 
-        return [
-            'type' => $type,
-        ];
+        return new Response('Coupons updated successfully');
     }
 
     /**
@@ -321,6 +308,18 @@ class StoreController extends PageController
 
                     # set coupon with code of current feed-coupon as just verified
                     $code_exists->setJustVerified();
+                    $code_exp_date = $code_exists->getExpireDate();
+                    $feed_exp_date =$this->convertDateFromFeed($feed_coupon['expires']);
+                    # check if feed-coupon expires later, than coupon-object
+                    if (!empty($code_exp_date) && $code_exp_date < $feed_exp_date) {
+                        # set expire date from feed-coupon
+                        $code_exists->setExpireDate($feed_exp_date);
+                        # if coupon object is deactivated as expired and has no start date in future, activate it
+                        if ($code_exists->getActivity() == 0 && $code_exp_date <= new \DateTimeImmutable()) {
+                            $code_exists->setActivity(1);
+                        }
+                    }
+
                     $coupons_updated = true;
                     # goto next feed-coupon
                     continue;
@@ -435,8 +434,8 @@ class StoreController extends PageController
             # convert imezone of given date to current server timezone)
             $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));
             $cur_date = new \DateTimeImmutable();
-            # return date or null, if year of date is more, than 3 years before/after current date
-            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 3 || $date->format("Y") < $cur_date->format("Y") - 3)? null : $date;
+            # return date or null, if year of date is more, than 19 years after and 2 years before current date
+            return $limiter && ($date->format("Y") > $cur_date->format("Y") + 19 || $date->format("Y") < $cur_date->format("Y") - 2) ? null : $date;
         } catch (\Exception $e) {
             return null;
         }
