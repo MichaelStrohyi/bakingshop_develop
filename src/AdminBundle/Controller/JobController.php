@@ -29,4 +29,16 @@ class JobController extends PageController
         
         return $response;
     }
+
+    /**
+     * @Route("/daily", name="admin_job_daily")
+     */
+    public function dailyAction()
+    {
+        $repo = $this->getDoctrine()->getEntityManager()->getRepository('AppBundle:Coupon');
+        $repo->deactivateExpired();
+        $repo->removeOldDates();
+
+        return new Response('Daily job has been finished');
+    }
 }
