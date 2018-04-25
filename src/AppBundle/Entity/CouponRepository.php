@@ -76,4 +76,27 @@ class CouponRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    /**
+     * Find coupons, which are expired for more, than 2 weeks
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findExpired()
+    {
+        $date = new \DateTime();
+        $date->setTime(0, 0, 0);
+        $date->modify('-2 weeks');
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT c FROM AppBundle:Coupon c '
+                . 'WHERE c.expireDate < :date'
+            )
+            ->setParameters([
+                'date' => $date,
+            ]);
+
+        return $query->getResult();
+    }
 }

@@ -38,7 +38,25 @@ class JobController extends PageController
         $repo = $this->getDoctrine()->getEntityManager()->getRepository('AppBundle:Coupon');
         $repo->deactivateExpired();
         $repo->removeOldDates();
+        $this->removeExpiredCoupons();
 
         return new Response('Daily job has been finished');
+    }
+
+    /**
+     * Remove expired coupons
+     *
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function removeExpiredCoupons()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $coupons = $em->getRepository('AppBundle:Coupon')->findExpired();
+        foreach ($coupons as $coupon) {
+            $em->remove($coupon);
+        }
+        $em->flush();
     }
 }
