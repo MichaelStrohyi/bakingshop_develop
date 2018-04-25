@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Coupon;
@@ -128,25 +129,13 @@ class StoreController extends PageController
 
     /**
      * @Route("/autoupdate/{type}", name="admin_store_autoupdate",
-     *     requirements={"type": "all|new|job"},
+     *     requirements={"type": "all|new"},
      *     defaults={"type": "new"},
      * ))
-     * @Template()
      */
     public function autoupdateAction($type)
     {
         ini_set('MAX_EXECUTION_TIME', 540);
-        # if it is cron-runned job select mode of autoupdate (all-mode once in 12 hours)
-        if ($type == "job") {
-            $date = new \DateTimeImmutable();
-            $hours = $date->format('H');
-            if ($hours % 12 == 0) {
-                $type = "all";
-            } else {
-                $type = "new";
-            }
-        }
-
         $url = $this->getParameter('feeds_url');
         # get feed-data from server according to run-mode
         switch ($type) {
@@ -163,9 +152,7 @@ class StoreController extends PageController
                 break;
         }
 
-        return [
-            'type' => $type,
-        ];
+        return new Response('Coupons updated successfully');
     }
 
     /**
