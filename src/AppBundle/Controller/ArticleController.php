@@ -25,7 +25,7 @@ class ArticleController extends Controller
         $parameters = [
             'article' => $article,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
-            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName(),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition(),
             'type' => $article->getType(),
             'type_title' => $article->getTypeTitle($article->getType()),
         ];

@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -21,6 +22,7 @@ class Menu
     const TYPE_SIDE = 'side';
     const TYPE_BOTTOM = 'bottom';
     const PROD_COLORS = ['red', 'blue', 'yellow'];
+    const DEFAULT_POSITION = 10000;
 
     /**
      * @var integer
@@ -67,6 +69,15 @@ class Menu
      * @Assert\NotBlank
      */
     private $type;
+
+    /**
+     * @var integer
+     *
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @Assert\NotNull
+     */
+    private $position = self::DEFAULT_POSITION;
 
 
     public function __construct()
@@ -221,4 +232,26 @@ class Menu
         ];
     }
 
+    /**
+     * Set position
+     *
+     * @param int $position
+     * @return Menu
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
 }

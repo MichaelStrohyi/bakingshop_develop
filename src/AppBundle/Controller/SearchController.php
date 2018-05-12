@@ -76,7 +76,7 @@ class SearchController extends Controller
             'type' => 'search',
             'type_title' => 'Search',
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
-            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByPosition(),
             'needle' => $needle,
             'stores' => null,
             'articles' => null,

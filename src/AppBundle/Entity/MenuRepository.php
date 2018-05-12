@@ -13,14 +13,27 @@ use Doctrine\ORM\EntityRepository;
 class MenuRepository extends EntityRepository
 {
     /**
-     * Return list of all menu ordered by name
+     * Return list of all menu ordered by position
      *
      * @return Menu[]
      * 
      * @author Mykola Martynov
      **/
-    public function findAllByName()
+    public function findAllByPosition()
     {
-        return $this->findBy([], ['name' => 'ASC']);
+        return $this->findBy([], ['position' => 'ASC']);
+    }
+
+    /**
+     * Find position for new menu with given type.
+     *
+     * @param string $type
+     *
+     * @return int
+     * @author Michael Strohyi
+     **/
+    public function getNewPosition($type = null)
+    {
+       return count($this->findBy(['type' => $type]));
     }
 }

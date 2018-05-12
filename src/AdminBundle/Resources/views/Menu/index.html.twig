@@ -25,7 +25,10 @@
         <tbody>
             {% for menu_type in menu_types %}
                 <tr bgcolor="#eee">
-                    <td colspan="5">{{ menu_type|capitalize }}-menu block</td>
+                    <td colspan="4">{{ menu_type|capitalize }}-menu block</td>
+                    <td>
+                        <a href="{{ path("admin_menu_reorder", {type: menu_type}) }}">Reorder</a>
+                    </td>
                 </tr>
                 {% set i = 0 %}
                 {% for menu in menu_list %}
