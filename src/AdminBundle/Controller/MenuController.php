@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Menu;
 use AdminBundle\Form\MenuType;
+use AdminBundle\Form\MenusType;
 
 /**
  * @Route("/menu")
@@ -21,7 +22,7 @@ class MenuController extends Controller
      */
     public function indexAction()
     {
-        $menu_list = $this->getDoctrine()->getRepository("AppBundle:Menu")->findAllByName();
+        $menu_list = $this->getDoctrine()->getRepository("AppBundle:Menu")->findAllByPosition();
 
         return [
             'menu_list' => $menu_list,
@@ -47,6 +48,9 @@ class MenuController extends Controller
         $form = $this->createMenuForm($menu, $request);
 
         if ($form->isValid()) {
+            # set position for new menu at the end of the same type menus list
+            $menu->setPosition($this->getDoctrine()->getRepository('AppBundle:Menu')->getNewPosition($menu->getType()));
+            # save menu
             $this->persistMenu($menu);
 
             return $this->redirectToRoute("admin_menu_items", ["id" => $menu->getId()]);
@@ -139,6 +143,44 @@ class MenuController extends Controller
     }
 
     /**
+     * Display all menu with given type
+     *
+     * @param  array $items
+     * @param  Request $request
+     *
+     * @return Template
+     *
+     * @author Michael Strohyi
+     *
+     * @Route("/{type}/reorder", name="admin_menu_reorder")
+     * @Template()
+     **/
+    public function reorderAction(Request $request, $type)
+    {
+        # get all menus with given type
+        $menu_list = $this->getDoctrine()->getRepository('AppBundle:Menu')->findByType($type);
+        # create form
+        $form = $this->createMenusForm($menu_list, $request);
+        # check if form has been submitted and is valid
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            # save all menus
+            foreach ($form->getData()['items'] as $menu) {
+                $em->persist($menu);
+            }
+
+            $em->flush();
+
+            return $this->redirectToRoute("admin_menu_index");
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+
+    /**
      * Save given menu into database
      *
      * @param  Menu  $menu
@@ -168,6 +210,24 @@ class MenuController extends Controller
     private function createMenuForm(Menu $menu, Request $request)
     {
         $form = $this->createForm(new MenuType, $menu);
+        $form->handleRequest($request);
+
+        return $form;
+    }
+
+    /**
+     * Return form for reorder menu
+     *
+     * @param  array  $menus
+     * @param  Request  $request
+     *
+     * @return FormBuilder
+     *
+     * @author Michael Strohy
+     **/
+    private function createMenusForm($menus, Request $request)
+    {
+        $form = $this->createForm(new MenusType, ['items' => $menus]);
         $form->handleRequest($request);
 
         return $form;

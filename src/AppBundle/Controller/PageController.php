@@ -44,7 +44,7 @@ class PageController extends Controller
      */
     public function sidebarAction($pathInfo = null)
     {
-        $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAll();
+        $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition();
 
         return [
             'menus' => $menus,
@@ -108,7 +108,7 @@ class PageController extends Controller
         $page_repo = $this->getDoctrine()->getRepository("USPCPageBundle:Page");
         $parameters = [
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
-            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByName(),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByPosition(),
             'page' => $page,
             'type' => $slug,
             ];

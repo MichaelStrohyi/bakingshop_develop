@@ -26,7 +26,7 @@ class StoreController extends Controller
         $parameters = [
             'store' => $store,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
-            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyName(),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition(),
         ];
 
         # if prefix is not set render html page
