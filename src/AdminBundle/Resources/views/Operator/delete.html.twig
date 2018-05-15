@@ -1,0 +1,21 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}Delete operator | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Do you want to remove following operator?</h1>
+    </header>
+
+    <dl class="dl-horizontal">
+        <dt>Name</dt>
+        <dd>{{ operator.name }}</dd>
+    </dl>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="actions col-md-offset-2">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{{ path('admin_operator_index') }}" class="btn btn-default">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

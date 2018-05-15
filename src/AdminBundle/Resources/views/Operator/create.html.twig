@@ -1,0 +1,27 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}New Operator |{{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>New Operator</h1>
+    </header>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <div class="actions text-right">
+            <button type="submit" class="btn btn-danger">Create</button>
+            <a href="{{ path('admin_operator_index') }}" class="btn btn-default">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/operator.js"
+        '@AppBundle/Resources/public/coffee/admin/operator.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

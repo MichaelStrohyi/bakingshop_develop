@@ -14,7 +14,7 @@ addItemFormDeleteLink = ($itemFormLi) ->
     $itemFormLi.prepend $removeFormA
 
 $(document).ready () ->
-    # add function for replacing some special symbols headers before submit
+    # add function for replacing some special symbols in headers before submit
     $("#edit-items").on 'submit', (event) ->
         # cancel form submit event
         event.preventDefault()

@@ -99,4 +99,25 @@ class CouponRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Return list off all coupons, which are associated with operator with given operator_id
+     *
+     * @param int $operator_id
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findByOperator($operator_id)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT c FROM AppBundle:Coupon c '
+                . 'WHERE c.addedBy = :operator_id'
+            )
+            ->setParameters([
+                'operator_id' => $operator_id,
+            ]);
+
+        return $query->getResult();
+    }
 }
