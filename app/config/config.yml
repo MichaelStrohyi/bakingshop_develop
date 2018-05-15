@@ -126,10 +126,10 @@ ivory_ck_editor:
     configs:
         my_config:
             filebrowserBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=files"
-            filebrowserImageBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=images"
+            filebrowserImageBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=img"
             filebrowserFlashBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=flash"
             filebrowserUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=files"
-            filebrowserImageUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=images"
+            filebrowserImageUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=img"
             filebrowserFlashUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=flash"
 
             templates_replaceContent: false
