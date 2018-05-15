@@ -44,6 +44,25 @@ class JobController extends PageController
     }
 
     /**
+     * @Route("/tmp", name="admin_job_tmp")
+     */
+    public function tmpAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Article');
+        $articles = $repo->findAllByHeader();
+        foreach ($articles as $article) {
+            $body = $article->getBody();
+            $body = str_replace('/articles/images', '/bc/img/articles/images', $body);
+            $article->setBody($body);
+            $em->persist($article);
+        }
+
+        $em->flush();
+        return new Response('Tmp job has been finished');
+    }
+
+    /**
      * Remove expired coupons
      *
      *

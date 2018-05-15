@@ -22,7 +22,7 @@ return array(
 // GENERAL SETTINGS
 
     'disabled' => false,
-    'uploadURL' => "/articles",
+    'uploadURL' => "/bc",
     'uploadDir' => "",
     'theme' => "default",
 
@@ -31,7 +31,7 @@ return array(
     // (F)CKEditor types
         'files'   =>  "",
         'flash'   =>  "swf",
-        'images'  =>  "*img",
+        'img'  =>  "*img",
 
     // TinyMCE types
         'file'    =>  "",

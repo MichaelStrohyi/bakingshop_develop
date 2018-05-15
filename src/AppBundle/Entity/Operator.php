@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Operator
@@ -11,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Operator
 {
+    const PAGE_TYPE = 'operator';
+
     /**
      * @var integer
      *
@@ -23,7 +26,10 @@ class Operator
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3, max=100)
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
      */
     private $name;
 
@@ -38,7 +44,7 @@ class Operator
     }
 
     /**
-     * Set url
+     * Set name
      *
      * @param string $name
      * @return Operator

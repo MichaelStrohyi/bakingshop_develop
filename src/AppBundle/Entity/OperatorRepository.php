@@ -26,14 +26,23 @@ class OperatorRepository extends EntityRepository
     }
 
     /**
-     * Return all operator's id from db
+     * Return all operators from db, except operators with id in exclusions list
      *
      * @return array|null
      * @author Michael Strohyi
      **/
-    public function getAllOperators()
+    public function getAllOperators($exclusions = [])
     {
-        return $this->findAll();
+        $q = 'SELECT o FROM AppBundle:Operator o';
+        if (!empty($exclusions)) {
+            $exclusions = '(' . implode(', ', $exclusions) . ')';
+            $q .= ' WHERE o.id NOT IN ' . $exclusions;
+        }
+        $q .= " ORDER BY o.name ASC";
+        $query = $this->getEntityManager()->createQuery($q);
+
+        return $query->getResult();
+
     }
 
     /**
@@ -47,5 +56,4 @@ class OperatorRepository extends EntityRepository
     {
         return empty($items) ? null : $items[rand(0, count($items) - 1)];
     }
-
 }
