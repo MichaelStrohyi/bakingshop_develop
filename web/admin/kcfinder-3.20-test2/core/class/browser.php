@@ -673,7 +673,18 @@ class browser extends uploader {
         }
 
         $filename = $this->normalizeFilename($file['name']);
-        $target = "$dir/" . file::getInexistantFilename($filename, $dir);
+// !!! modified
+        $allow_rename = array_key_exists('searchInexistantName', $this->config) && $this->config['searchInexistantName'];
+        $new_filename = file::getInexistantFilename($filename, $dir, null, $allow_rename);
+        if (empty($new_filename)) {
+            if (isset($file['tmp_name']))
+                @unlink($file['tmp_name']);
+            return "{$file['name']}: file with this name already exists";
+        }
+
+        $target = "$dir/" . $new_filename;
+// endof modified
+//        $target = "$dir/" . file::getInexistantFilename($filename, $dir);
 
         if (!@move_uploaded_file($file['tmp_name'], $target) &&
             !@rename($file['tmp_name'], $target) &&
