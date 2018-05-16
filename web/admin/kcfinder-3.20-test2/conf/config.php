@@ -104,6 +104,9 @@ return array(
     'cookieDomain' => "",
     'cookiePath' => "",
     'cookiePrefix' => 'KCFINDER_',
+    // !!! modified
+    // settings to allow or deny creating new name for uploaded file, if another file with this name already exists
+    'searchInexistantName' => false,
 
 
 // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION SETTINGS

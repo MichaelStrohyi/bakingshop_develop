@@ -48,7 +48,7 @@ class JobController extends PageController
      */
     public function tmpAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+/*        $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:Article');
         $articles = $repo->findAllByHeader();
         foreach ($articles as $article) {
@@ -58,7 +58,7 @@ class JobController extends PageController
             $em->persist($article);
         }
 
-        $em->flush();
+        $em->flush();*/
         return new Response('Tmp job has been finished');
     }
 
