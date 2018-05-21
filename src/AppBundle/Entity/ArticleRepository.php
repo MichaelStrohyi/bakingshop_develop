@@ -124,4 +124,26 @@ class ArticleRepository extends EntityRepository
             
         return $query->getResult();
     }
+
+    /**
+     * Return list off all articles, which have $filename in body
+     *
+     * @param string $filename
+     * @param int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function isFileUsed($filename)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a.header FROM AppBundle:Article a '
+                . 'WHERE a.body LIKE :filename '
+            )
+            ->setParameters([
+                'filename' => '%' . $filename . '%',
+            ]);
+
+        return !empty($query->getResult());
+    }
 }
