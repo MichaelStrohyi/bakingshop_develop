@@ -43,17 +43,16 @@ class DefaultController extends Controller
 
         # display error if page not found
         if (empty($page) || empty($page_object)) {
-            throw $this->createNotFoundException();
+            $new_url = $this->findRedirect($url);
+            if (empty($new_url)) {
+                throw $this->createNotFoundException();
+            }
+
+            return $this->makeRedirect($new_url, $prefix, $request->getBaseUrl());
         }
         # if page is alias redirect to new url
         if ($page->isAlias()) {
-            $new_url = $request->getBaseUrl();
-            if (!empty($prefix)) {
-                $new_url .=  '/' . rtrim($prefix, '/');
-            }
-            $new_url .= $this->page_object->getUrl();
-
-            return $this->redirect($new_url, 301);
+            return $this->makeRedirect($this->page_object->getUrl(), $prefix, $request->getBaseUrl());
         }
 
         list($controller, $parameters) = $this->getPageController();
@@ -123,5 +122,47 @@ class DefaultController extends Controller
         $object = $this->getDoctrine()->getRepository($entity)->find($this->page->getObjectId());
 
         return $object;
+    }
+
+    /**
+     * Create new url and make redirect to it
+     *
+     * @param string $url
+     * @param string $prefix
+     * @param string $base_url
+     *
+     * @return RedirectResponse
+     * @author Michael Strohyi
+     **/
+    private function makeRedirect($url, $prefix = null, $base_url = null)
+    {
+        $new_url = $base_url;
+        if (!empty($prefix)) {
+            $new_url .=  '/' . rtrim($prefix, '/');
+        }
+
+        $new_url .= $url;
+
+        return $this->redirect($new_url, 301);
+    }
+
+    /**
+     * Search given url in redirects table and return it's prod url for redirect or null, if no redirect was found
+     *
+     * @param string $url
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    private function findRedirect($url)
+    {
+        $redirects = $this->getDoctrine()->getRepository('AppBundle:Redirect')->findAll();
+        foreach ($redirects as $redirect) {
+            $redirect_url = $redirect->getProdUrl();
+            if (strpos($url, $redirect_url) === 0) {
+                $url = str_replace($redirect_url, $redirect->getUrl(), $url);
+                return $url;
+            }
+        }
     }
 }
