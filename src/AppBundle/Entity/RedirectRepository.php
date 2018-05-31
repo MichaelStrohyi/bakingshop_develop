@@ -32,4 +32,25 @@ class RedirectRepository extends EntityRepository
         # return lists with results as array
         return [$urls, $prod_urls];
     }
+
+    /**
+     * Return all redirects if their Ids are absent in given exclusions
+     *
+     * @param array $exclusions
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getAllRedirects($exclusions = [])
+    {
+        $q = 'SELECT r FROM AppBundle:Redirect r';
+        if (!empty($exclusions)) {
+            $exclusions = '(' . implode(', ', $exclusions) . ')';
+            $q .= ' WHERE r.id NOT IN ' . $exclusions;
+        }
+
+        $query = $this->getEntityManager()->createQuery($q);
+
+        return $query->getResult();
+    }
 }

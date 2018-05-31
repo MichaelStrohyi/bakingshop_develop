@@ -41,13 +41,15 @@ class DefaultController extends Controller
         # get page object
         $page_object = $this->page_object = $this->getPageObject();
 
-        # display error if page not found
+        # if page not found
         if (empty($page) || empty($page_object)) {
+            # try to find given url in redirects
             $new_url = $this->findRedirect($url);
+            # if url not found display error page
             if (empty($new_url)) {
                 throw $this->createNotFoundException();
             }
-
+            # make redirect to new url
             return $this->makeRedirect($new_url, $prefix, $request->getBaseUrl());
         }
         # if page is alias redirect to new url

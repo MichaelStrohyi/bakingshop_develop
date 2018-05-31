@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -11,11 +13,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\RedirectRepository")
- * @UniqueEntity("url", message="Redirect for this url already exists")
+ * @UniqueEntity("prodUrl", message="Redirect for this url already exists")
  * @ORM\HasLifecycleCallbacks
  */
 class Redirect
 {
+    const DEFAULT_POSITION = 10000;
+    const PAGE_TYPE = 'redirect';
 
     /**
      * @var integer
@@ -41,6 +45,16 @@ class Redirect
      * @AppAssert\LocalURL
      */
     private $prodUrl;
+
+    /**
+     * @var integer
+     *
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @Assert\NotNull
+     */
+    private $position = self::DEFAULT_POSITION;
+
 
 
     /**
@@ -115,4 +129,28 @@ class Redirect
             $this->prodUrl = stream_get_contents($this->prodUrl, -1, 0);
         }
     }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     * @return Redirect
+     */
+    public function setPosition($position)
+    {
+        $this->position = intval($position);
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer 
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
 }
