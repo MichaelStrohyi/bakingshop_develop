@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\RedirectRepository")
  * @UniqueEntity("prodUrl", message="Redirect for this url already exists")
+ * @UniqueEntity("url", message="Redirect to this url already exists")
  * @ORM\HasLifecycleCallbacks
  */
 class Redirect

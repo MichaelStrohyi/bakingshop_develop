@@ -501,9 +501,12 @@ class Article
         $repo = $event->getEntityManager()->getRepository("AppBundle:Redirect");
         # get all redirects from db
         list($urls, $prod_urls) = $repo->getAllUrls();
-        # replase real urls for their prod-analogues in article
+        # replace real urls for their prod-analogues in article body
         $redirected_body = str_replace($urls, $prod_urls, $this->getBody());
-        $this->setProdBody($this->parseHtml($redirected_body));
+//        $this->setProdBody($this->parseHtml($redirected_body));
+        # save prepared body for production
+        $this->setProdBody($redirected_body);
+        # save prepared body for amp-production
         $this->setAmpBody($this->prepareAmpBody($redirected_body));
     }
 }
