@@ -13,7 +13,7 @@ use AdminBundle\Form\OperatorType;
 /**
  * @Route("/operator")
  */
-class OperatorController extends PageController
+class OperatorController extends Controller
 {
     /**
      * @Route("/", name="admin_operator_index")

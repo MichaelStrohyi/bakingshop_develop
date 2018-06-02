@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SearchController extends Controller
 {
     const RESULTS_LIMIT = 10;
+
     /**
      * @Route("/{prefix}search", name="search_ajax",
      *     requirements={"prefix": "amp/|"},

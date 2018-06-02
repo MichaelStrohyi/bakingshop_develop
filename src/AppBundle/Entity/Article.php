@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as AppAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -107,6 +108,13 @@ class Article
      */
     private $description;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prod_body", type="text", nullable=true)
+     */
+    private $prodBody;
+
 
     /**
      * Get id
@@ -186,7 +194,6 @@ class Article
     public function setBody($body)
     {
         $this->body = $body;
-        $this->updateAmpBody();
 
         return $this;
     }
@@ -199,6 +206,29 @@ class Article
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Set prodBody
+     *
+     * @param string $prodBody
+     * @return Article
+     */
+    public function setProdBody($prodBody)
+    {
+        $this->prodBody = $prodBody;
+
+        return $this;
+    }
+
+    /**
+     * Get prodBody
+     *
+     * @return string
+     */
+    public function getProdBody()
+    {
+        return $this->prodBody;
     }
 
     /**
@@ -327,24 +357,24 @@ class Article
     }
 
     /**
-     * Actualize ampBody with current body
+     * Make adaptation of given body for amp-pages
      *
-     * @return Article
+     * @param string $body
+     *
+     * @return string
      */
-    private function updateAmpBody()
+    private function prepareAmpBody($body)
     {
-        if (is_null($this->getBody())) {
-            $this->ampBody = null;
+        if (empty($body)) {
             return;
         }
 
         $amp = new AppAMP();
-        $amp->loadHtml($this->getBody(), [
+        $amp->loadHtml($body, [
             'img_max_fixed_layout_width' => '100'
             ]);
-        $this->ampBody = $amp->convertToAmpHtml();
 
-        return $this;
+        return $amp->convertToAmpHtml();
     }
 
     /**
@@ -459,27 +489,30 @@ class Article
                 $tag->removeAttribute($attr);
             }
         }
-        return $dochtml->saveHTML();
+        # get body's content of dochtml as a result
+        $body = $dochtml->getElementsByTagName('body')->item(0);
+        $res = '';
+        foreach ($body->childNodes as $childNode) {
+            $res .=  $dochtml->saveHTML($childNode);
+        }
+
+        return $res;
     }
 
     /**
-     * Return body, parsed to pass html5-validation.
-     *
-     * @return string
+     * Prepare body for production and for amp-pages
+     * @ORM\PreFlush
      */
-    public function getParsedBody()
-    {
-        return $this->parseHtml($this->getBody());
+    public function setBodyForProd(PreFlushEventArgs $event) {
+        # get redirect repo
+        $repo = $event->getEntityManager()->getRepository("AppBundle:Redirect");
+        # get all redirects from db
+        list($urls, $prod_urls) = $repo->getAllUrls();
+        # replace real urls for their prod-analogues in article body
+        $redirected_body = $this->parseHtml(str_replace($urls, $prod_urls, $this->getBody()));
+        # save prepared body for production
+        $this->setProdBody($redirected_body);
+        # save prepared body for amp-production
+        $this->setAmpBody($this->prepareAmpBody($redirected_body));
     }
-
-    /**
-     * Return ampBody, parsed to pass html5-validation.
-     *
-     * @return string
-     */
-    public function getParsedAmpBody()
-    {
-        return $this->parseHtml($this->getAmpBody());
-    }
-
 }

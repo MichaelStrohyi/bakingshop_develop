@@ -146,4 +146,34 @@ class ArticleRepository extends EntityRepository
 
         return !empty($query->getResult());
     }
+
+    /**
+     * Return list off all articles, which have $prodUrl in prodBody
+     *
+     * @param string $url
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findByUsedRedirect($url)
+    {
+        if (empty($url)) {
+            return [];
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.body LIKE :url'
+            )
+            ->setParameters([
+                'url' => '%' . $url . '%'
+            ]);
+
+        $res = [];
+        foreach ($query->getResult() as $article) {
+            $res[$article->getId()] = $article;
+        }
+
+        return $res;
+    }
 }

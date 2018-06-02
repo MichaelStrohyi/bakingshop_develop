@@ -145,7 +145,7 @@ class MenuController extends Controller
     /**
      * Display all menu with given type
      *
-     * @param  array $items
+     * @param string $type
      * @param  Request $request
      *
      * @return Template
