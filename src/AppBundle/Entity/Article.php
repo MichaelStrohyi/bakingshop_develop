@@ -489,7 +489,14 @@ class Article
                 $tag->removeAttribute($attr);
             }
         }
-        return $dochtml->saveHTML();
+        # get body's content of dochtml as a result
+        $body = $dochtml->getElementsByTagName('body')->item(0);
+        $res = '';
+        foreach ($body->childNodes as $childNode) {
+            $res .=  $dochtml->saveHTML($childNode);
+        }
+
+        return $res;
     }
 
     /**
@@ -502,8 +509,7 @@ class Article
         # get all redirects from db
         list($urls, $prod_urls) = $repo->getAllUrls();
         # replace real urls for their prod-analogues in article body
-        $redirected_body = str_replace($urls, $prod_urls, $this->getBody());
-//        $this->setProdBody($this->parseHtml($redirected_body));
+        $redirected_body = $this->parseHtml(str_replace($urls, $prod_urls, $this->getBody()));
         # save prepared body for production
         $this->setProdBody($redirected_body);
         # save prepared body for amp-production
