@@ -25,3 +25,4 @@ parameters:
 
     #key for getting feeds
     feeds_key: key_for_feeds
+    feeds_timeout: timeout_for_feeds

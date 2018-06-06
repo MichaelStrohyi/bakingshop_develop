@@ -135,12 +135,15 @@ class StoreController extends PageController
      */
     public function autoupdateAction($type)
     {
-        ini_set('MAX_EXECUTION_TIME', 540);
+        # set timeout for php-script and for socket-connection
+        $timeout = $this->getParameter('feeds_timeout');
+        set_time_limit($timeout);
+        $context = stream_context_create(['http'=> ['timeout' => $timeout]]);
         $url = $this->getParameter('feeds_url');
         # get feed-data from server according to run-mode
         switch ($type) {
             case 'all':
-                $feed_data = file_get_contents($url);
+                $feed_data = file_get_contents($url, false, $context);
                 # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data);
                 break;
