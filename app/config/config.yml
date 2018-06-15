@@ -26,7 +26,7 @@ parameters:
     images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
-    feeds_url: "https://services.fmtc.co/v2/getDeals?key=%feeds_key%&format=JSON"
+    feeds_url: "https://services.fmtc.co/v2/getDeals?key=%feeds_key%&format=CSV"
 
 framework:
     #esi:             ~

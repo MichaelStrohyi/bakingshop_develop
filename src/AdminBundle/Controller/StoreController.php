@@ -135,6 +135,8 @@ class StoreController extends PageController
      */
     public function autoupdateAction($type)
     {
+        # set higher memory limit
+        ini_set('memory_limit', '384M');
         # set timeout for php-script and for socket-connection
         $timeout = $this->getParameter('feeds_timeout');
         set_time_limit($timeout);
@@ -143,7 +145,7 @@ class StoreController extends PageController
         # get feed-data from server according to run-mode
         switch ($type) {
             case 'all':
-                $feed_data = file_get_contents($url, false, $context);
+                $feed_data = file($url, 0, $context);
                 # fetch coupons data from feed
                 $this->fetchCouponsFromFeed($feed_data);
                 break;
@@ -223,43 +225,67 @@ class StoreController extends PageController
      * @return void
      * @author Michael Strohyi
      **/
-    private function fetchCouponsFromFeed($feed_data, $incr_mode = false)
+    private function fetchCouponsFromFeed(&$feed_data, $incr_mode = false)
     {   
-        # get feed data from json-format
-        $data = json_decode($feed_data);
+        # get list of all merchant feed ids which are set for stores
+        $doctrine = $this->getDoctrine();
+        $store_repo = $doctrine->getRepository("AppBundle:Store");
+        $used_feed_ids = $store_repo->getAllFeedId();
+        # decode feed data from csv-format to array of items
+        $rows = array_map('str_getcsv', $feed_data);
+        unset($feed_data);
+        # get list of feed-item keys
+        $header = array_shift($rows);
+        # get key of merchant feed id column
+        $feed_id_column = array_search('MerchantID', $header);
+        # return if column of feed id is not found
+        if ($feed_id_column === false) {
+            return;
+        }
+
+        $data = [];
+        # go through array of feed data items
+        foreach($rows as $row) {
+            # continue if merchant feed id of current item is not found in list of used feed ids
+            # continue if count of item subitems is not equival to count of feed-item keys
+            if (!in_array($row[$feed_id_column], $used_feed_ids) || count($row) !== count($header)) {
+                continue;
+            }
+            # add item into named array of decoded data
+            $data[] = array_combine($header, $row);
+        }
+        # return array of decoded data is empty
         if (empty($data)) {
             return;
         }
 
         $feed_coupons = [];
         # run through data array to get coupons
-        foreach ($data as $key => $value) {
-            if (!is_object($value)) {
-                continue;
-            }
+        foreach ($data as $key => $coupon) {
+            # replace special symbol in Label if it exists
+            $coupon['Label'] = str_replace(chr(239) . chr(191) . chr(189), '', $coupon['Label']);
             # get necessary data for current coupon
-            $coupon = get_object_vars($value);
             $cur_coupon = [
-                'id' => $coupon['nCouponID'],
-                'label' => $coupon['cLabel'],
-                'code' => $coupon['cCode'],
-                'link' => $coupon['cAffiliateURL'],
-                'starts' => $coupon['dtStartDate'],
-                'expires' => $coupon['dtEndDate'],
-                'discount' => Coupon::findMaxDiscount($coupon['cLabel']),
-                'status' => $coupon['cStatus'],
-                'rating' => $coupon['fRating'],
-                'last_updated' =>$coupon['cLastUpdated'],
+                'id' => $coupon['CouponID'],
+                'label' => $coupon['Label'],
+                'code' => $coupon['CouponCode'],
+                'link' => $coupon['AffiliateURL'],
+                'starts' => $coupon['StartDate'],
+                'expires' => $coupon['EndDate'],
+                'discount' => Coupon::findMaxDiscount($coupon['Label']),
+                'status' => $coupon['Status'],
+                'rating' => $coupon['Rank'],
+                'last_updated' =>$coupon['LastUpdated'],
             ];
             # save current coupon into array of coupons, grouped by merchant id
-            $feed_coupons[$coupon['nMerchantID']][] = $cur_coupon;
+            $feed_coupons[$coupon['MerchantID']][] = $cur_coupon;
         }
         # return if there was found no coupons in feed data
         if (empty($feed_coupons)) {
             return;
         }
 
-        $doctrine = $this->getDoctrine();
+        unset($data);
         $em = $doctrine->getEntityManager();
         $coupon_repo = $doctrine->getRepository("AppBundle:Coupon");
         $operator_repo = $doctrine->getRepository("AppBundle:Operator");
@@ -269,7 +295,7 @@ class StoreController extends PageController
         # run through feed merchants array
         foreach ($feed_coupons as $feed_store_id => $feed_store_coupons) {
             # get store-object with current merchant id
-            $store = $doctrine->getRepository("AppBundle:Store")->getStoreByFeedId($feed_store_id);
+            $store = $store_repo->getStoreByFeedId($feed_store_id);
             # return if no store has current merchant id
             if (empty($store)) {
                 continue;
