@@ -120,4 +120,24 @@ class CouponRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Activate coupons with startDate today and set them verifiedAt date today
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function activateStartedToday()
+    {
+        $date = new \DateTime();
+        $date->setTime(0, 0, 0);
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $query = $qb->update('AppBundle\Entity\Coupon', 'c')
+            ->set('c.activity', 1)
+            ->set('c.verifiedAt', 'CURRENT_TIMESTAMP()')
+            ->where('c.startDate = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->execute();
+    }
 }

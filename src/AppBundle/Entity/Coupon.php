@@ -695,4 +695,22 @@ class Coupon
 
         return null;
     }
+
+    /**
+     * Check startDate and if it is not null and > current date set Activity in 0
+     * Return true if activity was changed, otherwise retirn false
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function checkStartDate()
+    {
+        $cur_date = new \DateTimeImmutable();
+        if ($this->getStartDate() > $cur_date && $this->getActivity() !== 0) {
+            $this->setActivity(0);
+            return true;
+        }
+
+        return false;
+    }
 }

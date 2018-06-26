@@ -287,7 +287,6 @@ class StoreController extends PageController
 
         unset($data);
         $em = $doctrine->getEntityManager();
-        $coupon_repo = $doctrine->getRepository("AppBundle:Coupon");
         $operator_repo = $doctrine->getRepository("AppBundle:Operator");
         $operators =  $operator_repo->getAllOperators();
         # reset stores list
@@ -308,6 +307,9 @@ class StoreController extends PageController
             $coupons_list = [];
             $new_coupons = [];
             $coupons_count = 0;
+
+            $cur_date = new \DateTime();
+            $cur_date->setTime(0, 0, 0);
             # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
                 # break if coupons count for store is more, than limit
@@ -338,7 +340,7 @@ class StoreController extends PageController
                     # set coupon with code of current feed-coupon as just verified
                     $code_exists->setJustVerified();
                     $code_exp_date = $code_exists->getExpireDate();
-                    $feed_exp_date =$this->convertDateFromFeed($feed_coupon['expires']);
+                    $feed_exp_date = $this->convertDateFromString($feed_coupon['expires']);
                     # check if feed-coupon expires later, than coupon-object
                     if (!empty($code_exp_date) && $code_exp_date < $feed_exp_date) {
                         # set expire date from feed-coupon
@@ -361,7 +363,7 @@ class StoreController extends PageController
                     $coupons_updated = true;
                 }
                 # check if feed-coupon has been updated later than coupon-object from db
-                if (!empty($store_coupon) && $store_coupon->getLastUpdated() >= $this->convertDateFromFeed($feed_coupon['last_updated'], false)) {
+                if (!empty($store_coupon) && $store_coupon->getLastUpdated() >= $this->convertDateFromString($feed_coupon['last_updated'], false)) {
                     # add feed-coupon id into coupons list
                     $coupons_list[] = $feed_coupon['id'];
                     continue;
@@ -381,13 +383,15 @@ class StoreController extends PageController
                     ->setCode(empty($feed_coupon['code']) ? null : $feed_coupon['code'])
 //                    ->setLink($feed_coupon['link'])
                     ->setLink($store->getLink())
-                    ->setStartDate($this->convertDateFromFeed($feed_coupon['starts']))
-                    ->setExpireDate($this->convertDateFromFeed($feed_coupon['expires']))
-                    ->setLastUpdated($this->convertDateFromFeed($feed_coupon['last_updated'], false))
+                    ->setStartDate($this->convertDateFromString($feed_coupon['starts']))
+                    ->setExpireDate($this->convertDateFromString($feed_coupon['expires']))
+                    ->setLastUpdated($this->convertDateFromString($feed_coupon['last_updated'], false))
                     ->setRating($feed_coupon['rating'])
                     ->setJustVerified()
                     ->setMaxDiscount()
                 ;
+                # deactivate coupon-object if it has startDate in future
+                $store_coupon->checkStartDate();
                 # if coupon-object is new add it into new coupons array
                 if (empty($store_coupon->getId())) {
                     $new_coupons[] = $store_coupon;
@@ -456,7 +460,7 @@ class StoreController extends PageController
      * @return DateTime|null
      * @author Michael Strohyi
      **/
-    private function convertDateFromFeed($date, $limiter = true)
+    private function convertDateFromString($date, $limiter = true)
     {
         try {
             $date = new \DateTime($date);
