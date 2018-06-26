@@ -21,12 +21,13 @@ class JobController extends PageController
     {
         $date = new \DateTimeImmutable();
         $hours = $date->format('H');
-        if ($hours % 12 == 0) {
+/*        if ($hours % 12 == 0) {
             $parameters['type'] = "all";
         } else {
             $parameters['type'] = "new";
         }
-
+*/
+        $parameters['type'] = "all";
         $response = $this->forward("AdminBundle:Store:autoupdate", $parameters);
         
         return $response;
@@ -43,6 +44,7 @@ class JobController extends PageController
     {
         $repo = $this->getDoctrine()->getEntityManager()->getRepository('AppBundle:Coupon');
         $repo->deactivateExpired();
+        $repo->activateStartedToday();
         $repo->removeOldDates();
         $this->removeExpiredCoupons();
 

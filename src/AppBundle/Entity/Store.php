@@ -395,7 +395,7 @@ class Store
 
         $coupons = $this->getCoupons();
         foreach($coupons->getIterator() as $coupon) {
-            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() !== $feedId ? true : false;
+            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() != $feedId ? true : false;
             if ($exists) {
                 return $coupon;
             }

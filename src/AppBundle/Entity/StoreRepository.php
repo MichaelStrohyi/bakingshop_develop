@@ -141,4 +141,22 @@ class StoreRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Return list of all store's feedId, which are not null
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getAllFeedId()
+    {
+        $q = 'SELECT s.feedId FROM AppBundle:Store s WHERE s.feedId IS NOT NULL';
+        $query = $this->getEntityManager()->createQuery($q);
+        $res = [];
+        foreach ($query->getResult() as $value) {
+            $res[] = $value['feedId'];
+        };
+
+        return $res;
+    }
 }
