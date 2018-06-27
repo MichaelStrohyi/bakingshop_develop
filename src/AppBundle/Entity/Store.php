@@ -519,15 +519,16 @@ class Store
      **/
     public function findCouponPositionByRating($rating, $max = 0, $min = 0)
     {
+        # if max position is 0 return it
+        if ($max == 0) {
+            return 0;
+        }
+
         $coupons = $this->getCoupons()->toArray();
         $coupons_count = count($coupons);
         # return 0 if there are no coupons in this store
         if ($coupons_count == 0) {
             return 0;
-        }
-        # if max position is not set take the last coupon position instead of max
-        if ($max == 0) {
-            $max = $coupons_count;
         }
 
         $pos = -1;
