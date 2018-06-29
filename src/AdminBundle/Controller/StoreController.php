@@ -329,7 +329,12 @@ class StoreController extends PageController
                     continue;
                 }
                 # check if in current store exists other coupon with code of current feed-coupon
-                $code_exists = !empty($feed_coupon['code']) ? $store->findCouponByCode($feed_coupon['code'], $feed_coupon['id']) : null;
+                $code_exists = null;
+                if (!empty($feed_coupon['code'])) {
+                    $code_exists = $this->findCouponByCode($feed_coupon['code'], $feed_coupon['id'], $store->getCoupons());
+                    $code_exists = empty($code_exists) ? $this->findCouponByCode($feed_coupon['code'], $feed_coupon['id'], $new_coupons): $code_exists;
+                }
+
                 if (!empty($code_exists)) {
                     if (!empty($store_coupon)) {
                         # if other coupon with code of current feed-coupon exists remove current coupon-object to prevent code duplication
@@ -346,10 +351,20 @@ class StoreController extends PageController
                         # set expire date from feed-coupon
                         $code_exists->setExpireDate($feed_exp_date);
                         # if coupon object is deactivated as expired and has no start date in future, activate it
-                        if ($code_exists->getActivity() == 0 && $code_exp_date <= new \DateTimeImmutable()) {
-                            $code_exists->setActivity(1);
+                        if (!$code_exists->isActive() && $code_exp_date <= $cur_date) {
+                            $code_exists->activate();
                         }
                     }
+
+                    $code_start_date = $code_exists->getStartDate();
+                    $feed_start_date = $this->convertDateFromString($feed_coupon['starts']);
+                    # check if feed-coupon starts in other day, than coupon-object
+                    if (!empty($code_start_date) && !empty($feed_start_date) && $code_start_date != $feed_start_date) {
+                        # set start date from feed-coupon
+                        $code_exists->setStartDate($feed_start_date);
+                    }
+                    # deactivate coupon if it has start date in future
+                    $code_exists->checkStartDate();
 
                     $coupons_updated = true;
                     # goto next feed-coupon
@@ -390,8 +405,12 @@ class StoreController extends PageController
                     ->setJustVerified()
                     ->setMaxDiscount()
                 ;
-                # deactivate coupon-object if it has startDate in future
+                # deactivate coupon-object if it has startDate in future or has expire date in past
                 $store_coupon->checkStartDate();
+                $coupon_expire_date = $store_coupon->getExpireDate();
+                if (!empty($coupon_expire_date) &&  $coupon_expire_date < $cur_date) {
+                    $store_coupon->deactivate();
+                }
                 # if coupon-object is new add it into new coupons array
                 if (empty($store_coupon->getId())) {
                     $new_coupons[] = $store_coupon;
@@ -471,6 +490,29 @@ class StoreController extends PageController
             return $limiter && ($date->format("Y") > $cur_date->format("Y") + 19 || $date->format("Y") < $cur_date->format("Y") - 2) ? null : $date;
         } catch (\Exception $e) {
             return null;
+        }
+    }
+
+    /**
+     * Search for coupon with given code and feedId different from given feedId. Return target coupon if it exists or null, if it does not exist
+     *
+     * @param string $code
+     * @param int $feedId
+     *
+     * @return StoreCoupon|null
+     * @author Michael Strohyi
+     **/
+    private function findCouponByCode($code, $feedId, $coupons)
+    {
+        if (empty($code)) {
+            return;
+        }
+
+        foreach($coupons as $coupon) {
+            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() != $feedId ? true : false;
+            if ($exists) {
+                return $coupon;
+            }
         }
     }
 }
