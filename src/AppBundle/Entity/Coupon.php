@@ -487,7 +487,7 @@ class Coupon
         $current_date = date(time());
         $start_date = empty($this->startDate) ? null : $this->startDate->getTimestamp();
         $expire_date = empty($this->expireDate) ? null : $this->expireDate->getTimestamp();
-        return $this->activity == 0 || !empty($start_date) && $start_date > $current_date || !empty($expire_date) && $expire_date < $current_date ? false : true;
+        return !$this->isActive() || !empty($start_date) && $start_date > $current_date || !empty($expire_date) && $expire_date < $current_date ? false : true;
     }
 
     /**
@@ -697,7 +697,7 @@ class Coupon
     }
 
     /**
-     * Check startDate and if it is not null and > current date set Activity in 0
+     * Check startDate and, if it is not null and > current date, deactivate coupon
      * Return true if activity was changed, otherwise retirn false
      *
      * @return boolean
@@ -706,11 +706,44 @@ class Coupon
     public function checkStartDate()
     {
         $cur_date = new \DateTimeImmutable();
-        if ($this->getStartDate() > $cur_date && $this->getActivity() !== 0) {
-            $this->setActivity(0);
+        if ($this->getStartDate() > $cur_date && $this->isActive()) {
+            $this->deactivate();
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Deactivate coupon
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deactivate()
+    {
+        $this->setActivity(0);
+    }
+
+    /**
+     * Activate coupon
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function activate()
+    {
+        $this->setActivity(1);
+    }
+
+    /**
+     * Return true if coupon is active, otherwise return false
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function isActive()
+    {
+        return $this->getActivity() == 1;
     }
 }

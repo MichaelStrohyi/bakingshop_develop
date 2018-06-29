@@ -379,30 +379,6 @@ class Store
     }
 
     /**
-     * Search for coupon with given code and feedId different from given feedId. Return target coupon if it exists or null, if it does not exist
-     *
-     * @param string $code
-     * @param int $feedId
-     *
-     * @return StoreCoupon|null
-     * @author Michael Strohyi
-     **/
-    public function findCouponByCode($code, $feedId = 0)
-    {
-        if (empty($code)) {
-            return;
-        }
-
-        $coupons = $this->getCoupons();
-        foreach($coupons->getIterator() as $coupon) {
-            $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() != $feedId ? true : false;
-            if ($exists) {
-                return $coupon;
-            }
-        }
-    }
-
-    /**
      * Return position of last coupon with code in coupons array. If no coupons have code return -1
      *
      * @return int
@@ -519,15 +495,16 @@ class Store
      **/
     public function findCouponPositionByRating($rating, $max = 0, $min = 0)
     {
+        # if max position is 0 return it
+        if ($max == 0) {
+            return 0;
+        }
+
         $coupons = $this->getCoupons()->toArray();
         $coupons_count = count($coupons);
         # return 0 if there are no coupons in this store
         if ($coupons_count == 0) {
             return 0;
-        }
-        # if max position is not set take the last coupon position instead of max
-        if ($max == 0) {
-            $max = $coupons_count;
         }
 
         $pos = -1;

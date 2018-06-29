@@ -16,7 +16,7 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("First coupon")
             ->setLink("http://first.coupon.link")
             ->setPosition(1)
-            ->setActivity(1)
+            ->activate()
         ;
         $manager->persist($coupon1);
 
@@ -25,7 +25,7 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("Second coupon")
             ->setLink("http://second.coupon/link")
             ->setPosition(2)
-            ->setActivity(0)
+            ->deactivate()
         ;
         $manager->persist($coupon2);
 
@@ -34,7 +34,7 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("Third coupon label")
             ->setLink("http://second.coupon/link")
             ->setPosition(0)
-            ->setActivity(1)
+            ->activate()
             ->setCode("3rd")
         ;
         $manager->persist($coupon3);
