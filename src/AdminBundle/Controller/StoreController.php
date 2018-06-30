@@ -339,21 +339,15 @@ class StoreController extends PageController
                     if (!empty($store_coupon)) {
                         # if other coupon with code of current feed-coupon exists remove current coupon-object to prevent code duplication
                         $store->removeCoupon($store_coupon);
-                        $coupons_updated = true;
                     }
 
+                    $coupons_updated = true;
                     # set coupon with code of current feed-coupon as just verified
                     $code_exists->setJustVerified();
-                    $code_exp_date = $code_exists->getExpireDate();
-                    $feed_exp_date = $this->convertDateFromString($feed_coupon['expires']);
-                    # check if feed-coupon expires later, than coupon-object
-                    if (!empty($code_exp_date) && $code_exp_date < $feed_exp_date) {
-                        # set expire date from feed-coupon
-                        $code_exists->setExpireDate($feed_exp_date);
-                        # if coupon object is deactivated as expired and has no start date in future, activate it
-                        if (!$code_exists->isActive() && $code_exp_date <= $cur_date) {
-                            $code_exists->activate();
-                        }
+                    # check if coupon with code of current feed-coupon is updated before current feed-coupon
+                    if (!empty($code_exists->getLastUpdated()) && $this->convertDateFromString($feed_coupon['last_updated'], false) < $code_exists->getLastUpdated()) {
+                        # goto next feed-coupon
+                        continue;
                     }
 
                     $code_start_date = $code_exists->getStartDate();
@@ -362,11 +356,26 @@ class StoreController extends PageController
                     if (!empty($code_start_date) && !empty($feed_start_date) && $code_start_date != $feed_start_date) {
                         # set start date from feed-coupon
                         $code_exists->setStartDate($feed_start_date);
+                        # activate coupon if new start date is less or equal to current date and coupon is not active and old start date is in future
+                        if (!$code_exists->isActive() && $feed_start_date <= $cur_date && $code_start_date > $cur_date) {
+                            $code_exists->activate();
+                        }
+                        # deactivate coupon if it has start date in future
+                        $code_exists->checkStartDate();
                     }
-                    # deactivate coupon if it has start date in future
-                    $code_exists->checkStartDate();
+                    $code_exp_date = $code_exists->getExpireDate();
+                    $feed_exp_date = $this->convertDateFromString($feed_coupon['expires']);
+                    # check if feed-coupon expires later, than coupon-object
+                    if (!empty($code_exp_date) && !empty($feed_exp_date) && $code_exp_date != $feed_exp_date) {
+                        # set expire date from feed-coupon
+                        $code_exists->setExpireDate($feed_exp_date);
+                        # if coupon object is deactivated as expired, activate it
+                        if (!$code_exists->isActive() && $code_exp_date < $cur_date && $feed_exp_date >= $cur_date) {
+                            $code_exists->activate();
+                        }
+                    }
 
-                    $coupons_updated = true;
+                    $code_exists->setLastUpdated($this->convertDateFromString($feed_coupon['last_updated'], false));
                     # goto next feed-coupon
                     continue;
                 }
