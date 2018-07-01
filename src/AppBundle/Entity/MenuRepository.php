@@ -36,4 +36,17 @@ class MenuRepository extends EntityRepository
     {
        return count($this->findBy(['type' => $type]));
     }
+
+    /**
+     * Return list of all menu with given type ordered by position
+     *
+     * @param string $type
+     *
+     * @return Menu[]
+     * @author Michael Strohyi
+     **/
+    public function findAllByType($type)
+    {
+        return $this->findBy(['type' => $type], ['position' => 'ASC']);
+    }
 }

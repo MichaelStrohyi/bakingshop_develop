@@ -418,6 +418,7 @@ class Store
     /**
      * Set new actual position for all coupons, remove coupons with position > given limit
      *
+     * @param int $limit
      * @return void
      * @author Michael Strohyi
      **/
