@@ -101,9 +101,18 @@ class JobController extends PageController
     {
         $em = $this->getDoctrine()->getEntityManager();
         $coupons = $em->getRepository('AppBundle:Coupon')->findExpired();
+        $stores = [];
         foreach ($coupons as $coupon) {
-            $em->remove($coupon);
+            $store = $coupon->getStore();
+            $stores[$store->getId()] = $store;
+            $store->removeCoupon($coupon);
         }
+
+        foreach ($stores as $store) {
+            $store->actualiseCouponsPosition();
+            $em->persist($store);
+        }
+
         $em->flush();
     }
 
