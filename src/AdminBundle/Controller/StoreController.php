@@ -344,8 +344,9 @@ class StoreController extends PageController
                     $coupons_updated = true;
                     # set coupon with code of current feed-coupon as just verified
                     $code_exists->setJustVerified();
+                    $feed_last_updated = $this->convertDateFromString($feed_coupon['last_updated'], false);
                     # check if coupon with code of current feed-coupon is updated before current feed-coupon
-                    if (!empty($code_exists->getLastUpdated()) && $this->convertDateFromString($feed_coupon['last_updated'], false) < $code_exists->getLastUpdated()) {
+                    if (!empty($code_exists->getLastUpdated()) && $feed_last_updated < $code_exists->getLastUpdated()) {
                         # goto next feed-coupon
                         continue;
                     }
@@ -375,7 +376,7 @@ class StoreController extends PageController
                         }
                     }
 
-                    $code_exists->setLastUpdated($this->convertDateFromString($feed_coupon['last_updated'], false));
+                    $code_exists->setLastUpdated($feed_last_updated);
                     # goto next feed-coupon
                     continue;
                 }
