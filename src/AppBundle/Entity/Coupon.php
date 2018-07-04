@@ -484,10 +484,11 @@ class Coupon
      **/
     public function isActual()
     {
-        $current_date = date(time());
-        $start_date = empty($this->startDate) ? null : $this->startDate->getTimestamp();
-        $expire_date = empty($this->expireDate) ? null : $this->expireDate->getTimestamp();
-        return !$this->isActive() || !empty($start_date) && $start_date > $current_date || !empty($expire_date) && $expire_date < $current_date ? false : true;
+        $cur_date = new \DateTime();
+        $cur_date->setTime(0, 0, 0);
+        $start_date = $this->getStartDate();
+        $expire_date = $this->getExpireDate();
+        return !$this->isActive() || !empty($start_date) && $start_date > $cur_date || !empty($expire_date) && $expire_date < $cur_date ? false : true;
     }
 
     /**
@@ -717,9 +718,15 @@ class Coupon
      **/
     public function checkStartDate()
     {
-        $cur_date = new \DateTimeImmutable();
+        $cur_date = new \DateTime();
+        $cur_date->setTime(0, 0, 0);
         if ($this->getStartDate() > $cur_date && $this->isActive()) {
             $this->deactivate();
+            return true;
+        }
+
+        if ($this->getStartDate() == $cur_date && !$this->isActive()) {
+            $this->activate();
             return true;
         }
 
