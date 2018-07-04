@@ -532,6 +532,18 @@ class Coupon
     }
 
     /**
+     * Set current date into LastUpdated property
+     *
+     * @return self
+     * @author Michael Strohyi
+     **/
+    public function setJustUpdated()
+    {
+        $this->setLastUpdated(new \DateTimeImmutable() );
+
+        return $this;
+    }
+    /**
      * Get feedId
      *
      * @return integer

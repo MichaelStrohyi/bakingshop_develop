@@ -129,9 +129,10 @@ class MenuController extends Controller
 
         if ($form->isValid()) {
             $entity_manager = $this->getDoctrine()->getEntityManager();
-
+            $menu_type = $menu->getType();
             $entity_manager->remove($menu);
             $entity_manager->flush();
+            $this->actualiseMenusPosition($menu_type);
 
             return $this->redirectToRoute("admin_menu_index");
         }
@@ -231,5 +232,24 @@ class MenuController extends Controller
         $form->handleRequest($request);
 
         return $form;
+    }
+    /**
+     * Set new actual position for all menus with given type
+     *
+     * @param string $type
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function actualiseMenusPosition($type)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $menus = $this->getDoctrine()->getRepository("AppBundle:Menu")->findAllByType($type);
+        $pos = 0;
+        foreach ($menus as $menu) {
+           $menu->setPosition($pos++);
+           $em->persist($menu);
+        }
+
+        $em->flush();
     }
 }

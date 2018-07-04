@@ -70,8 +70,11 @@ class onFlushListener
 
                 case 'activity':
                     # if activity was changed
-                    # if current coupon is active and has no startDate in future(and if it has deactivate it)
-                    if ($value[1] == 1 && $value[1] != $value[0] && !$coupon->checkStartDate()) {
+                    # if current coupon is active and has startDate in future - deactivate it
+                    if ($value[1] != $value[0]) {
+                        if ($value[1] == 1) {
+                            $coupon->checkStartDate();
+                        }
                         # set justVerified flag to true
                         $just_verified = true;
                     }
@@ -94,22 +97,22 @@ class onFlushListener
                 case 'startDate':
                     # if startDate was changed
                     # check if coupon has startDate in future and if it has deactivate it
-                    if (!$coupon->checkStartDate()) {
-                        # set justVerified flag to true
-                        $just_verified = true;
-                    }
+                    $coupon->checkStartDate();
+                    $just_verified = true;
 
                     break;
 
                 default:
                     # in all other cases set justVerified flag to true
                     $just_verified = true;
+
                     break;
             }
         }
         # if justVerified flag is set mark coupon as just verified
         if ($just_verified) {
             $coupon->setJustVerified();
+            $coupon->setJustUpdated();
         }
 
         return $just_verified;
