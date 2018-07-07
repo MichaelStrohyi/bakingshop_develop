@@ -11,7 +11,7 @@
             <div class="coupons-block-header-logo">
                 <div class="logo-wraper">
                     {% if store.logo is not null and store.logo.filename is not null %}
-                        <a href="{{ coupon_image_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                        <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
                     {% endif %}
                 </div>
             </div>
@@ -38,6 +38,8 @@
                                     FREE Shipping
                             {% elseif store_coupon.discount is not empty %}
                                     <span>{{ store_coupon.discount }}</span> OFF
+                            {% elseif store.logo is not null and store.logo.filename is not null %}
+                                <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
                             {% endif %}
                         </div>
                     </div>
