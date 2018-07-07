@@ -596,7 +596,6 @@ a {
     width: 120px;
     height: 120px;
     float: left;
-    margin-top: -36px;
     display: table;
 }
 .logo-wraper {
@@ -607,7 +606,6 @@ a {
     background-color: $main-red-color;
     margin-bottom: 8px;
     color: $headers-text-color;
-    margin-left: 125px;
     font-size: 24px;
     &.no-logo {
         margin-left: 0;
@@ -890,12 +888,6 @@ a {
         max-width: 400px;
         margin: 0 auto;
     }
-    .coupons-block-header-title {
-        margin-left: 0;
-    }
-    .coupons-block-header-logo {
-        margin-top: 0;
-    }
     .coupon-block-item-logo {
         width: 90px;
         height: 90px;
@@ -928,9 +920,6 @@ a {
     }
 }
 @media screen and (max-width: 339px) {
-    .coupons-block-header-title {
-        margin-left: 0;
-    }
     .coupons-block-header-logo {
         width: 100px;
         height: 100px;

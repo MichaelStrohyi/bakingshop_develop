@@ -8,37 +8,21 @@
             <div class="coupons-block-header-title {{ store.logo is not null and store.logo.filename is not null ? '' : 'no-logo' }}">
                 <h1>{{ store.name }} shop coupons</h1>
             </div>
-            {% if store.logo is not null and store.logo.filename is not null %}
-                <div class="coupons-block-header-logo">
-                    <div class="logo-wraper">
-                        <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
-                    </div>
-                </div>
-            {% endif %}
-            <div class="coupons-block-header-descr">
-                {{ store.shortDescription }}
-                {% if store.shortDescription|length < store.description|length %}
-                    <input type="checkbox" id="descr-details">
-                    <label class="descr-details-open" for="descr-details">... more</label>
-                    <span class="descr-details-text">
-                        {{ store.restDescription }}
-                        <label class="descr-details-close" for="descr-details">less</label>
-                    </span>
-                {% endif %}
-            </div>
         </div>
         {% for store_coupon in store.coupons %}
             {% if store_coupon.actual %}
                 <div class="coupons-block-item">
                     <div class="coupon-block-item-left">
-                        <div class="coupon-block-item-logo {{ store_coupon.logo is null and store_coupon.discount is null ? 'empty' : '' }} {{ store_coupon.logo is null and store_coupon.discount == 'FREE Shipping' ? 'shipping' : '' }}">
+                        <div class="coupon-block-item-logo {{ store_coupon.logo is null and store_coupon.discount == 'FREE Shipping' ? 'shipping' : '' }}">
                             {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
                                 <img src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" alt >
                             {% elseif store_coupon.discount == 'FREE Shipping' %}
                                     FREE Shipping
                             {% elseif store_coupon.discount is not empty %}
                                     <span>{{ store_coupon.discount }}</span> OFF
-                        {% endif %}
+                            {% elseif store.logo is not null and store.logo.filename is not null %}
+                                <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="coupon-block-item-right">
@@ -68,5 +52,25 @@
                 </div>
             {% endif %}
         {% endfor %}
+        <div class="coupons-block-header">
+            {% if store.logo is not null and store.logo.filename is not null %}
+                <div class="coupons-block-header-logo">
+                    <div class="logo-wraper">
+                        <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="coupons-block-header-descr">
+                {{ store.shortDescription }}
+                {% if store.shortDescription|length < store.description|length %}
+                    <input type="checkbox" id="descr-details">
+                    <label class="descr-details-open" for="descr-details">... more</label>
+                    <span class="descr-details-text">
+                        {{ store.restDescription }}
+                        <label class="descr-details-close" for="descr-details">less</label>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
