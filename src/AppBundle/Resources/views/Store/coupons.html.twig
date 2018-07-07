@@ -8,24 +8,6 @@
             <div class="coupons-block-header-title">
                 <h1>{{ store.name }} coupons</h1>
             </div>
-            <div class="coupons-block-header-logo">
-                <div class="logo-wraper">
-                    {% if store.logo is not null and store.logo.filename is not null %}
-                        <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="coupons-block-header-descr">
-                {{ store.shortDescription }}
-                {% if store.shortDescription|length < store.description|length %}
-                    <input type="checkbox" id="descr-details">
-                    <label class="descr-details-open" for="descr-details">... more</label>
-                    <span class="descr-details-text">
-                        {{ store.restDescription }}
-                        <label class="descr-details-close" for="descr-details">less</label>
-                    </span>
-                {% endif %}
-            </div>
         </div>
         {% for store_coupon in store.coupons %}
             {% if store_coupon.actual %}
@@ -72,6 +54,26 @@
                 </div>
             {% endif %}
         {% endfor %}
+        <div class="coupons-block-header">
+            <div class="coupons-block-header-logo">
+                <div class="logo-wraper">
+                    {% if store.logo is not null and store.logo.filename is not null %}
+                        <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="coupons-block-header-descr">
+                {{ store.shortDescription }}
+                {% if store.shortDescription|length < store.description|length %}
+                    <input type="checkbox" id="descr-details">
+                    <label class="descr-details-open" for="descr-details">... more</label>
+                    <span class="descr-details-text">
+                        {{ store.restDescription }}
+                        <label class="descr-details-close" for="descr-details">less</label>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
