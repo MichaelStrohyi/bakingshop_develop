@@ -93,7 +93,7 @@ class PageController extends Controller
 
     /**
      * @Route("/{prefix}{slug}/list/{page}", name="list_page",
-     *     requirements={"slug": ".+", "prefix": "amp/|", "page": "\d+"},
+     *     requirements={"slug": ".+", "prefix": "amp/|", "page": "\d+|all"},
      *     defaults={"prefix": "", "page": 1},
      * )
      *
@@ -101,6 +101,10 @@ class PageController extends Controller
      */
     public function listAction($slug, $prefix = null, $page, Request $request)
     {
+        if ($page == "all") {
+            $page = 0;
+        }
+
         if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
             throw $this->createNotFoundException();
         }
@@ -115,13 +119,11 @@ class PageController extends Controller
 
         # get pagination links and articles or stores wich match search-string according to search type
         if ($slug == Store::PAGE_TYPE) {
-            list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['stores' => $this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName()], $page);
-            $parameters['stores'] = $items['stores'];
+            list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(), $page);
             $parameters['type_title'] = 'Stores';
         }
         else {
-            list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['articles' => $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByType($slug)], $page);
-            $parameters['articles'] = $items['articles'];
+            list($parameters['articles'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Article")->findAllByType($slug), $page);
             $parameters['type_title'] = Article::getTypeTitle($slug);
         }
 

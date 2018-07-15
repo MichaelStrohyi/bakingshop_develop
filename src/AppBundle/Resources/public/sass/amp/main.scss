@@ -2,6 +2,7 @@ $site-width: 760px;
 $main-red-color: #ff6562;
 $article-block-red-color: #ec7b7d;
 $main-blue-color: #617dda;
+$main-green-color: #669999;
 $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
@@ -564,7 +565,7 @@ a {
     float: left;
     display: table;
 }
-.main-content-block:after, .article-preview-content:after, .coupons-block-header:after, .article-previews:after {
+.main-content-block:after, .article-preview-content:after, .coupons-block-header:after, .article-previews:after, .row:after {
     content:'';
     clear: both;
     display: block;
@@ -840,6 +841,39 @@ a {
         font-family: 'Verdana', sans-serif;
         margin: 0;
         text-decoration: underline;
+    }
+}
+.list-all-header {
+    font: {
+        size: 24px;
+        style: italic;
+    }
+    color: $main-red-color;
+    text-transform: uppercase;
+    border-bottom: 1px solid $main-red-color
+}
+.list-all-navigation {
+    font-size: 16px;
+    color: $main-green-color;
+    text-align:
+    center;
+    border-bottom: 1px solid #e6e6e6;
+    ul {
+        list-style: none;
+        display: inline;
+        padding-left: 0px;
+    }
+    li {
+        display: inline;
+    }
+    a {
+        font-size: 16px;
+        color: $main-green-color;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+    & > a {
+        text-transform: none;
     }
 }
 @media screen and (min-width: 800px) {

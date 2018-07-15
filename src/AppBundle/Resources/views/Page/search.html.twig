@@ -1,53 +1,8 @@
-{% if articles is not empty %}
-    {% if stores is not empty %}
-        <li class="search-result-type">Results from articles:</li>
-    {% endif %}
-    {% set count = 0 %}
-    {% for article in articles %}
-        <li>
-            {% if amplified %}
-                <a href="{{ path(article, {'prefix': amp_prefix}) }}">{{ article.header }}</a>
-            {% else %}
-                <a href="{{ path(article) }}">{{ article.header }}</a>
-            {% endif %}
-        </li>
-        {% set count = count + 1 %}
-    {% endfor %}
-    {% if articles_count > count %}
-        <li>
-            {% if amplified %}
-                <a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
-            {% else %}
-                <a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle, 'page': 1}) }}">... more results for '{{ needle }}'</a>
-            {% endif %}
-        </li>
-    {% endif %}
-{% endif %}
 {% if stores is not empty %}
-    {% set count = 0 %}
-    {% if articles is not empty %}
-        <li class="search-result-type">Results from stores:</li>
-    {% endif %}
-    {% for store in stores %}
-        <li>
-
-            {% if amplified %}
-                <a href="{{ path(store, {'prefix': amp_prefix}) }}">{{ store.name }}</a>
-            {% else %}
-            <a href="{{ path(store) }}">{{ store.name }}</a>
-            {% endif %}
-        </li>
-        {% set count = count + 1 %}
-    {% endfor %}
-    {% if stores_count > count %}
-        <li>
-            {% if amplified %}
-                <a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
-            {% else %}
-                <a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle, 'page': 1}) }}">... more results for '{{ needle }}'</a>
-            {% endif %}
-        </li>
-    {% endif %}
+    {% include 'AppBundle:layout:_search_pattern.html.twig' with {'items': stores, 'items_type': 'store', 'method': 'getName', 'single_type': articles is not empty ? false : true} %}
+{% endif %}
+{% if articles is not empty %}
+    {% include 'AppBundle:layout:_search_pattern.html.twig' with {'items': articles, 'items_type': 'article', 'method': 'getHeader', 'single_type': stores is not empty ? false : true} %}
 {% endif %}
 {% if stores is empty and  articles is empty %}
     <li class="search-result-type">No results found for '{{ needle }}' </li>

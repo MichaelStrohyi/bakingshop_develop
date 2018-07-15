@@ -64,12 +64,16 @@ class SearchController extends Controller
 
     /**
      * @Route("/{prefix}search/{slug}/{page}", name="search_page",
-     *     requirements={"slug": "article|store|all", "prefix": "amp/|", "page": "\d+"},
-     *     defaults={"prefix": "", "page": 0},
+     *     requirements={"slug": "article|store|all", "prefix": "amp/|", "page": "\d+|all"},
+     *     defaults={"prefix": "", "page": 1},
      * )
      */
     public function listAction($slug, $page, $prefix = null, Request $request)
     {
+        if ($page == "all") {
+            $page = 0;
+        }
+
         # get search-string from parameters
         $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('q')))));
         #set parameters for twig template
@@ -90,13 +94,11 @@ class SearchController extends Controller
         # get articles and stores wich match search-string according to search type and pagination links
         switch ($slug) {
             case 'article':
-                list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['articles' => $this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle)], $page);
-                $parameters['articles'] = $items['articles'];
+                list($parameters['articles'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle), $page);
                 break;
 
             case 'store':
-                list($items, $parameters['navigation']) = $page_repo->getResultsForPage(['stores' => $this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle)], $page);
-                $parameters['stores'] = $items['stores'];
+                list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle), $page);
                 break;
 
             case 'all':
@@ -125,6 +127,7 @@ class SearchController extends Controller
      *
      * @param array $articles
      * @param array $stores
+     * @param string $needle
      * @param int $articles_count
      * @param int $stores_count
      * @param string $baseUrl
@@ -147,59 +150,13 @@ class SearchController extends Controller
 
             return json_encode(["items" => $items]);
         }
-        # if articles are not empty
-        if (!empty($articles)) {
-            # if stores are not empty add header with type of search result for articles
-            if (!empty($stores)) {
-                $items[] = [
-                    'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                    'name' => 'Results from Articles',
-                    'class' => 'search-result-type disabled',
-                ];
-            }
-            # add each article into result
-            foreach ($articles as $article) {
-                $items[] = [
-                    'url' => $this->generatePathForObj($article, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
-                    'name' => $article->getHeader(),
-                    'class' => 'result',
-                ];
-            }
-            # add link to see all articles if some articles were removed from result by limit
-            if ($articles_count > count($articles)) {
-               $items[] = [
-                   'url' => $this->generateUrl('search_page', ['slug' => 'article', 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
-                   'name' => "... more results for '" . $needle . "'",
-                   'class' => 'search-result-more',
-               ]; 
-            }
-        }
         # if stores are not empty
         if (!empty($stores)) {
-            # if articles are not empty add header with type of search result for store
-            if (!empty($articles)) {
-                $items[] = [
-                    'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                    'name' => 'Results from Stores',
-                    'class' => 'search-result-type disabled',
-                ];
-            }
-            # add each store into result
-            foreach ($stores as $store) {
-                $items[] = [
-                    'url' => $this->generatePathForObj($store, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
-                    'name' => $store->getName(),
-                    'class' => 'result',
-                ];
-            }
-            # add link to see all stores if some store were removed from result by limit
-            if ($stores_count > count($stores)) {
-               $items[] = [
-                   'url' => $this->generateUrl('search_page', ['slug' => 'store', 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
-                   'name' => "... more results for '" . $needle . "'",
-                   'class' => 'search-result-more'
-               ]; 
-            }
+            $items = array_merge($items, $this->prepareForJson($stores, $stores_count, $needle, $baseUrl, $prefix, empty($articles)));
+        }
+        # if articles are not empty
+        if (!empty($articles)) {
+            $items = array_merge($items, $this->prepareForJson($articles, $articles_count, $needle, $baseUrl, $prefix, empty($stores)));
         }
         #return result as json
         return json_encode(["items" => $items]);
@@ -256,5 +213,66 @@ class SearchController extends Controller
         }
 
         return $url;
+    }
+    /**
+     * Get data from given items and convert this data to array, which can be converted into JSON search-respond
+     *
+     * @param array $items
+     * @param int $items_count
+     * @param string $needle
+     * @param string $baseUrl
+     * @param string $prefix
+     * @param boolean $single_type
+     * @return array
+     * @author Michael Strohyi
+     **/
+    private function prepareForJson($items, $items_count, $needle, $baseUrl, $prefix = null, $single_type = true)
+    {
+        $res = [];
+        if (empty($items)) {
+            return $res;
+        }
+        # analize type of items and set necessary variables according to item's type
+        switch (get_class($items[0])) {
+            case 'AppBundle\Entity\Article':
+                $method = 'getHeader';
+                $type = 'Article';
+                break;
+
+            case 'AppBundle\Entity\Store':
+                $method = 'getName';
+                $type = 'Store';
+                break;
+
+            default:
+                # return if type of items is unknown
+                return $res;
+        }
+        # if items of another type exist (single_Type == false) add header with type of search result for current items
+        if (!$single_type) {
+            $res[] = [
+                'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
+                'name' => 'Results from ' . $type . 's',
+                'class' => 'search-result-type disabled',
+            ];
+        }
+        # add each item into result
+        foreach ($items as $item) {
+            $res[] = [
+                'url' => $this->generatePathForObj($item, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
+                'name' => $item->$method(),
+                'class' => 'result',
+            ];
+        }
+        # add link to see all items if some item was removed from result by limit
+        if ($items_count > count($items)) {
+           $res[] = [
+               'url' => $this->generateUrl('search_page', ['slug' => strtolower($type), 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
+               'name' => "... more results for '" . $needle . "'",
+               'class' => 'search-result-more',
+           ];
+        }
+
+        return $res;
     }
 }

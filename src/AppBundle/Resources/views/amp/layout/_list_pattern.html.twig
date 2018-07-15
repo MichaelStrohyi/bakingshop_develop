@@ -1,0 +1,61 @@
+{% if page == 0 %}
+    <div class="list-all-navigation">Browse: <a href="">all </a>
+        <ul>
+            {% for key, group in items %}
+                <li><a href="{{ key == '#' ? '#digits' : '#'~key }}">{{ key }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="article-previews">                    
+        {% for key, group in items %}
+            <div class="list-all-header" id="{{ key == '#' ? 'digits' : key }}">{{ key }}</div>
+            {% set opened = false %}
+            {% for item in group %}
+                {% if loop.index is odd %}
+                    {% set opened = true %}
+                    <div class="row">
+                {% endif %}
+                <div class="list-all-item"><a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a></div>
+                {% if loop.index is even %}
+                    {% set opened = false %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if opened %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    {% set count = 0 %}
+    <div class="article-previews">
+        {% for item in items %}
+            {% set count = count + 1 %}
+            <div class="article-preview-item">
+                <div class="article-preview">
+                    <h1><span>{{ attribute(item, method) }}</span></h1>
+                    <div class="article-preview-content">
+                        <div class="article-preview-image">
+                            <div class="logo-wraper">
+                                {% if item.logo is not null and item.logo.filename is not null %}
+                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}" width="{{ item.logo.width }}" height="{{ item.logo.height }}" layout="responsive"></amp-img>
+                                {% elseif items_type == 'article' %}
+                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                {% else %}
+                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p>{{ item.description }}</p>
+                    </div>
+                    <a class="show-recipe-block" href="{{ path(item, {'prefix': amp_prefix}) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if _context[items_type ~ 's_count'] is defined and _context[items_type ~ 's_count'] > count %}
+        <div class="list-pagination-links">
+            <a class="search-result-more" href="{{ path('search_page', {'slug': items_type, 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">See more results for '{{ needle }}'</a>
+        </div>
+    {% endif %}
+{% endif %} 

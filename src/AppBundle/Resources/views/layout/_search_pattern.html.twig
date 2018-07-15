@@ -1,0 +1,25 @@
+{% if items is not empty %}
+    {% set count = 0 %}
+    {% if not single_type %}
+        <li class="search-result-type">Results from {{ items_type }}s:</li>
+    {% endif %}
+    {% for item in items %}
+        <li>
+            {% if amplified %}
+                <a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a>
+            {% else %}
+                <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
+            {% endif %}
+        </li>
+        {% set count = count + 1 %}
+    {% endfor %}
+    {% if _context[items_type ~ 's_count'] > count %}
+        <li>
+            {% if amplified %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': items_type, 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
+            {% else %}
+                <a class="search-result-more" href="{{ path('search_page', {'slug': items_type, 'q': needle, 'page': 1}) }}">... more results for '{{ needle }}'</a>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endif %}
