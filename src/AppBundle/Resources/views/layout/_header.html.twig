@@ -16,7 +16,11 @@
         <div class="top-menu-pattern-top"></div>
         <div class="top-menu-section-header">
             <div class="top-menu-text">
-                <span>{{ type_title }}</span>
+                {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_ARTICLE') and page is defined and page == 0 %}
+                    <span>{{ type_title }}</span>
+                {% else %}
+                    <a href='{{ path('list_page', {'slug': type}) }}'><span>{{ type_title }}</span></a>
+                {% endif %}
             </div>
             {# <div class="top-menu-text coupons-page">
                 <span>500,000+ Coupons for 50,000 Stores</span>

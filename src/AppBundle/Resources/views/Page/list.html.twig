@@ -6,146 +6,45 @@
     {% if needle is defined and articles is empty and stores is empty %}
         <div class="searched-for-alert">No results have been found for <b>'{{ needle }}'</b></div>
     {% endif %}
-        {% if articles is defined and articles is not empty %}
-            {% if needle is defined and needle is not empty %}
-                <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ stores is defined and stores is not empty ? ' in Articles' : '' }}:</div>
-            {% endif %}
-            {% if page == 0 %}
-                <div class="article-previews">
-                    {% set opened = false %}
-                    {% for article in articles %}
-                        {% if loop.index is odd %}
-                            {% set opened = true %}
-                            <div class="row">
-                        {% endif %}
-                        <div class="list-all-item"><a href="{{ path(article) }}">{{ article.header }}</a></div>
-                        {% if loop.index is even %}
-                            {% set opened = false %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% if opened %}
-                        </div>
-                    {% endif %}
-                </div>
-            {% else %}
-                {% set count = 0 %}
-                <div class="article-previews">
-                    {% for article in articles %}
-                        {% set count = count + 1 %}
-                        <div class="article-preview-item">
-                            <div class="article-preview">
-                                <h1><span>{{ article.header }}</span></h1>
-                                <div class="article-preview-content">
-                                    <div class="article-preview-image">
-                                        {% if article.logo is not null and article.logo.filename is not null %}
-                                            <img alt src="{{ article_logo_prefix }}/{{ article.logo.filename }}">
-                                        {% else %}
-                                            <img alt src="{{ article_logo_prefix }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
-                                        {% endif %}
-                                    </div>
-                                    <p>{{ article.description }}</p>
-                                </div>
-                                <a class="show-recipe-block" href="{{ path(article) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                {% if articles_count is defined and articles_count > count %}
-                    <div class="list-pagination-links">
-                        <a class="search-result-more" href="{{ path('search_page', {'slug': 'article', 'q': needle, 'page': 1}) }}">See more results for '{{ needle }}'</a>
-                    </div>
-                {% endif %}
-            {% endif %}
-        {% endif %} 
 
-        {% if stores is defined and stores is not empty %}
+    {% if stores is defined and stores is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ articles is defined and articles is not empty ? ' in Stores' : '' }}:</div>
+        {% endif %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': stores, 'items_type': 'store', 'method': 'getName'} %}
+    {% endif %}
+
+    {% if articles is defined and articles is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ stores is defined and stores is not empty ? ' in Articles' : '' }}:</div>
+        {% endif %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': articles, 'items_type': 'article', 'method': 'getHeader'} %}
+    {% endif %}
+
+    {% if navigation is defined and navigation is not empty %}
+        <div class="list-pagination-links">
             {% if needle is defined and needle is not empty %}
-                <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ articles is defined and articles is not empty ? ' in Stores' : '' }}:</div>
-            {% endif %}
-            {% if page == 0 %}
-                <div class="article-previews">
-                    {% set opened = false %}
-                    {% for store in stores %}
-                        {% if loop.index is odd %}
-                            {% set opened = true %}
-                            <div class="row">
-                        {% endif %}
-                        <div class="list-all-item"><a href="{{ path(store) }}">{{ store.name }}</a></div>
-                        {% if loop.index is even %}
-                            {% set opened = false %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% if opened %}
-                        </div>
-                    {% endif %}
-                </div>
+                {% set q = {"q": needle, "slug": slug} %}
+                {% set target = "search_page" %}
             {% else %}
-                {% set count = 0 %}
-                <div class="article-previews">
-                    {% for store in stores %}
-                        {% set count = count + 1 %}
-                        <div class="article-preview-item">
-                            <div class="article-preview">
-                                <h1><span>{{ store.name }}</span></h1>
-                                <div class="article-preview-content">
-                                    <div class="article-preview-image">
-                                        {% if store.logo is not null and store.logo.filename is not null %}
-                                            <img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}">
-                                        {% else %}
-                                            <img alt src="{{ store_logo_prefix }}/{{ store_default_logo }}">
-                                        {% endif %}
-                                    </div>
-                                    <p>{{ store.description }}</p>
-                                </div>
-                                <a class="show-recipe-block" href="{{ path(store) }}">Show&nbsp;&nbsp;<span>Coupons</span></a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                {% if stores_count is defined and stores_count > count %}
-                    <div class="list-pagination-links">
-                        <a class="search-result-more" href="{{ path('search_page', {'slug': 'store', 'q': needle, 'page': 1}) }}">See more results for '{{ needle }}'</a>
-                    </div>
-                {% endif %}
+                {% set q = {"slug": type} %}
+                {% set target = "list_page" %}
             {% endif %}
-        {% endif %}
-        {% if navigation is defined and navigation is not empty %}
-            <div class="list-pagination-links">
-                {% if needle is defined and needle is not empty %}
-                    Page:
-                    {% if navigation.prev is defined %}
-                        <a href="{{ path("search_page", {"slug": slug, "page": page - 1, "q": needle}) }}">prev</a>
-                    {% endif %}
-                    {% for nav_page in navigation.pages %}
-                        {% if nav_page == page %}
-                            <u>{{ nav_page }}</u>
-                        {% else %}
-                            <a href="{{ path("search_page", {"slug": slug, "page": nav_page, "q": needle}) }}">{{ nav_page }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if navigation.next is defined %}
-                        <a href="{{ path("search_page", {"slug": slug, "page": page + 1, "q": needle}) }}">next</a>
-                    {% endif %}
-                    <a href="{{ path("search_page", {"slug": slug, "page": 0, "q": needle}) }}">all</a>
+            Page:
+            {% if navigation.prev is defined %}
+                <a href="{{ path(target, q|merge({"page": page - 1})) }}">prev</a>
+            {% endif %}
+            {% for nav_page in navigation.pages %}
+                {% if nav_page == page %}
+                    <u>{{ nav_page }}</u>
                 {% else %}
-                    Page:
-                    {% if navigation.prev is defined %}
-                        <a href="{{ path("list_page", {"slug": type, "page": page - 1}) }}">prev</a>
-                    {% endif %}
-                    {% for nav_page in navigation.pages %}
-                        {% if nav_page == page %}
-                            <u>{{ nav_page }}</u>
-                        {% else %}
-                            <a href="{{ path("list_page", {"slug": type, "page": nav_page}) }}">{{ nav_page }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if navigation.next is defined %}
-                        <a href="{{ path("list_page", {"slug": type, "page": page + 1}) }}">next</a>
-                    {% endif %}
-                    <a href="{{ path("list_page", {"slug": type, "page": 0}) }}">all</a>
+                    <a href="{{ path(target, q|merge({"page": nav_page})) }}">{{ nav_page }}</a>
                 {% endif %}
-            </div>
-        {% endif %}
+            {% endfor %}
+            {% if navigation.next is defined %}
+                <a href="{{ path(target, q|merge({"page": page + 1})) }}">next</a>
+            {% endif %}
+            <a href="{{ path(target, q|merge({"page": "all"})) }}">all</a>
+        </div>
+    {% endif %}
 {% endblock %}

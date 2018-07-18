@@ -1168,6 +1168,9 @@ li.active {
             max-height: 100%;
             overflow: hidden;
         }
+        a {
+            color: #fff;
+        }
     }
 }
 .article-preview-image {
@@ -1297,6 +1300,38 @@ li.active {
         text-decoration: underline;
     }
 }
+.list-all-header {
+    font: {
+        size: 24px;
+        style: italic;
+    }
+    color: $main-red-color;
+    text-transform: uppercase;
+    border-bottom: 1px solid $main-red-color
+}
+.list-all-navigation {
+    font-size: 16px;
+    color: $main-green-color;
+    text-align:
+    center;
+    border-bottom: 1px solid #e6e6e6;
+    ul {
+        list-style: none;
+        display: inline;
+        padding-left: 0px;
+    }
+    li {
+        display: inline;
+    }
+    a {
+        font-size: 16px;
+        color: $main-green-color;
+        text-transform: uppercase;
+    }
+    & > a {
+        text-transform: none;
+    }
+}
 @media screen and (min-width: 700px) {
     .top-menu-search {
         position: absolute;
@@ -1331,6 +1366,10 @@ li.active {
         width: 50%;
         &.coupons-page {
             max-width: 375px;
+        }
+        a {
+            color: $main-red-color;
+            text-decoration: none;
         }
     }
     .main-menu-search {

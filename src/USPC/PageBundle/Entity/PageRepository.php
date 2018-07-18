@@ -279,24 +279,16 @@ class PageRepository extends EntityRepository
      **/
     public function getResultsForPage($items, $page, $limit = self::ARTICLES_PER_PAGE)
     {
+        # return if items is empty
+        if (empty($items)) {
+            return [$items, null];
+        }
+
         if ($page == 0) {
-            return [$items, null];
+            return [$this->groupAlphabetically($items), null];
         }
-        # get articles and stores arrays from item
-        $articles = array_key_exists('articles', $items) && !empty($items['articles']) ? $items['articles'] : [];
-        $stores = array_key_exists('stores', $items) && !empty($items['stores']) ? $items['stores'] : [];
-        # return if  articles and stores are empty
-        if (empty($articles) && empty($stores)) {
-            return [$items, null];
-        }
-        # if articles and stores are in the items list return mixed list of articles and stores for given page with given items limit per page
-        if (!empty($articles) && !empty($stores)) {
-            return $this->getMixedResultsForPage($articles, $stores, $limit);
-        }
-        # find out either articles or stores list is not empty
-        $items = empty($articles) ? $stores : $articles;
-        $items_type = empty($articles) ? 'stores' : 'articles';
-        # create 404 exception if given page is too big and there are no items in articles/stores list for this page
+
+        # create 404 exception if given page is too big and there are no items for this page
         if (($page - 1) * $limit >= count($items)) {
             throw $this->createNotFoundException();
         }
@@ -336,7 +328,7 @@ class PageRepository extends EntityRepository
             }
         }
 
-        return [[$items_type => array_slice($items, ($page - 1) * $limit, $limit)], $navigation];
+        return [array_slice($items, ($page - 1) * $limit, $limit), $navigation];
     }
 
     /**
@@ -368,5 +360,50 @@ class PageRepository extends EntityRepository
         }
 
         return ['articles' => $articles, 'stores' => $stores, 'articles_count' => $articles_all_count, 'stores_count' => $stores_all_count];
+    }
+
+
+    /**
+     * Return list off all articles with given $type ordered by header and grouped alphabetically if given simple_list param is 0
+     *
+     * @param array $items
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function groupAlphabetically($items)
+    {
+        $res = array_fill_keys(['#', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'], []);
+        if (empty($items)) {
+            return $res;
+        }
+        # analize type of items and set necessary variables according to item's type
+        switch (get_class($items[0])) {
+            case 'AppBundle\Entity\Article':
+                $method = 'getHeader';
+                break;
+
+            case 'AppBundle\Entity\Store':
+                $method = 'getName';
+                break;
+
+            default:
+                # return if type of items is unknown
+                return $res;
+        }
+
+        if (!method_exists($items[0], $method)) {
+            return $res;
+        }
+
+        foreach ($items as $item) {
+            $first_letter = strtolower(substr($item->$method(), 0, 1));
+            if (!ctype_alpha($first_letter)) {
+                $res['#'][] = $item;
+            } else {
+                $res[$first_letter][] = $item;
+            }
+        }
+
+        return $res;
     }
 }
