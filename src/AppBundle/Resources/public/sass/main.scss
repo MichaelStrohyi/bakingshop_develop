@@ -1168,6 +1168,9 @@ li.active {
             max-height: 100%;
             overflow: hidden;
         }
+        a {
+            color: #fff;
+        }
     }
 }
 .article-preview-image {
@@ -1363,6 +1366,10 @@ li.active {
         width: 50%;
         &.coupons-page {
             max-width: 375px;
+        }
+        a {
+            color: $main-red-color;
+            text-decoration: none;
         }
     }
     .main-menu-search {

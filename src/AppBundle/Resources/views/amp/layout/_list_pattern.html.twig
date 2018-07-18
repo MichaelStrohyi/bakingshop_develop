@@ -33,17 +33,19 @@
             {% set count = count + 1 %}
             <div class="article-preview-item">
                 <div class="article-preview">
-                    <h1><span>{{ attribute(item, method) }}</span></h1>
+                    <h1><span><a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a></span></h1>
                     <div class="article-preview-content">
                         <div class="article-preview-image">
                             <div class="logo-wraper">
-                                {% if item.logo is not null and item.logo.filename is not null %}
-                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}" width="{{ item.logo.width }}" height="{{ item.logo.height }}" layout="responsive"></amp-img>
-                                {% elseif items_type == 'article' %}
-                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
-                                {% else %}
-                                    <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
-                                {% endif %}
+                                <a href="{{ path(item, {'prefix': amp_prefix}) }}">
+                                    {% if item.logo is not null and item.logo.filename is not null %}
+                                        <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}" width="{{ item.logo.width }}" height="{{ item.logo.height }}" layout="responsive"></amp-img>
+                                    {% elseif items_type == 'article' %}
+                                        <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                    {% else %}
+                                        <amp-img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                                    {% endif %}
+                                </a>
                             </div>
                         </div>
                         <p>{{ item.description }}</p>

@@ -105,6 +105,45 @@ class PageController extends Controller
             $page = 0;
         }
 
+        if ($page == 0 && $slug == Article::PAGE_SUBTYPE_ARTICLE) {
+            return $this->redirectToRoute("sitemap_page", ["prefix" => $prefix]);
+        }
+
+        if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
+            throw $this->createNotFoundException();
+        }
+
+        $parameters = $this->getData($slug, $prefix , $page, $request);
+
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("/{prefix}sitemap", name="sitemap_page",
+     *     requirements={"prefix": "amp/|"},
+     *     defaults={"prefix": ""},
+     * )
+     *
+     * @Template()
+     */
+    public function sitemapAction($prefix = null, $parameters = [], Request $request)
+    {
+        $page = 0;
+        $slug = Article::PAGE_SUBTYPE_ARTICLE;
+        $parameters = $this->getData($slug, $prefix , $page, $request);
+        $parameters['type_title'] = 'Site Map';
+
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
+    }
+
+    /**
+     * Get data for twig template for list/sitemap page according to given parameters
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    private function getData($slug, $prefix = null, $page, Request $request)
+    {
         if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
             throw $this->createNotFoundException();
         }
@@ -117,7 +156,7 @@ class PageController extends Controller
             'type' => $slug,
             ];
 
-        # get pagination links and articles or stores wich match search-string according to search type
+        # get pagination links and articles or stores list according to type
         if ($slug == Store::PAGE_TYPE) {
             list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(), $page);
             $parameters['type_title'] = 'Stores';
@@ -127,6 +166,7 @@ class PageController extends Controller
             $parameters['type_title'] = Article::getTypeTitle($slug);
         }
 
-        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
+        return $parameters;
     }
+
 }

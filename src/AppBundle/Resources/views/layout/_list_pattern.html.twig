@@ -33,16 +33,18 @@
             {% set count = count + 1 %}
             <div class="article-preview-item">
                 <div class="article-preview">
-                    <h1><span>{{ attribute(item, method) }}</span></h1>
+                    <h1><span><a href="{{ path(item) }}">{{ attribute(item, method) }}</a></span></h1>
                     <div class="article-preview-content">
                         <div class="article-preview-image">
-                            {% if item.logo is not null and item.logo.filename is not null %}
-                                <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}">
-                            {% elseif items_type == 'article' %}
-                                <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
-                            {% else %}
-                                <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}">
-                            {% endif %}
+                            <a href="{{ path(item) }}">
+                                {% if item.logo is not null and item.logo.filename is not null %}
+                                    <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}">
+                                {% elseif items_type == 'article' %}
+                                    <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
+                                {% else %}
+                                    <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}">
+                                {% endif %}
+                            </a>
                         </div>
                         <p>{{ item.description }}</p>
                     </div>

@@ -20,7 +20,7 @@ use AppBundle\AMP\AppAMP;
 class Article
 {
     const PAGE_TYPE = 'article';
-    const PAGE_SUBTYPE_ARTICLE = 'article';
+    const PAGE_SUBTYPE_ARTICLE = 'tip';
     const PAGE_SUBTYPE_RECIPE = 'recipe';
     const PAGE_SUBTYPE_INFO = 'information';
 
@@ -446,7 +446,7 @@ class Article
     {
         switch ($type) {
             case self::PAGE_SUBTYPE_ARTICLE:
-                $type_title = 'Articles';
+                $type_title = 'Tips';
                 break;
             case self::PAGE_SUBTYPE_RECIPE:
                 $type_title = 'Recipes';
