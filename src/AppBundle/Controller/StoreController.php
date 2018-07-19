@@ -37,7 +37,7 @@ class StoreController extends Controller
         # if amp_flag is set render amplified html page otherwise render amp-html page
         return ($amp_flag == 'a') ? $this->render('AppBundle:amplified/Store:coupons.html.twig', $parameters) : $this->render('AppBundle:amp/Store:coupons.html.twig', $parameters);
     }
-    
+
     /**
      * @Route("/go/{store_name},{type},{id}", name="out_link",
      *     defaults={"coupon_id": null},

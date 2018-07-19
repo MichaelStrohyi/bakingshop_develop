@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Store;
 
 /**
  * @Route("/job")
@@ -58,17 +59,25 @@ class JobController extends PageController
      */
     public function tmpAction()
     {
-//        $em = $this->getDoctrine()->getEntityManager();
-//        $repo = $em->getRepository('AppBundle:Article');
-//        $articles = $repo->findAllByHeader();
-//        foreach ($articles as $article) {
-//            $body = $article->getBody();
-//            $body = str_replace('/articles/images', '/bc/img/articles/images', $body);
-//            $article->setBody($body);
-//            $em->persist($article);
-//        }
+/*        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Article');
+        $articles = $repo->findAllByHeader();
+        foreach ($articles as $article) {
+            $body = $article->getBody();
+            $body = str_replace('/articles/images', '/bc/img/articles/images', $body);
+            $article->setBody($body);
+            $em->persist($article);
+        }*/
 
-//        $em->flush();
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('USPCPageBundle:Page');
+        $pages = $repo->findBy(['type' => Store::PAGE_TYPE]);
+        foreach ($pages as $page) {
+            $page->setUrl($repo->getUrlFromRes($page->getUrl()) .  Store::URL_POSTFIX);
+            $em->persist($page);
+        }
+
+        $em->flush();
         return new Response('Tmp job has been finished');
     }
 

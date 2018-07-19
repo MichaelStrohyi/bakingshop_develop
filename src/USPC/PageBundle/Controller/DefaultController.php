@@ -5,6 +5,7 @@ namespace USPC\PageBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use USPC\PageBundle\Entity\Page;
+use AppBundle\Entity\Store;
 
 class DefaultController extends Controller
 {
@@ -31,18 +32,21 @@ class DefaultController extends Controller
     {
         # load dispatchers
         $this->dispatchers = $this->container->getParameter('router.dispatchers');
-
+        # find if slug have store's postfix at the end
+        $stores_postfix = Store::URL_POSTFIX;
+        $postfix =  strpos($slug, $stores_postfix) === strlen($slug) - strlen($stores_postfix) ? true : false;
         # add forward slash at the beginning
         $url = '/' . $slug;
 
-        # find page with the given url
-        $page = $this->page = $this->getDoctrine()->getRepository('USPCPageBundle:Page')->findOneByUrl($url);
+        # find page with the given url and flag, if postfix was added to the url to find page
+        list($page, $with_postfix) = $this->getDoctrine()->getRepository('USPCPageBundle:Page')->findPageByUrl($url);
+        $this->page = $page;
 
         # get page object
         $page_object = $this->page_object = $this->getPageObject();
 
-        # if page not found
-        if (empty($page) || empty($page_object)) {
+        # if page not found or class of found page object is not AppBundle:Store and page was found only by postfix adding
+        if (empty($page) || empty($page_object) || ($with_postfix && get_class($this->page_object) != 'AppBundle\Entity\Store')) {
             # try to find given url in redirects
             $new_url = $this->findRedirect($url);
             # if url not found display error page
@@ -55,6 +59,11 @@ class DefaultController extends Controller
         # if page is alias redirect to new url
         if ($page->isAlias()) {
             return $this->makeRedirect($this->page_object->getUrl(), $prefix, $request->getBaseUrl());
+        }
+        # if page object is Store and url has no postfix at the end
+        if (get_class($this->page_object) == 'AppBundle\Entity\Store' && !$postfix) {
+            # redirect to url with postfix
+            return $this->makeRedirect($url . $stores_postfix, $prefix, $request->getBaseUrl());
         }
 
         list($controller, $parameters) = $this->getPageController();

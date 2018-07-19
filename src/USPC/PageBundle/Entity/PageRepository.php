@@ -3,6 +3,7 @@
 namespace USPC\PageBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Store;
 
 /**
  * PageRepository
@@ -405,5 +406,32 @@ class PageRepository extends EntityRepository
         }
 
         return $res;
+    }
+
+    /**
+     * Search given url in Page db. Return found object and flag, if stores postfix was added to find object or not
+     *
+     * @param string $url
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findPageByUrl($url)
+    {
+        if (empty($url)) {
+            return [null, false];
+        }
+
+        $stores_postfix = Store::URL_POSTFIX;
+        $added_postfix = false;
+        # try to find page object with given url
+        $res = $this->findOneByUrl($url);
+        # if object is not found and stores_postfix is absent at the end of given url
+        if (empty($res) && strpos($url, $stores_postfix) !== strlen($url) - strlen($stores_postfix)) {
+            # try to find page object by url with stores_postfix added to the end
+            $res = $this->findOneByUrl($url . $stores_postfix);
+            $added_postfix = true;
+        }
+
+        return [$res, $added_postfix];
     }
 }

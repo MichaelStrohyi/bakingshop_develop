@@ -19,6 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Store
 {
     const PAGE_TYPE = 'store';
+    const URL_POSTFIX = '/coupons';
     /**
      * @var integer
      *
@@ -216,7 +217,7 @@ class Store
      */
     public function getUrl()
     {
-        return '/' . $this->convertNameToUrl($this->name);
+        return '/' . $this->convertNameToUrl($this->name) . self::URL_POSTFIX;
     }
 
     /**
