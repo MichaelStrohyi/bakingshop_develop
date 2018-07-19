@@ -38,7 +38,11 @@
                                 {% endif %}
                             </div>
                             <div class="coupon-block-item-code">
-                                <a href="{{ path(store, {'prefix': amp_prefix, 'a': 'a', 'i': 'cp' ~ store_coupon.id}) }}" target="_blank" rel="nofollow"><span>ShowCoupon{{ store_coupon.code is not null ? ' CODE' : '' }}</span></a>
+                                {% if store_coupon.code is not null %}
+                                    <a href="{{ path(store, {'prefix': amp_prefix, 'a': 'a', 'i': 'cp' ~ store_coupon.id}) }}" target="_blank" rel="nofollow"><span>ShowCoupon CODE</span></a>
+                                {% else %}
+                                    <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" rel="nofollow"><span>ShowCoupon</span></a>
+                                {% endif %}
                                 {% if store_coupon.expireDate is not null %}
                                     <span class="coupon-block-item-expire">expires: {{ store_coupon.expireDateProd }}</span>
                                 {% endif %}
