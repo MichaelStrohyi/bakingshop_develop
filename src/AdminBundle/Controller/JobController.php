@@ -58,17 +58,17 @@ class JobController extends PageController
      */
     public function tmpAction()
     {
-/*        $em = $this->getDoctrine()->getEntityManager();
-        $repo = $em->getRepository('AppBundle:Article');
-        $articles = $repo->findAllByHeader();
-        foreach ($articles as $article) {
-            $body = $article->getBody();
-            $body = str_replace('/articles/images', '/bc/img/articles/images', $body);
-            $article->setBody($body);
-            $em->persist($article);
-        }
+//        $em = $this->getDoctrine()->getEntityManager();
+//        $repo = $em->getRepository('AppBundle:Article');
+//        $articles = $repo->findAllByHeader();
+//        foreach ($articles as $article) {
+//            $body = $article->getBody();
+//            $body = str_replace('/articles/images', '/bc/img/articles/images', $body);
+//            $article->setBody($body);
+//            $em->persist($article);
+//        }
 
-        $em->flush();*/
+//        $em->flush();
         return new Response('Tmp job has been finished');
     }
 
@@ -87,6 +87,9 @@ class JobController extends PageController
         }
 
         $res = $this->scan($upload_dir, $upload_dir);
+        if (empty($res)) {
+            $res = 'No unlinked files were found';
+        }
 
         return new Response($res);
     }
