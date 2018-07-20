@@ -11,14 +11,14 @@
         {% if needle is defined and needle is not empty %}
             <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ articles is defined and articles is not empty ? ' in Stores' : '' }}:</div>
         {% endif %}
-        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': stores, 'items_type': 'store', 'method': 'getName'} %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
     {% endif %}
 
     {% if articles is defined and articles is not empty %}
         {% if needle is defined and needle is not empty %}
             <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ stores is defined and stores is not empty ? ' in Articles' : '' }}:</div>
         {% endif %}
-        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': articles, 'items_type': 'article', 'method': 'getHeader'} %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
     {% endif %}
 
     {% if navigation is defined and navigation is not empty %}

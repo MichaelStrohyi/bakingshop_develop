@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Store
 {
     const PAGE_TYPE = 'store';
-    const URL_POSTFIX = '/coupons';
+    const URL_POSTFIX = '/coupons'; // WARNING! Change postfix only with changing urls for store pages in page db
     /**
      * @var integer
      *
@@ -529,6 +529,17 @@ class Store
         }
         # return max if position was not found before
         return $max;
+    }
+
+    /**
+     * Return const PAGE_TYPE
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function getType()
+    {
+        return self::PAGE_TYPE;
     }
 
 }

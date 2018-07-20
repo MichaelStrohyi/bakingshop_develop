@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Article;
+use AppBundle\Entity\Store;
 
 class SearchController extends Controller
 {
@@ -93,11 +95,11 @@ class SearchController extends Controller
         $page_repo = $this->getDoctrine()->getRepository("USPCPageBundle:Page");
         # get articles and stores wich match search-string according to search type and pagination links
         switch ($slug) {
-            case 'article':
+            case Article::PAGE_TYPE:
                 list($parameters['articles'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Article")->findBySubname($needle), $page);
                 break;
 
-            case 'store':
+            case Store::PAGE_TYPE:
                 list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Store")->findBySubname($needle), $page);
                 break;
 
@@ -236,12 +238,12 @@ class SearchController extends Controller
         switch (get_class($items[0])) {
             case 'AppBundle\Entity\Article':
                 $method = 'getHeader';
-                $type = 'Article';
+                $type = Article::PAGE_TYPE;
                 break;
 
             case 'AppBundle\Entity\Store':
                 $method = 'getName';
-                $type = 'Store';
+                $type = Store::PAGE_TYPE;
                 break;
 
             default:
@@ -252,7 +254,7 @@ class SearchController extends Controller
         if (!$single_type) {
             $res[] = [
                 'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                'name' => 'Results from ' . $type . 's',
+                'name' => 'Results from ' . ucfirst($type) . 's',
                 'class' => 'search-result-type disabled',
             ];
         }
@@ -267,7 +269,7 @@ class SearchController extends Controller
         # add link to see all items if some item was removed from result by limit
         if ($items_count > count($items)) {
            $res[] = [
-               'url' => $this->generateUrl('search_page', ['slug' => strtolower($type), 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
+               'url' => $this->generateUrl('search_page', ['slug' => $type, 'prefix' => $prefix, 'q' => $needle, 'page' => 1]),
                'name' => "... more results for '" . $needle . "'",
                'class' => 'search-result-more',
            ];

@@ -39,7 +39,7 @@
                             <a href="{{ path(item) }}">
                                 {% if item.logo is not null and item.logo.filename is not null %}
                                     <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}">
-                                {% elseif items_type == 'article' %}
+                                {% elseif items_type == constant('AppBundle\\Entity\\Article::PAGE_TYPE') %}
                                     <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
                                 {% else %}
                                     <img alt src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ _context[items_type ~ '_default_logo'] }}">
@@ -48,7 +48,7 @@
                         </div>
                         <p>{{ item.description }}</p>
                     </div>
-                    <a class="show-recipe-block" href="{{ path(item) }}">Show&nbsp;&nbsp;<span>{{ type|capitalize }}</span></a>
+                    <a class="show-recipe-block" href="{{ path(item) }}">Show&nbsp;&nbsp;<span>{{ item.type|capitalize }}</span></a>
                 </div>
             </div>
         {% endfor %}
