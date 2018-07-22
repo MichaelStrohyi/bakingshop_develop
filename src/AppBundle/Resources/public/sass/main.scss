@@ -62,7 +62,7 @@ a {
 }
 .main-logo {
     position: absolute;
-    width: 30%;
+    width: 20%;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
@@ -144,6 +144,10 @@ a {
             width: 0;
             height: 0;
         }
+    }
+    a {
+        color: $main-red-color;
+        text-decoration: none;
     }
 }
 .top-menu {
@@ -1367,10 +1371,6 @@ li.active {
         &.coupons-page {
             max-width: 375px;
         }
-        a {
-            color: $main-red-color;
-            text-decoration: none;
-        }
     }
     .main-menu-search {
         width: 50%;
@@ -1506,6 +1506,16 @@ li.active {
     }
 }
 @media screen and (min-width: 340px) and (max-width: 539px) {
+    .main-logo {
+        min-width: 110px;
+    }
+    .header-logo {
+        min-height: 92px;
+        background: url("/bundles/app/img/header_small.png") bottom center no-repeat;
+        img {
+            display: none;
+        }
+    }
     .top-menu-text {
         padding: 6px 10px 0 30px;
         text-align: center;
@@ -1599,6 +1609,16 @@ li.active {
     }
 }
 @media screen and (max-width: 339px) {
+    .main-logo {
+        min-width: 100px;
+    }
+    .header-logo {
+        background: url("/bundles/app/img/header_xsmall.png") bottom center no-repeat;
+        min-height: 83px;
+        img {
+            display: none;
+        }
+    }
     .top-menu-text {
         padding: 0 8px;
         font-size: 36px;

@@ -1,9 +1,9 @@
 {% if type is defined %}
     <div class="header-logo">
             <img src="{{ asset("bundles/app/img/header.png") }}" alt="Bakingshop.com">
-            <div class="slideshow-container hidden-xs">
+{#            <div class="slideshow-container hidden-xs">
                 {{ render(controller('AppBundle:Page:headerSlideshow')) }}
-            </div>
+            </div>#}
     </div>
     <div class="main-logo">
         <img src="{{ asset("bundles/app/img/logo-bg.png") }}" alt="Bakingshop.com">
@@ -30,7 +30,7 @@
                     <form name="search" method="get" action="{{ path('search_page', {'slug': 'all', 'page': 1}) }}">
                         <div class="top-menu-search-image"></div>
                         <div class="top-menu-search-loading"></div>
-                        <input type="text" class="search-input" name="q" autocomplete="off">
+                        <input type="text" class="search-input" name="q" autocomplete="off" placeholder="Search Coupons or Recipes">
                         <input type="submit" value=' '>
                     </form>
                     <ul class="main-menu top-menu-search-result">
@@ -68,7 +68,7 @@
             <div class="top-menu-search-loading coupons-page"></div>
                 <input type="submit" value=" ">
                 <div class="main-menu-search-form">
-                    <input class="search-input" name="q" type="search" placeholder="Search" autocomplete="off">
+                    <input class="search-input" name="q" type="search" autocomplete="off" placeholder="Search Coupons or Recipes">
                 <ul class="top-menu-search-result main-menu coupons-page">
                 </ul>
                 </div>
