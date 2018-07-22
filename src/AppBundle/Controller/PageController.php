@@ -105,6 +105,10 @@ class PageController extends Controller
             $page = 0;
         }
 
+        if ($slug == Store::PAGE_TYPE && $page != 0) {
+            return $this->redirectToRoute("list_page", ["slug" => $slug, "prefix" => $prefix, "page" => "all"]);
+        }
+
         if ($page == 0 && $slug == Article::PAGE_SUBTYPE_ARTICLE) {
             return $this->redirectToRoute("sitemap_page", ["prefix" => $prefix]);
         }
