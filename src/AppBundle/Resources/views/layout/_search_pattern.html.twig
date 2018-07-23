@@ -4,17 +4,33 @@
         <li class="search-result-type">Results from {{ items_type }}s:</li>
     {% endif %}
     {% for item in items %}
-        <li>
-            {% if amplified %}
-                <a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a>
+        <li class="search-result">
+            {% if items_type == constant('AppBundle\\Entity\\Store::PAGE_TYPE') %}
+                <div class="search-result-logo">
+                    {% if item.logo is not empty %}
+                        <img src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}">
+                    {% endif %}
+                </div>
+                <div class="search-result-discount"><span>{{ item.mainDiscount is not empty ? 'Save ' ~ item.mainDiscount : ''}}</span></div>
+                <div class="search-result-header">
+                    {% if amplified %}
+                        <a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a>
+                    {% else %}
+                        <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
+                    {% endif %}
+                </div>
             {% else %}
-                <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
+                {% if amplified %}
+                    <a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a>
+                {% else %}
+                    <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
+                {% endif %}
             {% endif %}
         </li>
         {% set count = count + 1 %}
     {% endfor %}
     {% if _context[items_type ~ 's_count'] > count %}
-        <li>
+        <li class="search-result">
             {% if amplified %}
                 <a class="search-result-more" href="{{ path('search_page', {'slug': items_type, 'q': needle, 'page': 1, 'prefix': amp_prefix}) }}">... more results for '{{ needle }}'</a>
             {% else %}

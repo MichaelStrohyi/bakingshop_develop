@@ -542,4 +542,23 @@ class Store
         return self::PAGE_TYPE;
     }
 
+    /**
+     * Return discount of first actual coupon if discount is like xx%
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function getMainDiscount()
+    {
+        $coupons = $this->getCoupons();
+        foreach ($coupons->getIterator() as $coupon) {
+            if (!$coupon->isActual()){
+                continue;
+            }
+
+            return strpos($coupon->getDiscount(), '%') !== false ? $coupon->getDiscount() : null;
+        }
+
+        return null;
+    }
 }

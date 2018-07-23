@@ -260,10 +260,27 @@ class SearchController extends Controller
         }
         # add each item into result
         foreach ($items as $item) {
+            $logo = [];
+            $discount = null;
+            if ($type == 'Store') {
+                $item_logo = $item->getLogo();
+                if (!empty($item_logo) && !empty($item_logo->getFilename())) {
+                    $logo = [
+                        'filename' => $item_logo->getFilename(),
+                        'width' => $item_logo->getWidth(),
+                        'height' => $item_logo->getHeight(),
+                    ];
+                }
+
+                $discount = $item->getMainDiscount();
+            }
+
             $res[] = [
                 'url' => $this->generatePathForObj($item, ['baseUrl' => $baseUrl, 'prefix' => $prefix]),
                 'name' => $item->$method(),
                 'class' => 'result',
+                'logo' => $logo,
+                'discount' => $discount,
             ];
         }
         # add link to see all items if some item was removed from result by limit

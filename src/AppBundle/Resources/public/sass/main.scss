@@ -438,7 +438,6 @@ a {
             padding-left: 4px;
         }
         &:hover {
-            background-color: $menu-hover-bg;
             opacity: 1;
         }
     }
@@ -1280,6 +1279,39 @@ li.active {
         }
     }
 }
+.search-result-logo {
+    float: left;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: middle;
+    margin: 2px 0;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+    }
+}
+.search-result:hover {
+    background-color: $menu-hover-bg;
+    opacity: 1;
+}
+.search-result-header {
+    margin: 0 68px 0 28px;
+    a {
+        padding-left: 4px;
+    }
+}
+.search-result-discount  {
+    float: right;
+    line-height: 28px;
+    vertical-align: middle;
+    width: 66px;
+    text-align: center;
+    color: $main-red-color;
+    font-size: 16px
+}
 .searched-for-alert {
     font-size: 18px;
     text-align: center;
@@ -1719,11 +1751,26 @@ li.active {
         input {font-size: 16px;}
         a {
             font-size: 16px;
-            line-height: 16px;
             &.search-result-more, &.search-result-type {
                 font-size: 13px;
             }
         }
+    }
+    .search-result-logo {
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        margin: 1px 0;
+    }
+    .search-result-header {
+        margin: 0 68px 0 26px;
+        a {
+            padding-left: 4px;
+        }
+    }
+    .search-result-discount  {
+        width: 66px;
+        font-size: 14px
     }
     .main-menu-search input {
         font-size: 16px;
