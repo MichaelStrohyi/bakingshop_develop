@@ -89,6 +89,13 @@ class Store
      */
     private $feedId;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_featured", type="boolean", nullable=false, options={"default"=false})
+     **/
+    private $is_featured;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -218,6 +225,29 @@ class Store
     public function getUrl()
     {
         return '/' . $this->convertNameToUrl($this->name) . self::URL_POSTFIX;
+    }
+
+    /**
+     * Set is_featured
+     *
+     * @param boolean $is_featured
+     * @return Store
+     */
+    public function setIsFeatured($is_featured)
+    {
+        $this->is_featured = $is_featured;
+
+        return $this;
+    }
+
+    /**
+     * Get is_featured
+     *
+     * @return boolean
+     */
+    public function getIsFeatured()
+    {
+        return $this->is_featured;
     }
 
     /**
@@ -550,8 +580,7 @@ class Store
      **/
     public function getMainDiscount()
     {
-        $coupons = $this->getCoupons();
-        foreach ($coupons->getIterator() as $coupon) {
+        foreach ($this->getCoupons()->getIterator() as $coupon) {
             if (!$coupon->isActual()){
                 continue;
             }
@@ -560,5 +589,23 @@ class Store
         }
 
         return null;
+    }
+
+    /**
+     * Return count of actual coupons
+     *
+     * @return integer
+     * @author Michael Strohyi
+     **/
+    public function getCouponsCount()
+    {
+        $res = 0;
+        foreach ($this->getCoupons()->getIterator() as $coupon) {
+            if ($coupon->isActual()){
+                $res++;
+            }
+        }
+
+        return $res;
     }
 }

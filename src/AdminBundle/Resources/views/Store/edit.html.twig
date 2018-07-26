@@ -24,6 +24,7 @@
         </div>
     {% endif %}
     {{ form_row(form.feedId) }}
+    {{ form_row(form.is_featured) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Update</button>
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
