@@ -6,8 +6,13 @@
     <div class="content-coupons-block">
         <div class="coupons-block-header">
             <div class="coupons-block-header-title">
-                <h1>{{ store.name }} coupons</h1>
+                <h1>{{ store.name|title }} Coupons and Promo Codes 2018</h1>
             </div>
+                {% if store.logo is not null and store.logo.filename is not null %}
+                    <div class="coupons-block-header-logo">
+                        <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="{{ store.name }} logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                    </div>
+                {% endif %}
         </div>
         {% for store_coupon in store.coupons %}
             {% if store_coupon.actual %}
@@ -54,15 +59,15 @@
                 </div>
             {% endif %}
         {% endfor %}
-        <div class="coupons-block-header">
-            <div class="coupons-block-header-logo">
+        <div class="coupons-block-footer">
+            <div class="coupons-block-footer-logo">
                 <div class="logo-wraper">
                     {% if store.logo is not null and store.logo.filename is not null %}
                         <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
                     {% endif %}
                 </div>
             </div>
-            <div class="coupons-block-header-descr">
+            <div class="coupons-block-footer-descr">
                 {{ store.shortDescription }}
                 {% if store.shortDescription|length < store.description|length %}
                     <input type="checkbox" id="descr-details">

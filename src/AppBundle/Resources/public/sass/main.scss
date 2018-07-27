@@ -579,18 +579,18 @@ a {
         margin-bottom: 0;
     }
 }
-.coupons-block-header {
+.coupons-block-footer, .coupons-block-header {
     overflow: hidden;
 }
-.coupons-block-header-logo, .coupon-block-item-logo {
+.coupons-block-footer-logo, .coupon-block-item-logo {
     margin: {
         right: 15px;
         bottom: 10px;
     }
 }
-.coupons-block-header-logo {
-    width: 120px;
-    height: 120px;
+.coupons-block-footer-logo {
+    width: 100px;
+    height: 100px;
     float: left;
     display: table;
 }
@@ -598,13 +598,33 @@ a {
     display: table-cell;
     vertical-align: middle;
 }
-.coupons-block-header-title {
-    background-color: $main-red-color;
-    margin-bottom: 8px;
-    color: $headers-text-color;
-    font-size: 24px;
+.coupons-block-header {
+    display: table;
+    width: 100%;
+    padding: 10px 0;
+    min-height: 80px;
 }
-.coupons-block-header-descr {
+.coupons-block-header-logo {
+    width: 100px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.coupons-block-header-title {
+    padding-right: 10px;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    h1 {
+        margin: 0;
+        font: {
+            size: 32px;
+            weight: bold;
+            style: italic;
+        }
+    }
+}
+.coupons-block-footer-descr {
     padding: 0 10px;
     letter-spacing: -.002em;
     font-size: 14px;
@@ -626,16 +646,16 @@ a {
 .descr-details-text {
     display: inline;
 }
-.coupons-block-header-descr input[type=checkbox] {
+.coupons-block-footer-descr input[type=checkbox] {
     display: none;
 }
-.coupons-block-header-descr input[type=checkbox] + .descr-details-open + .descr-details-text {
+.coupons-block-footer-descr input[type=checkbox] + .descr-details-open + .descr-details-text {
     display: none;
 }
-.coupons-block-header-descr input[type=checkbox]:checked + .descr-details-open {
+.coupons-block-footer-descr input[type=checkbox]:checked + .descr-details-open {
     display: none;
 }
-.coupons-block-header-descr input[type=checkbox]:checked + .descr-details-open + .descr-details-text {
+.coupons-block-footer-descr input[type=checkbox]:checked + .descr-details-open + .descr-details-text {
     display: inline;
 }
 .coupons-block-item {
@@ -794,7 +814,7 @@ a {
     color: $headers-text-color;
     font-size: 24px;
 }
-.offers-block-header, .coupons-block-header-title h1, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2, .article-preview h1 {
+.offers-block-header, .side-menu-section .menu-title, .content-article-block h1, .content-article-block h2, .article-preview h1 {
     position: relative;
     letter-spacing: -.025em;
     text: {
@@ -969,7 +989,7 @@ li.active {
         color: $main-red-color;
     }
 }
-.content-article-block, .article-preview, .coupons-block-header-title {
+.content-article-block, .article-preview{
     h1, h2 {
         display: block;
         font-weight: bold;
@@ -1220,7 +1240,7 @@ li.active {
         max-height: 100%;
     }
 }
-.article-previews:after, .article-preview-content:after, .coupons-block-header:after {
+.article-previews:after, .article-preview-content:after, .coupons-block-footer:after, .coupons-block-header:after {
     content:'';
     clear: both;
     display: block;
@@ -1658,6 +1678,16 @@ li.active {
     .main-content {
         padding: 16px 5px;
     }
+    .coupons-block-footer-logo {
+        width: 80px;
+        height: 80px;
+    }
+    .coupons-block-header-logo {
+        width: 80px;
+    }
+    .coupons-block-header-title h1 {
+        font-size: 28px;
+    }
     .coupon-block-item-logo {
         width: 90px;
         height: 90px;
@@ -1785,13 +1815,19 @@ li.active {
         float: none;
         width: 100%;
     }
-    .coupons-block-header-logo {
-        width: 100px;
-        height: 100px;
+    .coupons-block-footer-logo {
+        width: 80px;
+        height: 80px;
         margin: 0 11px 5px 0;
     }
-    .coupon-block-item-logo {
+    .coupon-block-item-logo, .coupons-block-header-logo {
         display: none;
+    }
+    .coupons-block-header-title {
+        padding-right: 0;
+        h1 {
+            font-size: 28px;
+        }
     }
     .coupon-block-item-right {
         min-height: none;
@@ -1852,13 +1888,13 @@ li.active {
         height: 21px;
         margin-top: 0;
     }
-.search-result-discount  {
-    float: right;
-    line-height: 24px;
-    vertical-align: middle;
-    width: 66px;
-    text-align: center;
-    color: $main-red-color;
-    font-size: 16px
-}
+    .search-result-discount  {
+        float: right;
+        line-height: 24px;
+        vertical-align: middle;
+        width: 66px;
+        text-align: center;
+        color: $main-red-color;
+        font-size: 16px
+    }
 }
