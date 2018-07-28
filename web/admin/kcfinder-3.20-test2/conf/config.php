@@ -52,7 +52,7 @@ return array(
     'thumbWidth' => 100,
     'thumbHeight' => 100,
 
-    'watermark' => "",
+    'watermark' => "watermark.png",
 
 
 // DISABLE / ENABLE SETTINGS
