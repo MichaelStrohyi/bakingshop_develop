@@ -610,7 +610,7 @@ a {
     vertical-align: middle;
 }
 .coupons-block-header-title {
-    padding-right: 10px;
+    padding-left: 10px;
     overflow: hidden;
     display: table-cell;
     vertical-align: middle;
@@ -618,9 +618,8 @@ a {
     h1 {
         margin: 0;
         font: {
-            size: 32px;
+            size: 34px;
             weight: bold;
-            style: italic;
         }
     }
 }
@@ -1686,7 +1685,7 @@ li.active {
         width: 80px;
     }
     .coupons-block-header-title h1 {
-        font-size: 28px;
+        font-size: 30px;
     }
     .coupon-block-item-logo {
         width: 90px;
@@ -1824,9 +1823,9 @@ li.active {
         display: none;
     }
     .coupons-block-header-title {
-        padding-right: 0;
+        padding-left: 0;
         h1 {
-            font-size: 28px;
+            font-size: 30px;
         }
     }
     .coupon-block-item-right {
