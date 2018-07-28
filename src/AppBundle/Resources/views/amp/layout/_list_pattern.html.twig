@@ -6,6 +6,27 @@
             {% endfor %}
         </ul>
     </div>
+    {% if featured_stores is defined and featured_stores is not empty %}
+        <div class="featured-stores-list">
+            Featured Stores
+            <ul>
+            {% for store in featured_stores %}
+                <li>
+                    <div class="featured-stores-item-logo">
+                        <a href="{{ path(store, {'prefix': amp_prefix}) }}">
+                            {% if store.logo is not null and store.logo.filename is not null %}
+                                <amp-img alt src="{{ store_logo_prefix }}/{{ store.logo.filename }}" width="{{ store.logo.width }}" height="{{ store.logo.height }}" layout="responsive"></amp-img>
+                            {% else %}
+                                <amp-img alt src="{{ default_logo_prefix }}/{{ store_default_logo }}" width="{{ default_logo_width }}" height="{{ default_logo_height }}" layout="responsive"></amp-img>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <a href="{{ path(store, {'prefix': amp_prefix}) }}"><span>{{ store.couponsCount }}</span> Coupon{{ store.couponsCount == 1 ? '' : 's' }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     <div class="article-previews">                    
         {% for key, group in items %}
             <div class="list-all-header" id="{{ key == '#' ? 'digits' : key }}">{{ key }}</div>

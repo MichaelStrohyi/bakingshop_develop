@@ -12,8 +12,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoreRepository extends EntityRepository
 {
+    const FEATURED_LIST_LIMIT = 10;
+
     /**
-     * Return list aff all stores ordered by name
+     * Return list off all stores ordered by name
      *
      * @return Store
      * @author Michael Strohyi
@@ -158,5 +160,63 @@ class StoreRepository extends EntityRepository
         };
 
         return $res;
+    }
+
+    /**
+     * Return list off featured stores ordered randomly. List size is limited by given limit
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getFeaturedStores($limit = self::FEATURED_LIST_LIMIT)
+    {
+        # get all stores with true is_featured property from db
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s FROM AppBundle:Store s '
+                . 'WHERE s.logo is not null '
+                . 'AND s.is_featured = true '
+                . 'ORDER BY s.id ASC'
+            );
+        $stores = $query->getResult();
+        $res = [];
+        # while stores list is not empty iterations count not > given limit
+        while (!empty($stores) && $limit > 0) {
+            # cut random store from stores list
+            list($store, $stores) = $this->getRandomItem($stores);
+            # continue if current store has no actual coupons
+            if ($store->getCouponsCount() == 0) {
+                continue;
+            }
+            # add cutted store into result list
+            $res[] = $store;
+            # subtract this iteration from limit
+            $limit--;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Get random item from given list and return this item and list without this item
+     *
+     * @return array|null
+     * @author Michael Strohyi
+     **/
+
+    private function getRandomItem($items)
+    {
+        # if given items is emoty return
+        $count = count($items);
+        if ($count == 0) {
+            return;
+        }
+        # get random item from items list
+        $index = rand(0, $count-1);
+        $item = $items[$index];
+        # cut this item from items list
+        array_splice($items, $index, 1);
+
+        return [$item, $items];
     }
 }

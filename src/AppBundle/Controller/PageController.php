@@ -164,6 +164,9 @@ class PageController extends Controller
         if ($slug == Store::PAGE_TYPE) {
             list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(), $page);
             $parameters['type_title'] = 'Stores';
+            if ($page == 0) {
+                $parameters['featured_stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->getFeaturedStores();
+            }
         }
         else {
             list($parameters['articles'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Article")->findAllByType($slug), $page);
