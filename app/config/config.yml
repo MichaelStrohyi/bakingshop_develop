@@ -66,6 +66,9 @@ twig:
         store_default_logo: '%store_default_logo%'
         default_logo_width: '%default_logo_width%'
         default_logo_height: '%default_logo_height%'
+        google_analytics_key: '%google_analytics_key%'
+        statcounter_id: '%statcounter_id%'
+        statcounter_key: '%statcounter_key%'
 
 # Assetic Configuration
 assetic:

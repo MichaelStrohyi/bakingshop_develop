@@ -9,7 +9,7 @@
         <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicons/android-chrome-192x192.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicons/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ asset('favicons/site.webmanifest') }}">
-        <link rel="mask-icon" href="{{ asset('favicons/safari-pinned-tab.svg" color="#ec7b7d') }}">
+        <link rel="mask-icon" href="{{ asset('favicons/safari-pinned-tab.svg') }}" color="#ec7b7d">
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}">
         <meta name="msapplication-TileColor" content="#ec7b7d">
         <meta name="msapplication-TileImage" content="{{ asset('favicons/mstile-144x144.png') }}">
@@ -29,6 +29,15 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         {% block stylesheets %}{% endblock %}
+        {% if app.environment == 'prod' %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122956438-1"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ google_analytics_key }}');
+            </script>
+        {% endif %}
     </head>
     <body onunload="">
         {% block body %}{% endblock %}
@@ -38,5 +47,19 @@
             <script src="{{ asset("bundles/app/plugins/fresco/fresco.js") }}"></script>
 
         {% block javascripts %}{% endblock %}
+        {% if app.environment == 'prod' %}
+            <script type="text/javascript">
+                var sc_project={{ statcounter_id }};
+                var sc_invisible=1;
+                var sc_security="{{ statcounter_key }}";
+                var sc_https=1;
+            </script>
+            <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+            <noscript>
+                <div class="statcounter">
+                    <a title="Web Analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="//c.statcounter.com/{{ statcounter_id }}/0/{{ statcounter_key }}/1/" alt="Web Analytics"></a>
+                </div>
+            </noscript>
+        {% endif %}
     </body>
 </html>

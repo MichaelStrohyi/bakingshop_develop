@@ -28,6 +28,10 @@
       %}
           {{ fileGetContents(asset_url)|raw }}
       {% endstylesheets %}
+
+      {% if app.environment == 'prod' %}
+        statcounter {width: 1px;height:1px;}
+      {% endif %}
     </style>
 {% endblock %}
 
