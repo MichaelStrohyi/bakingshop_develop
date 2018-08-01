@@ -57,9 +57,13 @@ a {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 14px 10px 0 100px;
-    width: 100%;
+    padding: 14px 10px 0 0;
+    width: 44px;
     box-sizing: border-box;
+    &:hover {
+        padding-left: 100px;
+        width: 100%;
+    }
     form {
         width: 100%;
         text-align: right;
@@ -235,16 +239,23 @@ a {
     z-index: 9;
     position: relative;
     padding: 5px 0;
+    border-spacing: 5px;
     & > li {
         display: table-cell;
         width: 1%;
         box-sizing: border-box;
+        vertical-align: middle;
         text: {
             align: center;
             transform: capitalize;
         }
         position: relative;
-        border: 5px solid transparent;
+        border: 2px solid $main-red-color;
+        background-color: $coupons-block-item-bg;
+        padding: 0;
+        &:hover {
+            background-color: $menu-hover-bg;
+        }
     }
     a {
         color: $main-red-color;
@@ -254,9 +265,7 @@ a {
             size: 18px;
         }
         display: block;
-        background-color: $coupons-block-item-bg;
         padding: 4px;
-        border: 2px solid $main-red-color;
         &:hover {
             background-color: $menu-hover-bg;
             opacity: 1;
@@ -265,13 +274,11 @@ a {
 }
 .top-menu-submenu {
     position: absolute;
-    left: 0px;
+    left: -2px;
     top: 100%;
     visibility: hidden;
     opacity: 0;
     border: 2px solid $main-red-color;
-    border-top: none;
-    box-sizing: border-box;
     .top-menu-item:hover > & {
         transition: opacity 0.5s ease;
         visibility: visible;
@@ -906,7 +913,6 @@ a {
     padding: 10px 10px 0 10px;
     font-size: 20px;
     font-family: 'Verdana', sans-serif;
-
     ul {
         display: block;
         list-style: none;
