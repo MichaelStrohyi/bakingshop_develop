@@ -2,7 +2,7 @@
     {% for menu in menus %}
         {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_BOTTOM') and menu.items is not empty %}
         <div class="footer-menu-block">
-            <div><span>{{ menu.header }}</span></div>
+{#            <div><span>{{ menu.header }}</span></div>#}
             <nav>
                 <ul class="footer-menu">
                     {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
