@@ -1,4 +1,4 @@
-{% if page == 0 %}
+{% if page is defined and page == 0 %}
     <div class="list-all-navigation">Browse: <a href="">all </a>
         <ul>
             {% for key, group in items %}

@@ -31,9 +31,8 @@ class PageController extends Controller
         $parameters = [
             'request' => $request,
             'article' => $article,
-            'type' => $article->getType(),
-            'type_title' => $article->getTypeTitle($article->getType()),
             'prefix' => $prefix,
+            'homepage' => true,
         ];
 
         return $this->forward('AppBundle:Article:page', $parameters);

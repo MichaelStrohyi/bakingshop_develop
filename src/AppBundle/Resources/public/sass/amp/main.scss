@@ -949,6 +949,11 @@ a {
         display: block;
     }
 }
+.featured-stores-previews-title {
+    font-size: 20px;
+    font-family: 'Verdana', sans-serif;
+    margin-top: 10px;
+}
 @media screen and (min-width: 800px) {
     .content {
         padding: 24px;
@@ -968,6 +973,12 @@ a {
     .coupon-block-item-descr {
         padding-right: 194px;
     }
+    .featured-stores-previews {
+        margin: 0 -10px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 10px;
+    }
 }
 @media screen and (min-width: 620px) and (max-width: 699px) {
     .article-preview {
@@ -975,6 +986,12 @@ a {
     }
     .coupon-block-item-descr {
         padding-right: 194px;
+    }
+    .featured-stores-previews {
+        margin: 0 -10px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 10px;
     }
 }
 @media screen and (min-width: 540px) and (max-width: 619px) {
@@ -1008,6 +1025,12 @@ a {
             left: 3px;
             right: 3px;
         }
+    }
+    .featured-stores-previews {
+        margin: 0 -3px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 3px;
     }
 }
 @media screen and (min-width: 340px) and (max-width: 539px) {
@@ -1077,6 +1100,9 @@ a {
             right: 2px;
         }
     }
+    .featured-stores-previews-title {
+        text-align: center;
+    }
 }
 @media screen and (max-width: 339px) {
     .coupons-block-footer-logo {
@@ -1122,5 +1148,8 @@ a {
             left: 2px;
             right: 2px;
         }
+    }
+    .featured-stores-previews-title {
+        text-align: center;
     }
 }

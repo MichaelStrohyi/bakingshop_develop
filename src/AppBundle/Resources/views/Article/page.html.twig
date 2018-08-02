@@ -19,6 +19,12 @@
     </div>
 #}
 </article>
+{% if featured_stores is defined and featured_stores is not empty%}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">Featured Stores</div>
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}

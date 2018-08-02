@@ -20,7 +20,7 @@ class ArticleController extends Controller
      * @ParamConverter("article", class="AppBundle:Article")
      * @Template()
      */
-    public function pageAction(Article $article, Request $request, $prefix = null)
+    public function pageAction(Article $article, Request $request, $prefix = null, $homepage = false)
     {
         $parameters = [
             'article' => $article,
@@ -29,6 +29,10 @@ class ArticleController extends Controller
             'type' => $article->getType(),
             'type_title' => $article->getTypeTitle($article->getType()),
         ];
+
+        if ($homepage) {
+            $parameters['featured_stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->getFeaturedStores();
+        }
 
         # if prefix is not set render html page else render amp-html page
         return empty($prefix) ? $this->render('AppBundle:Article:page.html.twig', $parameters) : $this->render('AppBundle:amp/Article:page.html.twig', $parameters);
