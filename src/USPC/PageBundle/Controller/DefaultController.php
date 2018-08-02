@@ -37,7 +37,11 @@ class DefaultController extends Controller
         $postfix =  strpos($slug, $stores_postfix) === strlen($slug) - strlen($stores_postfix) ? true : false;
         # add forward slash at the beginning
         $url = '/' . $slug;
-
+//!!! mockup
+        if ($slug = 'shipping-information') {
+            return $this->makeRedirect('/', $prefix, $request->getBaseUrl());
+        }
+//!!! endof mockup
         # find page with the given url and flag, if postfix was added to the url to find page
         list($page, $with_postfix) = $this->getDoctrine()->getRepository('USPCPageBundle:Page')->findPageByUrl($url);
         $this->page = $page;
