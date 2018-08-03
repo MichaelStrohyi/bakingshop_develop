@@ -38,7 +38,7 @@ class DefaultController extends Controller
         # add forward slash at the beginning
         $url = '/' . $slug;
 //!!! mockup
-        if ($slug = 'shipping-information') {
+        if ($slug == 'shipping-information') {
             return $this->makeRedirect('/', $prefix, $request->getBaseUrl());
         }
 //!!! endof mockup
