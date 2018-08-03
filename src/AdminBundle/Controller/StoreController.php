@@ -18,7 +18,7 @@ use AdminBundle\Form\StoreType;
  */
 class StoreController extends PageController
 {
-    const COUPONS_LIMIT = 200;
+    const COUPONS_LIMIT = 70;
 
     /**
      * @Route("/", name="admin_store_index")
@@ -284,6 +284,24 @@ class StoreController extends PageController
         if (empty($feed_coupons)) {
             return;
         }
+        # sort feed_coupons array by codes (coupons with codes go first) and by rating (desc)
+        foreach ($feed_coupons as $key => $store_coupons) {
+            usort($feed_coupons[$key], function ($a, $b) {
+                if (empty($a['code']) && !empty($b['code'])) {
+                    return 1;
+                }
+
+                if (!empty($a['code']) && empty($b['code'])) {
+                    return -1;
+                }
+
+                if ($a['rating'] == $b['rating']) {
+                    return 0;
+                }
+
+                return ($a['rating'] < $b['rating']) ? 1 : -1;
+            });
+        }
 
         unset($data);
         $em = $doctrine->getEntityManager();
@@ -306,14 +324,13 @@ class StoreController extends PageController
             # reset lists of coupons and new coupons for current store
             $coupons_list = [];
             $new_coupons = [];
-            $coupons_count = 0;
-
+            $coupons_count = $store->getManualCouponsCount();
             $cur_date = new \DateTime();
             $cur_date->setTime(0, 0, 0);
             # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
                 # break if coupons count for store is more, than limit
-                if (++$coupons_count > self::COUPONS_LIMIT) {
+                if ($coupons_count > self::COUPONS_LIMIT) {
                     break;
                 }
                 # get coupon-object with given feed id from db
@@ -391,6 +408,7 @@ class StoreController extends PageController
                 if (!empty($store_coupon) && $store_coupon->getLastUpdated() >= $this->convertDateFromString($feed_coupon['last_updated'], false)) {
                     # add feed-coupon id into coupons list
                     $coupons_list[] = $feed_coupon['id'];
+                    $coupons_count++;
                     continue;
                 }
                 # if coupon-object for current feed-coupon exists (feed-coupon is new for store) create new coupon-object
@@ -429,6 +447,7 @@ class StoreController extends PageController
                 $coupons_updated = true;
                 # add feed-coupon id into coupons list
                 $coupons_list[] = $feed_coupon['id'];
+                $coupons_count++;
             }
 
             # if mode of autoupdate is not incremental remove from current store coupons, which are absent coupons list

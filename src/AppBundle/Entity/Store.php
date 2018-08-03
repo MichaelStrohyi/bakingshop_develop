@@ -608,4 +608,22 @@ class Store
 
         return $res;
     }
+
+    /**
+     * Return count of coupons, added by operators manually
+     *
+     * @return integer
+     * @author Michael Strohyi
+     **/
+    public function getManualCouponsCount()
+    {
+        $res = 0;
+        foreach ($this->getCoupons()->getIterator() as $coupon) {
+            if (empty($coupon->getFeedId())) {
+                $res++;
+            }
+        }
+
+        return $res;
+    }
 }
