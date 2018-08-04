@@ -36,12 +36,12 @@
                         {% endif %}
                         <div class="coupon-block-item-descr">
                             <div class="coupon-block-item-label">{{ store_coupon.label }}</div>
-                            <div class="coupon-block-item-verify">
+{#                            <div class="coupon-block-item-verify">
                                 Verified {{ store_coupon.whenVerified }}.
                                 {% if store_coupon.addedBy is not null %}
                                     Added by {{ store_coupon.addedBy.name }}
                                 {% endif %}
-                            </div>
+                            </div>#}
                             <div class="coupon-block-item-code">
                                 {% if store_coupon.encryptedCode is not empty %}
                                     <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon CODE</span></a>
