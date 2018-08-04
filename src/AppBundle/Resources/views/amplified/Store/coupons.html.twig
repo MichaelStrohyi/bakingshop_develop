@@ -57,25 +57,27 @@
                 </div>
             {% endif %}
         {% endfor %}
-        <div class="coupons-block-footer">
-            {% if store.logo is not null and store.logo.filename is not null %}
-                <div class="coupons-block-footer-logo">
-                    <div class="logo-wraper">
-                        <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
+        {% if store.description is not empty %}
+            <div class="coupons-block-footer">
+                {% if store.logo is not null and store.logo.filename is not null %}
+                    <div class="coupons-block-footer-logo">
+                        <div class="logo-wraper">
+                            <img src="{{ store_logo_prefix }}/{{ store.logo.filename }}" alt>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-            <div class="coupons-block-footer-descr">
-                {{ store.shortDescription }}
-                {% if store.shortDescription|length < store.description|length %}
-                    <input type="checkbox" id="descr-details">
-                    <label class="descr-details-open" for="descr-details">... more</label>
-                    <span class="descr-details-text">
-                        {{ store.restDescription }}
-                        <label class="descr-details-close" for="descr-details">less</label>
-                    </span>
                 {% endif %}
+                <div class="coupons-block-footer-descr">
+                    {{ store.shortDescription }}
+                    {% if store.shortDescription|length < store.description|length %}
+                        <input type="checkbox" id="descr-details">
+                        <label class="descr-details-open" for="descr-details">... more</label>
+                        <span class="descr-details-text">
+                            {{ store.restDescription }}
+                            <label class="descr-details-close" for="descr-details">less</label>
+                        </span>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
