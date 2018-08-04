@@ -15,14 +15,15 @@ class StoreRepository extends EntityRepository
     const FEATURED_LIST_LIMIT = 10;
 
     /**
-     * Return list off all stores ordered by name
+     * Return list off all stores with activity = true (or with any activity if param with_inactive is set to true) ordered by name
      *
+     * @param boolean $with_inactive
      * @return Store
      * @author Michael Strohyi
      **/
-    public function findAllByName()
+    public function findAllByName($with_inactive = false)
     {
-        return $this->findBy([], ['name' => 'asc']);
+        return $with_inactive ? $this->findBy([], ['name' => 'asc']) : $this->findBy(['activity' => true], ['name' => 'asc']);
     }
 
     /**
@@ -77,24 +78,27 @@ class StoreRepository extends EntityRepository
     }
 
     /**
-     * Return list off all stores, which have $subname in header
+     * Return list off all stores with activity = true (or with any activity if param with_inactive is set to true), which have $subname in header
      *
      * @param string $subname
      * @param int $limit
+     * @param boolean $with_inactive
      * @return array
      * @author Michael Strohyi
      **/
-    public function findBySubname($subname, $limit = null)
+    public function findBySubname($subname, $limit = null, $with_inactive = false)
     {
         # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
 
+        $query_param = $with_inactive ? '' : 'AND s.activity =true ';
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
-                . 'WHERE s.name LIKE :subname OR s.keywords LIKE :subname '
+                . 'WHERE (s.name LIKE :subname OR s.keywords LIKE :subname) '
+                . $query_param
                 . 'ORDER by s.name ASC'
             )
             ->setParameters([
@@ -163,19 +167,22 @@ class StoreRepository extends EntityRepository
     }
 
     /**
-     * Return list off featured stores ordered randomly. List size is limited by given limit
+     * Return list off featured stores  with activity = true (or with any activity if param with_inactive is set to true) ordered randomly. List size is limited by given limit
      *
+     * @param boolean $with_inactive
      * @return array
      * @author Michael Strohyi
      **/
-    public function getFeaturedStores($limit = self::FEATURED_LIST_LIMIT)
+    public function getFeaturedStores($limit = self::FEATURED_LIST_LIMIT, $with_inactive = false)
     {
+        $query_param = $with_inactive ? '' : 'AND s.activity = true ';
         # get all stores with true is_featured property from db
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
                 . 'WHERE s.logo is not null '
                 . 'AND s.is_featured = true '
+                . $query_param
                 . 'ORDER BY s.id ASC'
             );
         $stores = $query->getResult();

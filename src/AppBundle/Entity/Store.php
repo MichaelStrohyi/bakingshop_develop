@@ -20,6 +20,7 @@ class Store
 {
     const PAGE_TYPE = 'store';
     const URL_POSTFIX = '/coupons'; // WARNING! Change postfix only with changing urls for store pages in page db
+    const DEFAULT_ACTIVITY = true;
     /**
      * @var integer
      *
@@ -95,6 +96,13 @@ class Store
      * @ORM\Column(name="is_featured", type="boolean", nullable=false, options={"default"=false})
      **/
     private $is_featured;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="activity", type="boolean", nullable=false, options={"default"=true})
+     */
+    private $activity = self::DEFAULT_ACTIVITY;
 
     public function __construct()
     {
@@ -340,6 +348,29 @@ class Store
         $this->feedId = $feedId;
 
         return $this;
+    }
+
+    /**
+     * Set activity
+     *
+     * @param integer $activity
+     * @return Store
+     */
+    public function setActivity($activity)
+    {
+        $this->activity = $activity;
+
+        return $this;
+    }
+
+    /**
+     * Get activity
+     *
+     * @return integer
+     */
+    public function getActivity()
+    {
+        return $this->activity;
     }
 
     /**

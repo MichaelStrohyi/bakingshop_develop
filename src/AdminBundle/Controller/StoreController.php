@@ -26,7 +26,7 @@ class StoreController extends PageController
      */
     public function indexAction()
     {
-        $store_list = $this->getDoctrine()->getRepository("AppBundle:Store")->findAllByName();
+        $store_list = $this->getDoctrine()->getRepository("AppBundle:Store")->findAllByName(true);
 
         return [
             'store_list' => $store_list,

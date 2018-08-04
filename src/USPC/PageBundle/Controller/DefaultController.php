@@ -60,6 +60,9 @@ class DefaultController extends Controller
             # make redirect to new url
             return $this->makeRedirect($new_url, $prefix, $request->getBaseUrl());
         }
+        if (get_class($this->page_object) == 'AppBundle\Entity\Store' && !$this->page_object->getActivity()) {
+            return $this->makeRedirect('/', $prefix, $request->getBaseUrl());
+        }
         # if page is alias redirect to new url
         if ($page->isAlias()) {
             return $this->makeRedirect($this->page_object->getUrl(), $prefix, $request->getBaseUrl());

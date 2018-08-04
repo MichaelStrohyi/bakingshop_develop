@@ -19,6 +19,7 @@ class StoreType extends AbstractType
             ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\StoreLogo', 'label' => false])
             ->add('feedId', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'FMTC Id'])
             ->add('is_featured', null, ['label' => 'Featured store'])
+            ->add('activity', null, ['label' => 'Active store'])
         ;
     }
 
