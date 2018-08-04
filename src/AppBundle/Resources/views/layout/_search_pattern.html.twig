@@ -5,7 +5,7 @@
     {% endif %}
     {% for item in items %}
         <li class="search-result">
-            {% if items_type == constant('AppBundle\\Entity\\Store::PAGE_TYPE') %}
+            {% if items_type == constant('AppBundle\\Entity\\Store::PAGE_TYPE') and not amplified %}
                 <div class="search-result-logo">
                     {% if item.logo is not empty %}
                         <img src="{{ _context[items_type ~ '_logo_prefix'] }}/{{ item.logo.filename }}">
@@ -13,11 +13,7 @@
                 </div>
                 <div class="search-result-discount"><span>{{ item.mainDiscount is not empty ? 'Save ' ~ item.mainDiscount : ''}}</span></div>
                 <div class="search-result-header">
-                    {% if amplified %}
-                        <a href="{{ path(item, {'prefix': amp_prefix}) }}">{{ attribute(item, method) }}</a>
-                    {% else %}
-                        <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
-                    {% endif %}
+                    <a href="{{ path(item) }}">{{ attribute(item, method) }}</a>
                 </div>
             {% else %}
                 {% if amplified %}
