@@ -814,6 +814,7 @@ a {
     background-color: $background-color;
     li {
         padding-left: 4px;
+        text-transform: none;
         overflow: hidden;
         &.search-result-type {
             padding: {
