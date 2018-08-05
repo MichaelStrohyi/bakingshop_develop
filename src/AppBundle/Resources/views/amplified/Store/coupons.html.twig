@@ -44,9 +44,9 @@
                             </div>#}
                             <div class="coupon-block-item-code">
                                 {% if store_coupon.encryptedCode is not empty %}
-                                    <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon CODE</span></a>
+                                    <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>Show Coupon CODE</span></a>
                                 {% else %}
-                                        <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>ShowCoupon</span></a>
+                                        <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>Show Coupon</span></a>
                                 {% endif %}
                                 {% if store_coupon.expireDate is not null %}
                                     <span class="coupon-block-item-expire">expires: {{ store_coupon.expireDateProd }}</span>
