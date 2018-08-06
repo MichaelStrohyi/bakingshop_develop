@@ -14,7 +14,7 @@ class StoreCouponType extends AbstractType
         $builder
             ->add('label', 'textarea', ['attr' => ['rows' => '3', 'class' => 'coupon-label']])
             ->add('code', null, ['attr' => ['autocomplete' => 'off', 'class' => 'coupon-code']])
-            ->add('link', null, ['attr' => ['autocomplete' => 'off']])
+            ->add('link', null, ['attr' => ['autocomplete' => 'off', 'class' => 'coupon-link']])
             ->add('startDate', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'Starts'])
             ->add('expireDate', null, [
                 'attr' => ['autocomplete' => 'off'],

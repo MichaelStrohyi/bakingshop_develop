@@ -1,7 +1,17 @@
+cur_val = null
+
 window.removeLogo = (e, link) ->
     # open image in new window (window size = image size)
     e.preventDefault()
     link.closest('.form-group').remove()
+
+window.setLinkForAll = (e, link) ->
+    # open image in new window (window size = image size)
+    e.preventDefault()
+    cur_val = $(link.closest('div')).children('.coupon-link').val()
+    if (cur_val)
+        $('.coupon-link').each (index) ->
+            $(this).val cur_val
 
 $(document).ready () ->
     # add function for replacing some special symbols in name, keywords and description before submit
