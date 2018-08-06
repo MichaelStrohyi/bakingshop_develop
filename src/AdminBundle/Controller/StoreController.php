@@ -18,7 +18,8 @@ use AdminBundle\Form\StoreType;
  */
 class StoreController extends PageController
 {
-    const COUPONS_LIMIT = 70;
+    const DEFAULT_COUPONS_LIMIT = 70;
+    const ENLARGED_COUPONS_LIMIT = 110;
 
     /**
      * @Route("/", name="admin_store_index")
@@ -327,10 +328,11 @@ class StoreController extends PageController
             $coupons_count = $store->getManualCouponsCount();
             $cur_date = new \DateTime();
             $cur_date->setTime(0, 0, 0);
+            $coupons_limit = ini_get('max_input_vars') > 1999 ? self::ENLARGED_COUPONS_LIMIT : self::DEFAULT_COUPONS_LIMIT;
             # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
                 # break if coupons count for store is more, than limit
-                if ($coupons_count > self::COUPONS_LIMIT) {
+                if ($coupons_count > $coupons_limit) {
                     break;
                 }
                 # get coupon-object with given feed id from db
@@ -474,7 +476,7 @@ class StoreController extends PageController
             # check if coupons updated flag is set
             if ($coupons_updated) {
                 # set position for all store coupons according to actual position in list
-                $store->actualiseCouponsPosition(self::COUPONS_LIMIT);
+                $store->actualiseCouponsPosition($coupons_limit);
                 # save store into db
                 $em->persist($store);
             }
