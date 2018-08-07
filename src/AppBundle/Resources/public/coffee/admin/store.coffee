@@ -13,6 +13,13 @@ window.setLinkForAll = (e, link) ->
         $('.coupon-link').each (index) ->
             $(this).val cur_val
 
+$(document).on "change", "input[name=stores_filter]", () ->
+    stores_filter = $('[name="stores_filter"]:checked').val()
+    console.log stores_filter
+    $('.store-type').show()
+    if stores_filter isnt ''
+        $('.store-type').not($('.' + stores_filter + '-store')).hide()
+
 $(document).ready () ->
     # add function for replacing some special symbols in name, keywords and description before submit
     $("#edit-form").on 'submit', (event) ->

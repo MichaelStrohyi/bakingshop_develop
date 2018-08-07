@@ -3,14 +3,20 @@
 {% block title %}Store | {{ parent() }}{% endblock %}
 
 {% block content %}
-
-    <header>
-        <h1>All Stores</h1>
-    </header>
-
-    <div>
-        <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
-    </div>
+    <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
+    {% if store_list is not null %}
+        Show stores:
+            <label class="radio-inline">
+                <input type="radio" name="stores_filter" value="" checked>all
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="stores_filter" value="active">active
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="stores_filter" value="deactivated">deactivated
+            </label>
+            </select>
+    {% endif %}
 
     <table class="table table-hover">
         <thead>
@@ -22,7 +28,7 @@
         </thead>
         <tbody>
             {% for store in store_list %}
-                <tr>
+                <tr class="store-type {{ store.activity ? 'active' : 'deactivated' }}-store">
                     <td>{{ loop.index }}</td>
                     <td>{{ store.name }}</td>
                     <td>
@@ -34,4 +40,14 @@
             {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

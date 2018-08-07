@@ -18,6 +18,16 @@ window.setLinkForAll = function(e, link) {
   }
 };
 
+$(document).on("change", "input[name=stores_filter]", function() {
+  var stores_filter;
+  stores_filter = $('[name="stores_filter"]:checked').val();
+  console.log(stores_filter);
+  $('.store-type').show();
+  if (stores_filter !== '') {
+    return $('.store-type').not($('.' + stores_filter + '-store')).hide();
+  }
+});
+
 $(document).ready(function() {
   return $("#edit-form").on('submit', function(event) {
     event.preventDefault();
