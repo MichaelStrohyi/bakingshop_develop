@@ -3,9 +3,11 @@ jQuery(document).ready(function() {
   var $collectionHolder;
   $collectionHolder = $('ul.mutable-items');
   return $("#edit-items").on('submit', function(event) {
-    return $collectionHolder.find("li.list-item .item-position").each(function(index) {
+    event.preventDefault();
+    $collectionHolder.find("li.list-item .item-position").each(function(index) {
       return $(this).val(index);
     });
+    return $(this).unbind('submit').submit();
   });
 });
 

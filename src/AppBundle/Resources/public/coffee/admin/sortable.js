@@ -17,9 +17,11 @@ jQuery(document).ready(function() {
     return addAllActionLinks($(this));
   });
   return $("#edit-" + itemType + "s").on('submit', function(event) {
-    return $collectionHolder.find("li.list-item ." + itemType + "-position").each(function(index) {
+    event.preventDefault();
+    $collectionHolder.find("li.list-item ." + itemType + "-position").each(function(index) {
       return $(this).val(index);
     });
+    return $(this).unbind('submit').submit();
   });
 });
 
