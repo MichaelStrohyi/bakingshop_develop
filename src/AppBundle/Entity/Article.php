@@ -119,6 +119,7 @@ class Article
      * @var string
      *
      * @ORM\Column(name="metatags", type="text", nullable=true)
+     * @AppAssert\ValidHTML
      */
     private $metatags;
 
