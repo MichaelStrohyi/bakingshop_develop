@@ -99,6 +99,10 @@ class ArticleController extends PageController
      **/
     public function deleteAction(Article $article, Request $request)
     {
+        if ($article->getId() === 0) {
+            return $this->redirectToRoute("admin_article_index");
+        }
+
         $form = $this->createFormBuilder([])->getForm();
         $form->handleRequest($request);
 

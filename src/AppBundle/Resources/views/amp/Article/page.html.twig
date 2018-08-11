@@ -4,9 +4,16 @@
 
 {% block metatags %}
     {{ parent() }}
-    {{ article.metatags|raw }}
-    {% if article.keywordsString is not empty %}
-        <meta name="keywords" content="{{ article.keywordsString }}">
+    {% if homepage is defined %}
+        {% set item = homepage %}
+    {% else %}
+        {% set item = article %}
+    {% endif %}
+    {% if item is not empty %}
+        {{ item.metatags|raw }}
+        {% if item.keywordsString is not empty %}
+            <meta name="keywords" content="{{ item.keywordsString }}">
+        {% endif %}
     {% endif %}
 {% endblock %}
 

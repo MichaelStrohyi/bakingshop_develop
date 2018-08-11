@@ -33,7 +33,9 @@
                     <td><a href="{{ path(article) }}" target="_blank">{{ article.url }}</a></td>
                     <td>
                         <a href="{{ path("admin_article_edit", {id: article.id}) }}">Edit</a>
-                        <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>
+                        {% if article.id != 0 %}
+                            <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

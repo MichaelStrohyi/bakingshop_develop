@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityRepository;
 class ArticleRepository extends EntityRepository
 {
     /**
-     * Return list aff all article ordered by header
+     * Return list aff all article (_homepage included) ordered by header
      *
-     * @return void
+     * @return array
      * @author Michael Strohyi
      **/
     public function findAllByHeader()
@@ -31,7 +31,13 @@ class ArticleRepository extends EntityRepository
      **/
     public function getHomepage()
     {
-        return $this->findOneBy(['is_homepage' => true]);
+        $query = $this->getEntityManager()->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.is_homepage = true '
+                . 'AND a.id != 0'
+            );
+
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -50,7 +56,8 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'UPDATE AppBundle:Article a '
                 . 'SET a.is_homepage = false '
-                . 'WHERE a.is_homepage = true and a.id <> :id'
+                . 'WHERE a.is_homepage = true '
+                . 'AND a.id <> :id'
             )
             ->setParameters([
                     'id' => $article->getId(),
@@ -86,12 +93,21 @@ class ArticleRepository extends EntityRepository
     /**
      * Return list off all articles with given $type ordered by header
      *
-     * @return void
+     * @return array
      * @author Michael Strohyi
      **/
     public function findAllByType($type)
     {
-        return $this->findBy(['type' => $type], ['header' => 'asc']);
+        $query = $this->getEntityManager()->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.type = :type '
+                . 'AND a.id != 0'
+            )
+            ->setParameters([
+                'type' => $type,
+            ]);
+
+        return $query->getResult();
     }
 
     /**
@@ -114,6 +130,7 @@ class ArticleRepository extends EntityRepository
                 'SELECT a FROM AppBundle:Article a '
                 . 'WHERE a.header LIKE :subname '
                 . 'AND a.type != :type '
+                . 'AND a.id != 0 '
                 . 'ORDER by a.header ASC'
             )
             ->setParameters([
@@ -139,6 +156,7 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'SELECT a.header FROM AppBundle:Article a '
                 . 'WHERE a.body LIKE :filename '
+                . 'AND a.id != 0'
             )
             ->setParameters([
                 'filename' => '%' . $filename . '%',
@@ -148,7 +166,7 @@ class ArticleRepository extends EntityRepository
     }
 
     /**
-     * Return list off all articles, which have $prodUrl in prodBody
+     * Return list off all articles, which have $url in prodBody
      *
      * @param string $url
      * @return array
@@ -164,6 +182,7 @@ class ArticleRepository extends EntityRepository
             ->createQuery(
                 'SELECT a FROM AppBundle:Article a '
                 . 'WHERE a.body LIKE :url'
+                . 'AND a.id != 0'
             )
             ->setParameters([
                 'url' => '%' . $url . '%'
@@ -175,5 +194,16 @@ class ArticleRepository extends EntityRepository
         }
 
         return $res;
+    }
+
+    /**
+     * Return list aff all article (_homepage included) ordered by header
+     *
+     * @return Article
+     * @author Michael Strohyi
+     **/
+    public function getHomepageInfo()
+    {
+        return $this->findOneBy(['id' => 0]);
     }
 }

@@ -32,7 +32,7 @@ class PageController extends Controller
             'request' => $request,
             'article' => $article,
             'prefix' => $prefix,
-            'homepage' => true,
+            'is_homepage' => true,
         ];
 
         return $this->forward('AppBundle:Article:page', $parameters);
