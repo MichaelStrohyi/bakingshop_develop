@@ -2,6 +2,14 @@
 
 {% block title %}{{ store.name }} coupons | {{ parent() }}{% endblock %}
 
+{% block metatags %}
+    {{ parent() }}
+    {{ store.metatags|raw }}
+    {% if store.keywordsString is not empty %}
+        <meta name="keywords" content="{{ store.keywordsString }}">
+    {% endif %}
+{% endblock %}
+
 {% block main %}
     <div class="content-coupons-block">
         <div class="coupons-block-header">
