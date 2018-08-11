@@ -111,6 +111,20 @@ class Article
     /**
      * @var string
      *
+     * @ORM\Column(name="keywords", type="text", nullable=true)
+     */
+    private $keywords;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="metatags", type="text", nullable=true)
+     */
+    private $metatags;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="prod_body", type="text", nullable=true)
      */
     private $prodBody;
@@ -142,7 +156,7 @@ class Article
     /**
      * Get header
      *
-     * @return string 
+     * @return string
      */
     public function getHeader()
     {
@@ -165,7 +179,7 @@ class Article
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
     public function getUrl()
     {
@@ -201,7 +215,7 @@ class Article
     /**
      * Get body
      *
-     * @return string 
+     * @return string
      */
     public function getBody()
     {
@@ -326,7 +340,7 @@ class Article
     /**
      * Get author
      *
-     * @return string 
+     * @return string
      */
     public function getAuthor()
     {
@@ -349,7 +363,7 @@ class Article
     /**
      * Get ampBody
      *
-     * @return string 
+     * @return string
      */
     public function getAmpBody()
     {
@@ -428,11 +442,57 @@ class Article
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set keywords
+     *
+     * @param string $keywords
+     * @return Article
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
+
+        return $this;
+    }
+
+    /**
+     * Get keywords
+     *
+     * @return string
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * Set metatags
+     *
+     * @param string $metatags
+     * @return Article
+     */
+    public function setMetatags($metatags)
+    {
+        $this->metatags = $metatags;
+
+        return $this;
+    }
+
+    /**
+     * Get metatags
+     *
+     * @return string
+     */
+    public function getMetatags()
+    {
+        return $this->metatags;
     }
 
     /**
@@ -514,5 +574,16 @@ class Article
         $this->setProdBody($redirected_body);
         # save prepared body for amp-production
         $this->setAmpBody($this->prepareAmpBody($redirected_body));
+    }
+
+    /**
+     * Return keywords in format of one string. Keywords are separated by ', '
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function getKeywordsString()
+    {
+        return implode(', ', array_filter(explode(PHP_EOL, $this->getKeywords())));
     }
 }

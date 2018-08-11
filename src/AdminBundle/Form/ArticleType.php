@@ -33,7 +33,9 @@ class ArticleType extends AbstractType
                 'choices_as_values' => true,
             ])
             ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\ArticleLogo', 'label' => false])
+            ->add('keywords', 'textarea', ['attr' => ['rows' => '3']])
             ->add('description', 'textarea', ['attr' => ['rows' => '3']])
+            ->add('metatags', 'textarea', ['attr' => ['rows' => '3']])
             ->add('body', 'ckeditor')
             ->add('is_homepage', null, ['label' => 'Use as Homepage'])
         ;
