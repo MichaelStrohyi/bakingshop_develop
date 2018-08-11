@@ -15,6 +15,7 @@ class StoreType extends AbstractType
             ->add('name', null, ['attr' => ['autocomplete' => 'off']])
             ->add('link', null, ['attr' => ['autocomplete' => 'off']])
             ->add('keywords', 'textarea', ['attr' => ['rows' => '5']])
+            ->add('metatags', 'textarea', ['attr' => ['rows' => '5']])
             ->add('description', 'textarea', ['attr' => ['rows' => '5']])
             ->add('logo', new ImageType, ['required' => false, 'data_class' => '\AppBundle\Entity\StoreLogo', 'label' => false])
             ->add('feedId', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'FMTC Id'])

@@ -66,6 +66,13 @@ class Store
     private $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="metatags", type="text", nullable=true)
+     */
+    private $metatags;
+
+    /**
      * @var StoreCoupon[]
      *
      * @ORM\OneToMany(targetEntity="StoreCoupon", mappedBy="store", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -166,13 +173,6 @@ class Store
     }
 
     /**
-     * Set keywords
-     *
-     * @param string $keywords
-     * @return Store
-     */
-
-    /**
      * @ORM\PostLoad
      *
      * @return void
@@ -185,6 +185,12 @@ class Store
         }
     }
 
+    /**
+     * Set keywords
+     *
+     * @param string $keywords
+     * @return Store
+     */
     public function setKeywords($keywords)
     {
         $this->keywords = $keywords;
@@ -371,6 +377,29 @@ class Store
     public function getActivity()
     {
         return $this->activity;
+    }
+
+    /**
+     * Set metatags
+     *
+     * @param string $metatags
+     * @return Store
+     */
+    public function setMetatags($metatags)
+    {
+        $this->metatags = $metatags;
+
+        return $this;
+    }
+
+    /**
+     * Get metatags
+     *
+     * @return string
+     */
+    public function getMetatags()
+    {
+        return $this->metatags;
     }
 
     /**
@@ -656,5 +685,16 @@ class Store
         }
 
         return $res;
+    }
+
+    /**
+     * Return keywords in format of one string. Keywords are separated by ', '
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function getKeywordsString()
+    {
+        return implode(', ', array_filter(explode(PHP_EOL, $this->getKeywords())));
     }
 }
