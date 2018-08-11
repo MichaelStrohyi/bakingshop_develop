@@ -1,5 +1,9 @@
 {% extends ":amp:base.html.twig" %}
 
+{% block metatags %}
+    <link rel="canonical" href="{{ crosslink }}">
+{% endblock %}
+
 {% block body %}
     <section class="content">
         <header class="header">

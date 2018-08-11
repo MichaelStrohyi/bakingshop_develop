@@ -2,6 +2,14 @@
 
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
+{% block metatags %}
+    {{ parent() }}
+    {{ article.metatags|raw }}
+    {% if article.keywordsString is not empty %}
+        <meta name="keywords" content="{{ article.keywordsString }}">
+    {% endif %}
+{% endblock %}
+
 {% block main %}
 
 <article class="content-article-block">
