@@ -23,6 +23,7 @@ class StoreType extends AbstractType
             ->add('feedId', null, ['attr' => ['autocomplete' => 'off'], 'label' => 'FMTC Id'])
             ->add('is_featured', null, ['label' => 'Featured store'])
             ->add('activity', null, ['label' => 'Active store'])
+            ->add('useFeedLinks', null, ['label' => 'Use feed links for coupons'])
         ;
     }
 

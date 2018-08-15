@@ -269,6 +269,7 @@ class StoreController extends PageController
             $cur_coupon = [
                 'id' => $coupon['CouponID'],
                 'label' => $coupon['Label'],
+                'network' => strtolower($coupon['Network']),
                 'code' => $coupon['CouponCode'],
                 'link' => $coupon['AffiliateURL'],
                 'starts' => $coupon['StartDate'],
@@ -308,6 +309,7 @@ class StoreController extends PageController
         $em = $doctrine->getEntityManager();
         $operator_repo = $doctrine->getRepository("AppBundle:Operator");
         $operators =  $operator_repo->getAllOperators();
+        $feed_affiliates = $doctrine->getRepository("AppBundle:FeedAffiliate")->getAllAsNamedArray();
         # reset stores list
         $stores_list = [];
         # run through feed merchants array
@@ -422,12 +424,22 @@ class StoreController extends PageController
                         ->setAddedBy($operator_repo->getRandomItem($operators))
                     ;
                 }
+                # get store link as link for curent feed-coupon 
+                $feed_coupon_link = $store->getLink();
+                # if flas to use links from feed is set for current store and feed-affiliate replace rule for current feed-coupon's network is set
+                if ($store->getUseFeedLinks() && array_key_exists($feed_coupon['network'], $feed_affiliates)) {
+                    $feed_affiliate = $feed_affiliates[$feed_coupon['network']];
+                    # check, if feed-affiliate replace rule is properly filled: affiliate_id, feed_affiliate_id is not empty and feed_affiliate_id have only one match in feed-coupon link
+                    if (!empty($feed_affiliate['feed_affiliate_id']) && !empty($feed_affiliate['affiliate_id']) && substr_count($feed_coupon['link'], $feed_affiliate['feed_affiliate_id']) == 1) {
+                        # replace feed_affiliate_id by affilite_id in feed-coupon's link and get it as link for curent feed-coupon 
+                        $feed_coupon_link = str_replace($feed_affiliate['feed_affiliate_id'], $feed_affiliate['affiliate_id'], $feed_coupon['link']);
+                    }
+                }
                 # fill information for new coupon-object from feed-coupon
                 $store_coupon
                     ->setLabel($feed_coupon['label'])
                     ->setCode(empty($feed_coupon['code']) ? null : $feed_coupon['code'])
-//                    ->setLink($feed_coupon['link'])
-                    ->setLink($store->getLink())
+                    ->setLink($feed_coupon_link)
                     ->setStartDate($this->convertDateFromString($feed_coupon['starts']))
                     ->setExpireDate($this->convertDateFromString($feed_coupon['expires']))
                     ->setLastUpdated($this->convertDateFromString($feed_coupon['last_updated'], false))

@@ -18,7 +18,6 @@ $(document).ready () ->
     $("#edit-items").on 'submit', (event) ->
         # cancel form submit event
         event.preventDefault()
-
         # search and replace some special symbols in headers
         $('ul.mutable-items').find("li.list-item .item-title").each () ->
             replaceSymbols $(this)

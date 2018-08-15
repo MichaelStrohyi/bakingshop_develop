@@ -6,20 +6,21 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Entity\Redirect;
+use AppBundle\Entity\FeedAffiliate;
 
-class RedirectsType extends AbstractType
+
+class FeedAffiliatesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('items', 'collection', [
-                    'type' => new RedirectType,
+                    'type' => new FeedAffiliateType,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'by_reference' => false,
                     'sort_by' => [
-                        'position' => 'asc',
+                        'network' => 'asc',
                     ],
                     'label' => false,
                 ])
@@ -28,7 +29,7 @@ class RedirectsType extends AbstractType
 
     public function getName()
     {
-        return 'admin_redirects';
+        return 'admin_feed_affiliates';
     }
 
 
