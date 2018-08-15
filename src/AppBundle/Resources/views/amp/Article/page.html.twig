@@ -11,8 +11,11 @@
     {% endif %}
     {% if item is not empty %}
         {{ item.metatags|raw }}
-        {% if item.keywordsString is not empty %}
-            <meta name="keywords" content="{{ item.keywordsString }}">
+        {% if item.metaDescriptionString is not empty %}
+            <meta name="description" content="{{ item.metaDescriptionString }}">
+        {% endif %}
+        {% if item.metaKeywordsString is not empty %}
+            <meta name="keywords" content="{{ item.metaKeywordsString }}">
         {% endif %}
     {% endif %}
 {% endblock %}

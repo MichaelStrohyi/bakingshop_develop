@@ -69,6 +69,21 @@ class Store
     /**
      * @var string
      *
+     * @ORM\Column(name="meta_keywords", type="text", nullable=true)
+     */
+    private $metaKeywords;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="meta_description", type="text", nullable=true)
+     */
+    private $metaDescription;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="metatags", type="text", nullable=true)
      * @AppAssert\ValidHTML
      */
@@ -231,6 +246,52 @@ class Store
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set metaKeywords
+     *
+     * @param string $metaKeywords
+     * @return Store
+     */
+    public function setMetaKeywords($metaKeywords)
+    {
+        $this->metaKeywords = $metaKeywords;
+
+        return $this;
+    }
+
+    /**
+     * Get metaKeywords
+     *
+     * @return string 
+     */
+    public function getMetaKeywords()
+    {
+        return $this->metaKeywords;
+    }
+
+    /**
+     * Set metaDescription
+     *
+     * @param string $metaDescription
+     * @return Store
+     */
+    public function setMetaDescription($metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
+    }
+
+    /**
+     * Get metaDescription
+     *
+     * @return string 
+     */
+    public function getMetaDescription()
+    {
+        return $this->metaDescription;
     }
 
     /**
@@ -690,13 +751,48 @@ class Store
     }
 
     /**
-     * Return keywords in format of one string. Keywords are separated by ', '
+     * Return metaKeywords in format of one string. Keywords are separated by ', '
      *
      * @return string
      * @author Michael Strohyi
      **/
-    public function getKeywordsString()
+    public function getMetaKeywordsString()
     {
-        return implode(', ', array_filter(explode(PHP_EOL, $this->getKeywords())));
+        return $this->makeStringFromText($this->getMetaKeywords());
+    }
+    /**
+     * Return metaDescription in format of one string. Keywords are separated by '. '
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function getMetaDescriptionString()
+    {
+        return $this->makeStringFromText($this->getMetaDescription(), '.');
+    }
+
+    /**
+     * Return given text of one string. Lines are separated by given delimeter
+     *
+     * @param string $text
+     * @param string $delimeter
+     * @return string
+     * @author Michael Strohyi
+     **/
+    private function makeStringFromText($text, $delimeter = ',')
+    {
+        if ($delimeter != '.') {
+            return implode($delimeter . ' ', array_filter(explode(PHP_EOL, $text)));
+        }
+
+        $text_array = array_filter(explode(PHP_EOL, $text));
+        foreach ($text_array as $key => $value) {
+            if ($key == 0) {
+                continue;
+            } 
+            $text_array[$key] = ucfirst($value);
+        }
+
+        return implode($delimeter . ' ', $text_array);
     }
 }

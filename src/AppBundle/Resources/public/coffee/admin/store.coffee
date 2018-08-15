@@ -1,7 +1,7 @@
 cur_val = null
 
 window.removeLogo = (e, link) ->
-    # open image in new window (window size = image size)
+    # remove logo
     e.preventDefault()
     link.closest('.form-group').remove()
 
@@ -29,5 +29,8 @@ $(document).ready () ->
         replaceSymbols $("#admin_store_name")
         replaceSymbols $("#admin_store_keywords")
         replaceSymbols $("#admin_store_description")
+        replaceSymbols $("#admin_store_metaDescription")
+        replaceSymbols $("#admin_store_metaKeywords")
+        replaceSymbols $("#admin_store_metatags")
         # submit form
         $(this).unbind('submit').submit()

@@ -21,7 +21,7 @@ class ArticleController extends PageController
      */
     public function indexAction()
     {        
-        $article_list = $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByHeader();
+        $article_list = $this->getDoctrine()->getRepository("AppBundle:Article")->findAllByHeader(true);
         return [
             'article_list' => $article_list,
             'article_types' => Article::getTypes(),

@@ -18,9 +18,20 @@ class ArticleRepository extends EntityRepository
      * @return array
      * @author Michael Strohyi
      **/
-    public function findAllByHeader()
+    public function findAllByHeader($with_homepage = false)
     {
-        return $this->findBy([], ['header' => 'asc']);
+        if ($with_homepage) {
+            return $this->findBy([], ['header' => 'asc']);
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.id != 0 '
+                . 'ORDER by a.header ASC'
+            );
+            
+        return $query->getResult();
     }
 
     /**

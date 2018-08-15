@@ -5,7 +5,10 @@
 {% block metatags %}
     {{ parent() }}
     {{ store.metatags|raw }}
-    <meta name="keywords" content="{{ store.name }} Coupons and Promo Codes{{ store.keywordsString is not empty ? ', '~ store.keywordsString : '' }}">
+    {% if store.metaDescriptionString is not empty %}
+        <meta name="description" content="{{ store.metaDescriptionString }}">
+    {% endif %}
+    <meta name="keywords" content="{{ store.name }} Coupons and Promo Codes{{ store.metaKeywordsString is not empty ? ', '~ store.metaKeywordsString : '' }}">
 {% endblock %}
 
 {% block main %}

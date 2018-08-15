@@ -10,9 +10,11 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
     {{ form_row(form.name) }}
     {{ form_row(form.link) }}
+    {{ form_row(form.metaKeywords) }}
+    {{ form_row(form.metaDescription) }}
+    {{ form_row(form.metatags) }}
     {{ form_row(form.keywords) }}
     {{ form_row(form.description) }}
-    {{ form_row(form.metatags) }}
     {{ form_widget(form.logo) }}
     {{ form_row(form.feedId) }}
     {{ form_row(form.activity) }}

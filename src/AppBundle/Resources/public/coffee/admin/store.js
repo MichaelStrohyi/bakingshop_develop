@@ -34,6 +34,9 @@ $(document).ready(function() {
     replaceSymbols($("#admin_store_name"));
     replaceSymbols($("#admin_store_keywords"));
     replaceSymbols($("#admin_store_description"));
+    replaceSymbols($("#admin_store_metaDescription"));
+    replaceSymbols($("#admin_store_metaKeywords"));
+    replaceSymbols($("#admin_store_metatags"));
     return $(this).unbind('submit').submit();
   });
 });
