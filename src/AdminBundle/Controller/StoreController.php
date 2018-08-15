@@ -174,14 +174,29 @@ class StoreController extends PageController
         $entity_manager = $this->getDoctrine()->getEntityManager();
         # get old store url from db
         $old_url = $entity_manager->getRepository('AppBundle:Store')->getUrlFromDB($store);
+        # get old store link from db
+        $old_link = $entity_manager->getRepository('AppBundle:Store')->findLinkById($store->getId());
+        $old_name = $entity_manager->getRepository('AppBundle:Store')->findNameById($store->getId());
+        # update link of coupons which use store's link
+        if ($store->getLink() !== $old_link) {
+            $this->updateCouponsLink($store, $old_link);
+        }
         # save store into db
         $entity_manager->persist($store);
         $entity_manager->flush();
         # add/update store url in database
         $this->updatePageUrls(Store::PAGE_TYPE, $store);
-
+        if (empty($store->getId())) {
+            return;
+        }
         # update store url in menus
-        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $store->getUrl());
+        if ($store->getUrl() !== $old_url) {
+            $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $store->getUrl());
+        }
+        # update store name in menus
+        if ($store->getName() !== $old_name) {
+            $entity_manager->getRepository('AppBundle:MenuItem')->updateTitles($old_name, $store->getName());
+        }
     }
 
      /**
@@ -555,6 +570,25 @@ class StoreController extends PageController
             $exists = strtolower($coupon->getCode()) == strtolower($code) && $coupon->getFeedId() != $feedId ? true : false;
             if ($exists) {
                 return $coupon;
+            }
+        }
+    }
+
+    /**
+     * Search for coupons with given link and set them new link - current store's link
+     *
+     * @param string $old_link
+     *
+     * @return null
+     * @author Michael Strohyi
+     **/
+    private function updateCouponsLink($store, $old_link)
+    {
+        $coupons = $store->getCoupons();
+        $new_link = $store->getLink();
+        foreach ($coupons as $coupon) {
+            if ($coupon->getLink() === $old_link) {
+                $coupon->setLink($new_link);
             }
         }
     }

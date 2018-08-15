@@ -48,7 +48,7 @@ class StoreRepository extends EntityRepository
                 'id' => $store->getId(),
             ]);
 
-        return $store->convertNameToUrl($query->getOneOrNullResult()['name']);
+        return $store->makeUrlFromName($query->getOneOrNullResult()['name']);
     }
 
     /**
@@ -64,7 +64,7 @@ class StoreRepository extends EntityRepository
         if (empty($id)) {
             return;
         }
-        
+
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT s.link FROM AppBundle:Store s '
@@ -75,6 +75,32 @@ class StoreRepository extends EntityRepository
             ]);
 
         return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
+    }
+
+    /**
+     * Get name from db for store with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findNameById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.name FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $query->getOneOrNullResult()['name'];
     }
 
     /**

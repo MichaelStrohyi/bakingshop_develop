@@ -52,6 +52,7 @@ class MenuItemRepository extends EntityRepository
         if (empty($old_url) || empty($new_url)) {
             return;
         }
+
         $query = $this->getEntityManager()
             ->createQuery(
                 'UPDATE AppBundle:MenuItem m SET m.url = :new_url '
@@ -60,6 +61,33 @@ class MenuItemRepository extends EntityRepository
             ->setParameters([
                 'new_url' => $new_url,
                 'old_url' => $old_url,
+            ]);
+        $query->execute();
+    }
+
+    /**
+     * Set title to $new_title for all menu items with title $old_title
+     *
+     * @param string $old_title
+     * @param string $new_title
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function updateTitles($old_title, $new_title)
+    {
+        if (empty($old_title) || empty($new_title)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:MenuItem m SET m.title = :new_title '
+                . 'WHERE m.title = :old_title'
+            )
+            ->setParameters([
+                'new_title' => $new_title,
+                'old_title' => $old_title,
             ]);
         $query->execute();
     }

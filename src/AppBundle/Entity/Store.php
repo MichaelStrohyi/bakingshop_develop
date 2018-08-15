@@ -303,13 +303,23 @@ class Store
     }
 
     /**
-     * Return page name for local url, based on store name
+     * Return url of store's page, based on store name
      *
      * @return string
      */
     public function getUrl()
     {
-        return '/' . $this->convertNameToUrl($this->name) . self::URL_POSTFIX;
+        return $this->makeUrlFromName($this->name);
+    }
+
+    /**
+     * Return url of stores's page, based on given store's name
+     *
+     * @return string
+     */
+    public function makeUrlFromName($name)
+    {
+        return '/' . $this->convertNameToUrl($name) . self::URL_POSTFIX;
     }
 
     /**
