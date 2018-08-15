@@ -136,8 +136,11 @@ class ArticleController extends PageController
     private function persistArticle(Article $article)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
+        $article_repo = $entity_manager->getRepository('AppBundle:Article');
         # get old article url from db
-        $old_url = $entity_manager->getRepository('AppBundle:Article')->getUrlFromDB($article);
+        $old_url = $article_repo->getUrlFromDB($article);
+        # get old article header from db
+        $old_header = $article_repo->findHeaderById($article->getId());
         # save article into db
         $entity_manager->persist($article);
         $entity_manager->flush();
@@ -145,9 +148,20 @@ class ArticleController extends PageController
         # add/update article url in database
         $this->updatePageUrls(Article::PAGE_TYPE, $article);
         $this->updateHomepage($article);
+        # return at this point if it is a new article
+        if (empty($article->getId())) {
+            return;
+        }
 
-        # update article url in menus
-        $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $article->getUrl());
+        $menu_item_repo = $entity_manager->getRepository('AppBundle:MenuItem');
+        # update article url in menus if it was changed
+        if ($article->getUrl() !== $old_url) {
+            $menu_item_repo->updateUrls($old_url, $article->getUrl());
+        }
+        # update article header in menus if it was changed
+        if ($article->getHeader() !== $old_header) {
+            $menu_item_repo->updateTitles($old_header, $article->getHeader());
+        }
     }
 
      /**

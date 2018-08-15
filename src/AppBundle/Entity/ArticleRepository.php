@@ -217,4 +217,31 @@ class ArticleRepository extends EntityRepository
     {
         return $this->findOneBy(['id' => 0]);
     }
+
+    /**
+     * Get header from db for article with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findHeaderById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a.header FROM AppBundle:Article a '
+                . 'WHERE a.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $query->getOneOrNullResult()['header'];
+    }
+
 }

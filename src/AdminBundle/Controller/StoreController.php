@@ -172,11 +172,12 @@ class StoreController extends PageController
     private function persistStore(Store $store)
     {
         $entity_manager = $this->getDoctrine()->getEntityManager();
+        $store_repo = $entity_manager->getRepository('AppBundle:Store');
         # get old store url from db
-        $old_url = $entity_manager->getRepository('AppBundle:Store')->getUrlFromDB($store);
+        $old_url = $store_repo->getUrlFromDB($store);
         # get old store link from db
-        $old_link = $entity_manager->getRepository('AppBundle:Store')->findLinkById($store->getId());
-        $old_name = $entity_manager->getRepository('AppBundle:Store')->findNameById($store->getId());
+        $old_link = $store_repo->findLinkById($store->getId());
+        $old_name = $store_repo->findNameById($store->getId());
         # update link of coupons which use store's link
         if ($store->getLink() !== $old_link) {
             $this->updateCouponsLink($store, $old_link);
@@ -186,16 +187,19 @@ class StoreController extends PageController
         $entity_manager->flush();
         # add/update store url in database
         $this->updatePageUrls(Store::PAGE_TYPE, $store);
+        # return at this point if it is a new store
         if (empty($store->getId())) {
             return;
         }
-        # update store url in menus
+
+        $menu_item_repo = $entity_manager->getRepository('AppBundle:MenuItem');
+        # update store url in menus if it was changed
         if ($store->getUrl() !== $old_url) {
-            $entity_manager->getRepository('AppBundle:MenuItem')->updateUrls($old_url, $store->getUrl());
+            $menu_item_repo->updateUrls($old_url, $store->getUrl());
         }
-        # update store name in menus
+        # update store name in menus  if it was changed
         if ($store->getName() !== $old_name) {
-            $entity_manager->getRepository('AppBundle:MenuItem')->updateTitles($old_name, $store->getName());
+            $menu_item_repo->updateTitles($old_name, $store->getName());
         }
     }
 
