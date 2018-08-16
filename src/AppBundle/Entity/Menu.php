@@ -254,4 +254,19 @@ class Menu
     {
         return $this->position;
     }
+
+    /**
+     * Set new actual position for all items
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function actualiseItemsPosition()
+    {
+        $items = $this->getItems();
+        $pos = 0;
+        foreach ($items as $item) {
+           $item->setPosition($pos++);
+        }
+    }
 }

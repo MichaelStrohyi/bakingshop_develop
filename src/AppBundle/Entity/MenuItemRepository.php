@@ -91,4 +91,31 @@ class MenuItemRepository extends EntityRepository
             ]);
         $query->execute();
     }
+
+    /**
+     * Return list of Menu, which include MenuItem with url = given $url
+     *
+     * @param string $url
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getMenusByItemUrl($url)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT m FROM AppBundle:MenuItem m '
+                . 'WHERE m.url = :url'
+            )
+            ->setParameters([
+                'url' => $url,
+            ]);
+        $menus = [];
+        foreach ($query->getResult() as $menu_item) {
+            $menu = $menu_item->getMenu();
+            $menus[$menu->getId()] = $menu;
+        }
+
+        return $menus;
+    }
 }

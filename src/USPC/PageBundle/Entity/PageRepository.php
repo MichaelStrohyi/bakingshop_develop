@@ -136,11 +136,12 @@ class PageRepository extends EntityRepository
             return;
         }
 
+        $em = $this->getEntityManager();
         # try to get object_id from object, if it is empty get id from arguments
         $obj_id = empty($obj->getId()) ? $obj_id : $obj->getId();
 
         # find all urls for current object with given type
-        $query = $this->getEntityManager()
+        $query = $em
             ->createQuery(
                 'SELECT p.url FROM USPCPageBundle:Page p '
                 . 'WHERE p.type = :type and p.object_id = :object_id'
@@ -158,10 +159,14 @@ class PageRepository extends EntityRepository
         }
 
         # delete all menu-items link to current object (menu-item url is in the list of object urls)
-        $item_repo = $this->getEntityManager()->getRepository('AppBundle:MenuItem');
+        $menus = [];
+        $item_repo = $em->getRepository('AppBundle:MenuItem');
         foreach ($obj_page_urls as $value) {
             if (!empty($value['url'])) {
                 $url = $this->getUrlFromRes($value['url']);
+                # save menus with menu-items which have to be deleted
+                $menus += $item_repo->getMenusByItemUrl($url);
+                # delete necessary menu-items
                 $item_repo->deleteMenuItems($url);
                 if ($obj_url === $url) {
                     $obj_url = null;
@@ -169,12 +174,21 @@ class PageRepository extends EntityRepository
             }
         }
 
-        if (empty($obj_url)) {
-            return;
+        # if object url was not in url list from Pages db, delete menu-item linked to this url
+        if (!empty($obj_url)) {
+            # save menus with menu-items which have to be deleted
+            $menus += $item_repo->getMenusByItemUrl($obj_url);
+            # delete necessary menu-items
+            $item_repo->deleteMenuItems($obj_url);
         }
 
-        # if object url was not in url list from Pages db, delete menu-item linked to this url
-        $item_repo->deleteMenuItems($obj_url);
+        foreach ($menus as $menu) {
+            $menu->actualiseItemsPosition();
+            $em->persist($menu);
+        }
+
+        $em->flush();
+
     }
 
     /**

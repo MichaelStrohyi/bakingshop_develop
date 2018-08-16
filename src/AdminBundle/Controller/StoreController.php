@@ -506,8 +506,8 @@ class StoreController extends PageController
             }
             # check if coupons updated flag is set
             if ($coupons_updated) {
-                # set position for all store coupons according to actual position in list
-                $store->actualiseCouponsPosition($coupons_limit);
+                # set position for all store coupons
+                $store->actualiseCouponsPosition();
                 # save store into db
                 $em->persist($store);
             }
