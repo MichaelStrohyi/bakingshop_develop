@@ -23,6 +23,7 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
+                <th>Url</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,6 +32,7 @@
                 <tr class="store-type {{ store.activity ? 'active' : 'deactivated' }}-store">
                     <td>{{ loop.index }}</td>
                     <td>{{ store.name }}</td>
+                    <td><a href="{{ path(store) }}" target="_blank">{{ store.url }}</a></td>
                     <td>
                         <a href="{{ path("admin_store_edit", {id: store.id}) }}">Edit</a>
                         <a href="{{ path("admin_store_coupons", {id: store.id}) }}">Coupons</a>
