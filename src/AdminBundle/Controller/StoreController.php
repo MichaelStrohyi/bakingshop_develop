@@ -350,6 +350,7 @@ class StoreController extends PageController
             $cur_date = new \DateTime();
             $cur_date->setTime(0, 0, 0);
             $coupons_limit = ini_get('max_input_vars') > 1999 ? self::ENLARGED_COUPONS_LIMIT : self::DEFAULT_COUPONS_LIMIT;
+            $store_network = $this->findUsedNetwork($store->getLink(), $feed_affiliates);
             # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
                 # break if coupons count for store is more, than limit
@@ -446,7 +447,7 @@ class StoreController extends PageController
                 # get store link as link for curent feed-coupon 
                 $feed_coupon_link = $store->getLink();
                 # if flas to use links from feed is set for current store and feed-affiliate replace rule for current feed-coupon's network is set
-                if ($store->getUseFeedLinks() && array_key_exists($feed_coupon['network'], $feed_affiliates)) {
+                if ($store->getUseFeedLinks() && !empty($store_network) && $feed_coupon['network'] == $store_network) {
                     $feed_affiliate = $feed_affiliates[$feed_coupon['network']];
                     # check, if feed-affiliate replace rule is properly filled: affiliate_id, feed_affiliate_id is not empty and feed_affiliate_id have only one match in feed-coupon link
                     if (!empty($feed_affiliate['feed_affiliate_id']) && !empty($feed_affiliate['affiliate_id']) && substr_count($feed_coupon['link'], $feed_affiliate['feed_affiliate_id']) == 1) {
@@ -596,4 +597,29 @@ class StoreController extends PageController
             }
         }
     }
+
+    /**
+     * Find if given link use one of networks from given feed_affiliates array.
+     * Return name of used network or null
+     *
+     * @param string $link
+     * @param array $feed_affiliates
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    private function findUsedNetwork($link, $feed_affiliates)
+    {
+        $res = [];
+        # go through feed_affiliates
+        foreach ($feed_affiliates as $key => $feed_affiliate) {
+            # if affiliate_id of current feed affiliate have only one match in link
+            if (!empty($feed_affiliate['affiliate_id']) && substr_count($link, $feed_affiliate['affiliate_id']) == 1) {
+                # add key (feed network name) to results
+                $res[] = $key;
+            }
+        }
+        # if only one result was found return it else return null
+        return count($res) == 1 ? $res[0] : null;
+    }
+
 }
