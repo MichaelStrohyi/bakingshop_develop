@@ -13,7 +13,7 @@ class onFlushListener
         $recalculate = false;
         # go through new entities sheduled for insertion
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
-            # check if current entity has StoreCoupon
+            # check if current entity has StoreCoupon class
             if (get_class($entity) == 'AppBundle\Entity\StoreCoupon') {
                 # set new coupon as just verified
                 $entity->setJustVerified();
@@ -29,7 +29,8 @@ class onFlushListener
         }
         # go through entities sheduled for update
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            # check if current entity has StoreCoupon
+            $recompute = false;
+            # check if current entity has StoreCoupon class
             if (get_class($entity) == 'AppBundle\Entity\StoreCoupon') {
                 # check if coupon has changes, which need additional manipulations with coupon and do these manipulations
                 if (!$this->analyzeCouponChanges($entity, $uow->getEntityChangeSet($entity))) {
@@ -37,6 +38,27 @@ class onFlushListener
                     continue;
                 }
                 # save changes
+                $recompute = true;
+                $uow->recomputeSingleEntityChangeSet($classMetadata, $entity);
+            }
+            # check if current entity has Store class
+            if (get_class($entity) == 'AppBundle\Entity\Store') {
+                $changes = $uow->getEntityChangeSet($entity);
+                # check if useFeedLinks was changed
+                if (array_key_exists('useFeedLinks', $changes)) {
+                    if ($changes['useFeedLinks'][1]) {
+                        # if useFeedLinks is set to true set lastUpdated for all feed coupons to null
+                        $entity->clearLastUpdatedFeedCoupons();
+                        $recompute = true;
+                    } else {
+                        # if useFeedLinks is set to false set link from store for all feed coupons
+                        $entity->resetLinkForAllFeedCoupons();
+                        $recompute = true;
+                    }
+                }
+            }
+            # if changes was made save them
+            if ($recompute) {
                 $uow->recomputeSingleEntityChangeSet($classMetadata, $entity);
             }
         }

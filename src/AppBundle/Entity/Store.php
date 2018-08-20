@@ -829,4 +829,37 @@ class Store
 
         return implode($delimeter . ' ', $text_array);
     }
+
+    /**
+     * Clear LastUpdate field for coupons with not null feedId
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function clearLastUpdatedFeedCoupons()
+    {
+        $coupons = $this->getCoupons();
+        foreach ($coupons as $coupon) {
+            if (!empty($coupon->getFeedId())) {
+                $coupon->setLastUpdated(null);
+            }
+        }
+    }
+
+    /**
+     * Set store link for all coupons with not null feedId
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function resetLinkForAllFeedCoupons()
+    {
+        $coupons = $this->getCoupons();
+        $link = $this->getLink();
+        foreach ($coupons as $coupon) {
+            if (!empty($coupon->getFeedId())) {
+                $coupon->setLink($link);
+            }
+        }
+    }
 }
