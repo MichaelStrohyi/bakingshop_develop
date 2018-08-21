@@ -12,11 +12,9 @@
     {{ form_row(form.author) }}
     {{ form_row(form.type) }}
     {{ form_widget(form.logo) }}
-    <div class="hidden">
-        {{ form_row(form.metaKeywords) }}
-        {{ form_row(form.metaDescription) }}
-        {{ form_row(form.metatags) }}
-    </div>
+    {{ form_row(form.metaKeywords) }}
+    {{ form_row(form.metaDescription) }}
+    {{ form_row(form.metatags) }}
     {{ form_row(form.description) }}
     {{ form_row(form.body) }}
     {{ form_row(form.is_homepage) }}

@@ -23,14 +23,12 @@
                 </div>
             </div>
         {% endif %}
+        {{ form_row(form.metaKeywords) }}
+        {{ form_row(form.metaDescription) }}
+        {{ form_row(form.metatags) }}
         {{ form_row(form.description) }}
         {{ form_row(form.body) }}
         {{ form_row(form.is_homepage) }}
-        <div class="hidden">
-            {{ form_row(form.metaKeywords) }}
-            {{ form_row(form.metaDescription) }}
-            {{ form_row(form.metatags) }}
-        </div>
     {% else %}
         {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
         {{ form_row(form.header) }}
