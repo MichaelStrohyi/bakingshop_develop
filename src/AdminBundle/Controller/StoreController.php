@@ -178,13 +178,28 @@ class StoreController extends PageController
         # get old store link from db
         $old_link = $store_repo->findLinkById($store->getId());
         $old_name = $store_repo->findNameById($store->getId());
-        # update link of coupons which use store's link
+        # if store link changed
         if ($store->getLink() !== $old_link) {
+            if ($store->getUseFeedLinks()) {
+                $feed_affiliates = $entity_manager->getRepository("AppBundle:FeedAffiliate")->getAllAsNamedArray();
+                $old_network = $this->findUsedNetwork($old_link, $feed_affiliates);
+                $cur_network = $this->findUsedNetwork($store->getLink(), $feed_affiliates);
+                # if new store link and old store link are from different networks
+                if ($old_network !== $cur_network) {
+                    # set lastUpdated for all feed coupons to null
+                    $store->clearLastUpdatedFeedCoupons();
+                    # set store link to all feed coupons
+                    $store->resetLinkForAllFeedCoupons();
+                }
+
+            }
+            # update link of coupons which use store's link
             $this->updateCouponsLink($store, $old_link);
         }
         # save store into db
         $entity_manager->persist($store);
         $entity_manager->flush();
+
         # add/update store url in database
         $this->updatePageUrls(Store::PAGE_TYPE, $store);
         # return at this point if it is a new store
