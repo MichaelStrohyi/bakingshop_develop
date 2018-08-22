@@ -134,7 +134,9 @@ class onFlushListener
         # if justVerified flag is set mark coupon as just verified
         if ($just_verified) {
             $coupon->setJustVerified();
-            $coupon->setJustUpdated();
+            if (empty($coupon->getFeedId())) {
+                $coupon->setJustUpdated();
+            }
         }
 
         return $just_verified;
