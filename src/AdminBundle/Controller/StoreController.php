@@ -366,6 +366,7 @@ class StoreController extends PageController
             $cur_date->setTime(0, 0, 0);
             $coupons_limit = ini_get('max_input_vars') > 1999 ? self::ENLARGED_COUPONS_LIMIT : self::DEFAULT_COUPONS_LIMIT;
             $store_network = $this->findUsedNetwork($store->getLink(), $feed_affiliates);
+            $store_network_error = false;
             # run through feed-coupons array for current store
             foreach ($feed_store_coupons as $feed_coupon) {
                 # break if coupons count for store is more, than limit
@@ -461,7 +462,12 @@ class StoreController extends PageController
                 }
                 # get store link as link for curent feed-coupon 
                 $feed_coupon_link = $store->getLink();
-                # if flas to use links from feed is set for current store and feed-affiliate replace rule for current feed-coupon's network is set
+                # if flag to use links from feed is set for current store and network of store's link is different from feed-coupon network
+                if ($store->getUseFeedLinks() && $feed_coupon['network'] !== $store_network) {
+                    # set networ error flag
+                    $store_network_error = true;
+                }
+                # if flag to use links from feed is set for current store and network of store's link is the same as feed-coupons network
                 if ($store->getUseFeedLinks() && !empty($store_network) && $feed_coupon['network'] == $store_network) {
                     $feed_affiliate = $feed_affiliates[$feed_coupon['network']];
                     # check, if feed-affiliate replace rule is properly filled: affiliate_id, feed_affiliate_id is not empty and feed_affiliate_id have only one match in feed-coupon link
@@ -524,6 +530,11 @@ class StoreController extends PageController
             if ($coupons_updated) {
                 # set position for all store coupons
                 $store->actualiseCouponsPosition();
+                # if current store network error flag is not equival for store->networkError from db
+                if ($store->getNetworkError() !== $store_network_error) {
+                    # set new value for store->networkError
+                    $store->setNetworkError($store_network_error);
+                }
                 # save store into db
                 $em->persist($store);
             }

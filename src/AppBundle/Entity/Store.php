@@ -136,6 +136,13 @@ class Store
      */
     private $useFeedLinks = self::DEFAULT_USE_FEED_LINKS;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="network_error", type="boolean", nullable=false, options={"default"=false})
+     */
+    private $networkError = false;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -453,7 +460,7 @@ class Store
     /**
      * Get activity
      *
-     * @return integer
+     * @return boolean
      */
     public function getActivity()
     {
@@ -476,11 +483,34 @@ class Store
     /**
      * Get useFeedLinks
      *
-     * @return integer
+     * @return boolean
      */
     public function getUseFeedLinks()
     {
         return $this->useFeedLinks;
+    }
+
+    /**
+     * Set networkError
+     *
+     * @param integer $networkError
+     * @return Store
+     */
+    public function setNetworkError($networkError)
+    {
+        $this->networkError = $networkError;
+
+        return $this;
+    }
+
+    /**
+     * Get networkError
+     *
+     * @return boolean
+     */
+    public function getNetworkError()
+    {
+        return $this->networkError;
     }
 
     /**
