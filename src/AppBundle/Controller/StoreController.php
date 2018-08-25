@@ -22,11 +22,12 @@ class StoreController extends Controller
     {
         # get from-amp flag from parameters
         $amp_flag = $request->query->get('a');
-
+        $cur_date = new \DateTimeImmutable();
         $parameters = [
             'store' => $store,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition(),
+            'cur_date' => $cur_date->format('F j Y'),
         ];
 
         # if prefix is not set render html page
