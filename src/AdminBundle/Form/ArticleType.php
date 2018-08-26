@@ -38,6 +38,7 @@ class ArticleType extends AbstractType
             ->add('metatags', 'textarea', ['attr' => ['rows' => '3']])
             ->add('description', 'textarea', ['attr' => ['rows' => '3']])
             ->add('body', 'ckeditor')
+            ->add('is_featured', null, ['label' => 'Featured article'])
             ->add('is_homepage', null, ['label' => 'Use as Homepage'])
         ;
     }

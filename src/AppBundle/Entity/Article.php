@@ -137,6 +137,13 @@ class Article
      */
     private $prodBody;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_featured", type="boolean", nullable=false, options={"default"=false})
+     **/
+    private $is_featured;
+
 
     /**
      * Get id
@@ -524,6 +531,29 @@ class Article
     public function getMetatags()
     {
         return $this->metatags;
+    }
+
+    /**
+     * Set is_featured
+     *
+     * @param boolean $is_featured
+     * @return Article
+     */
+    public function setIsFeatured($is_featured)
+    {
+        $this->is_featured = $is_featured;
+
+        return $this;
+    }
+
+    /**
+     * Get is_featured
+     *
+     * @return boolean
+     */
+    public function getIsFeatured()
+    {
+        return $this->is_featured;
     }
 
     /**
