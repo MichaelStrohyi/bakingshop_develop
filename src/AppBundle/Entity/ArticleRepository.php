@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class ArticleRepository extends EntityRepository
 {
+    const FEATURED_LIST_LIMIT = 10;
+
     /**
      * Return list aff all article (_homepage included) ordered by header
      *
@@ -208,7 +210,7 @@ class ArticleRepository extends EntityRepository
     }
 
     /**
-     * Return list aff all article (_homepage included) ordered by header
+     * Return _homepage
      *
      * @return Article
      * @author Michael Strohyi
@@ -244,4 +246,65 @@ class ArticleRepository extends EntityRepository
         return $query->getOneOrNullResult()['header'];
     }
 
+    /**
+     * Return list off featured articles with id <> given id ordered randomly. List size is limited by given limit
+     *
+     * @param boolean $with_inactive
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getFeaturedArticles($id = 0, $limit = self::FEATURED_LIST_LIMIT)
+    {
+        # get all articles (except info-articles) with not null body
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT a FROM AppBundle:Article a '
+                . 'WHERE a.body is not null '
+                . 'AND a.is_featured = true '
+                . 'AND a.type <> :type '
+                . 'AND a.id <> :id '
+                . 'AND a.id <> 0 '
+                . 'ORDER BY a.id ASC'
+            )
+            ->setParameters([
+                    'type' => Article::PAGE_SUBTYPE_INFO,
+                    'id' => $id,
+                ]);
+        $articles = $query->getResult();
+        $res = [];
+        # while articles list is not empty iterations count not > given limit
+        while (!empty($articles) && $limit > 0) {
+            # cut random article from articles list
+            list($article, $articles) = $this->getRandomItem($articles);
+            # add cutted article into result list
+            $res[] = $article;
+            # subtract this iteration from limit
+            $limit--;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Get random item from given list and return this item and list without this item
+     *
+     * @return array|null
+     * @author Michael Strohyi
+     **/
+
+    private function getRandomItem($items)
+    {
+        # if given items is emoty return
+        $count = count($items);
+        if ($count == 0) {
+            return;
+        }
+        # get random item from items list
+        $index = rand(0, $count-1);
+        $item = $items[$index];
+        # cut this item from items list
+        array_splice($items, $index, 1);
+
+        return [$item, $items];
+    }
 }

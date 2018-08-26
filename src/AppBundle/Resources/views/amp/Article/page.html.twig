@@ -33,10 +33,16 @@
         </div>
     {% endif %}
 </article>
-{% if featured_stores is defined and featured_stores is not empty%}
+{% if homepage is defined and featured_stores is defined and featured_stores is not empty%}
     <div class="featured-stores-previews">
         <div class="featured-stores-previews-title">Featured Stores</div>
-        {% include 'AppBundle:amp/layout:_list_pattern.html.twig' with {'items': featured_stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+    </div>
+{% endif %}
+{% if homepage is not defined and featured_articles is defined and featured_articles is not empty%}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">You may also enjoy</div>
+        {% include 'AppBundle:amp/layout:_list_pattern.html.twig' with {'items': featured_articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
     </div>
 {% endif %}
 {% endblock %}
