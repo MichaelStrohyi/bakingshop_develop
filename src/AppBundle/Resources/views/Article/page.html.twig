@@ -46,7 +46,7 @@
 {% if homepage is not defined and featured_articles is defined and featured_articles is not empty%}
     <div class="featured-stores-previews">
         <div class="featured-stores-previews-title">You may also enjoy</div>
-        {% include 'AppBundle:amp/layout:_list_pattern.html.twig' with {'items': featured_articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
     </div>
 {% endif %}
 {% endblock %}
