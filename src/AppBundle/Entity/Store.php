@@ -576,7 +576,7 @@ class Store
     }
 
     /**
-     * Return first 30 words of description
+     * Return first 40 words of description
      *
      * @return string
      */
@@ -591,7 +591,7 @@ class Store
     }
 
     /**
-     * Return rest of description (after first 30 words)
+     * Return rest of description (after first 40 words)
      *
      * @return string
      */

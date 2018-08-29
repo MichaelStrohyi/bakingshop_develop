@@ -28,13 +28,12 @@ class ArticleController extends Controller
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition(),
             'type' => $article->getType(),
             'type_title' => $article->getTypeTitle($article->getType()),
+            'featured_articles' => $this->getDoctrine()->getRepository("AppBundle:Article")->getFeaturedArticles($article->getId()),
         ];
 
         if ($is_homepage) {
             $parameters['featured_stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->getFeaturedStores();
             $parameters['homepage'] = $this->getDoctrine()->getRepository("AppBundle:Article")->getHomepageInfo();
-        } else {
-            $parameters['featured_articles'] = $this->getDoctrine()->getRepository("AppBundle:Article")->getFeaturedArticles($article->getId());
         }
 
         # if prefix is not set render html page else render amp-html page
