@@ -13,7 +13,6 @@
             </header>
 
             <section class="main-content">
-                {% block carousel %}{% endblock %}
                 <div class="row no-expand">
                     <div class="col-sm-8 content-left-column">
                             {% block main %}{% endblock %}       
@@ -23,8 +22,10 @@
                     </aside>
 
                 </div>
+                
             </section>
 
+                {% block carousel %}{% endblock %}
             <footer class="footer">
                 {% block page_footer %}
                     {% include 'AppBundle:layout:_footer.html.twig' ignore missing %}
