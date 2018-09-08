@@ -28,7 +28,7 @@ class SearchController extends Controller
 
         $articles_all_count = $stores_all_count = $articles = $stores = $json_res = null;
         # get search-string from parameters
-        $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('search-ajax')))));
+        $needle = trim(strip_tags(stripcslashes($request->get('search-ajax'))));
         $amplified = $request->get('a') == 'a' ? true : false;
         # if search-string is not empty
         if (!empty($needle)) {
@@ -77,7 +77,7 @@ class SearchController extends Controller
         }
 
         # get search-string from parameters
-        $needle = trim(strip_tags(stripcslashes(htmlspecialchars($request->get('q')))));
+        $needle = trim(strip_tags(stripcslashes($request->get('q'))));
         #set parameters for twig template
         $parameters = [
             'type' => 'search',
