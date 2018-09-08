@@ -18,11 +18,14 @@ window.setLinkForAll = function(e, link) {
   }
 };
 
-$(document).on("change", "input[name=stores_filter]", function() {
-  var stores_filter;
+$(document).on("change", "input[name=stores_filter], input[name=feeds_filter]", function() {
+  var feeds_filter, stores_filter;
+  feeds_filter = $('[name="feeds_filter"]:checked').val();
   stores_filter = $('[name="stores_filter"]:checked').val();
-  console.log(stores_filter);
   $('.store-type').show();
+  if (feeds_filter !== '') {
+    $('.store-type').not($('.' + feeds_filter + '-feed')).hide();
+  }
   if (stores_filter !== '') {
     return $('.store-type').not($('.' + stores_filter + '-store')).hide();
   }

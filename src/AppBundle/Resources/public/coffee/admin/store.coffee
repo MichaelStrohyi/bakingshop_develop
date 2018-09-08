@@ -13,10 +13,12 @@ window.setLinkForAll = (e, link) ->
         $('.coupon-link').each (index) ->
             $(this).val cur_val
 
-$(document).on "change", "input[name=stores_filter]", () ->
+$(document).on "change", "input[name=stores_filter], input[name=feeds_filter]", () ->
+    feeds_filter = $('[name="feeds_filter"]:checked').val()
     stores_filter = $('[name="stores_filter"]:checked').val()
-    console.log stores_filter
     $('.store-type').show()
+    if feeds_filter isnt ''
+        $('.store-type').not($('.' + feeds_filter + '-feed')).hide()
     if stores_filter isnt ''
         $('.store-type').not($('.' + stores_filter + '-store')).hide()
 

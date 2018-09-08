@@ -3,19 +3,54 @@
 {% block title %}Store | {{ parent() }}{% endblock %}
 
 {% block content %}
-    <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
     {% if store_list is not null %}
-        Show stores:
-            <label class="radio-inline">
-                <input type="radio" name="stores_filter" value="" checked>all
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="stores_filter" value="active">active
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="stores_filter" value="deactivated">deactivated
-            </label>
-            </select>
+        <table class="radio-panel">
+            <tr>
+                <td rowspan="2">
+                    <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
+                </td>
+                <td>
+                    Show by activity:
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="" checked>all
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="active">active
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="deactivated">deactivated
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Show by feed:
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="" checked>all
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="on">feed on
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="off">feed off
+                    </label>
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
     {% endif %}
 
     <table class="table table-hover">
@@ -29,7 +64,7 @@
         </thead>
         <tbody>
             {% for store in store_list %}
-                <tr class="store-type {{store.networkError ? 'network-error' : '' }} {{ store.activity ? 'active' : 'deactivated' }}-store">
+                <tr class="store-type {{store.networkError ? 'network-error' : '' }} {{ store.activity ? 'active' : 'deactivated' }}-store {{ store.feedId is not empty ? 'on' : 'off' }}-feed">
                     <td>{{ loop.index }}</td>
                     <td>{{ store.name }}</td>
                     <td><a href="{{ path(store) }}" target="_blank">{{ store.url }}</a></td>
