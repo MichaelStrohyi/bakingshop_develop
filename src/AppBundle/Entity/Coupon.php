@@ -37,7 +37,7 @@ class Coupon
      *
      * @ORM\Column(name="label", type="text", nullable=false)
      * @Assert\NotBlank
-     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]£€]*$/")
      */
     private $label;
 
