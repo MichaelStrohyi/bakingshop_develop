@@ -132,27 +132,65 @@ class ArticleRepository extends EntityRepository
      * @author Michael Strohyi
      **/
     public function findBySubname($subname, $limit = null)
-    {   
+    {
+        # trim from subname spaces and % symbols and replace all spaces for single '%'
+        $subname = preg_replace(["/[\s]+/", "/[%]+/"], "%", trim($subname, " %"));
         # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
 
+        $search_words = explode('%', $subname);
+        # make requisitons for sql-query from $search_words array
+        foreach ($search_words as $key => $value) {
+            if ($key == 0) {
+                $query_string = "WHERE a.header LIKE '%$value%' ";
+            } else {
+                $query_string .= "AND a.header LIKE '%$value%' ";
+            }
+
+        }
+
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT a FROM AppBundle:Article a '
-                . 'WHERE a.header LIKE :subname '
+                . $query_string
                 . 'AND a.type != :type '
                 . 'AND a.id != 0 '
                 . 'ORDER by a.header ASC'
             )
             ->setParameters([
-                'subname' => '%' . $subname . '%',
                 'type' => Article::PAGE_SUBTYPE_INFO,
             ])
             ->setMaxResults($limit);
-            
-        return $query->getResult();
+        # make regex pattern: all given words must be in string as a separate words
+        $pattern = '/^(?=.*\b' . implode('\b)(?=.*\b', $search_words) . '\b)';
+        if (count($search_words) == 1) {
+            # add to regex pattern OR if only one search word existsts: it may be as a beginning part of first word in string
+            $pattern .= '|(?=^' . $search_words[0] . '.*\b)';
+        } else {
+            # add to regex pattern OR if more than one search word existsts: all words except last  must be in string as a separate words and last word may be as a beginning part word in string
+            $pattern .= '|';
+            $last_word = array_pop($search_words);
+            foreach ($search_words as $key => $value) {
+                $pattern .= '(?=.*\b' . $value . '\b)';
+            }
+            foreach ($search_words as $key => $value) {
+                $pattern .= '(?=.*\b' . $last_word . '.*\b)';
+            }
+        }
+
+        $pattern .= '.*$/i';
+        $res = [];
+        $articles = $query->getResult();
+        # go through results from db and add to results only articles with headers which match regex pattern
+        foreach ($articles as $article) {
+            if (preg_match($pattern, $article->getHeader())) {
+                $res[] = $article;
+            }
+        }
+
+        return $res;
     }
 
     /**

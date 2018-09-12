@@ -822,7 +822,7 @@ class Store
      **/
     public function getMetaKeywordsString()
     {
-        return $this->makeStringFromText($this->getMetaKeywords());
+        return self::makeStringFromText($this->getMetaKeywords());
     }
     /**
      * Return metaDescription in format of one string. Keywords are separated by '. '
@@ -832,7 +832,7 @@ class Store
      **/
     public function getMetaDescriptionString()
     {
-        return $this->makeStringFromText($this->getMetaDescription(), '.');
+        return self::makeStringFromText($this->getMetaDescription(), '.');
     }
 
     /**
@@ -843,18 +843,17 @@ class Store
      * @return string
      * @author Michael Strohyi
      **/
-    private function makeStringFromText($text, $delimeter = ',')
+    public static function makeStringFromText($text, $delimeter = ',')
     {
-        if ($delimeter != '.') {
-            return implode($delimeter . ' ', array_filter(explode(PHP_EOL, $text)));
-        }
-
         $text_array = array_filter(explode(PHP_EOL, $text));
-        foreach ($text_array as $key => $value) {
-            if ($key == 0) {
-                continue;
-            } 
-            $text_array[$key] = ucfirst($value);
+        # if delimeter is '.' capitalize words after delimeter
+        if ($delimeter == '.') {
+            foreach ($text_array as $key => $value) {
+                if ($key == 0) {
+                    continue;
+                }
+                $text_array[$key] = ucfirst($value);
+            }
         }
 
         return implode($delimeter . ' ', $text_array);

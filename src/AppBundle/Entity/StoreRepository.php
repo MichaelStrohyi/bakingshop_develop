@@ -114,12 +114,14 @@ class StoreRepository extends EntityRepository
      **/
     public function findBySubname($subname, $limit = null, $with_inactive = false)
     {
+        # trim from subname spaces and % symbols and replace all spaces for single '%'
+        $subname = preg_replace(["/[\s]+/", "/[%]+/"], "%", trim($subname, " %"));
         # if length of search-string (subname) is < 2 return empty result
         if (strlen($subname) < 2) {
             return [];
         }
-
-        $query_param = $with_inactive ? '' : 'AND s.activity =true ';
+        # add inactive stores to result if flag is set
+        $query_param = $with_inactive ? '' : 'AND s.activity = true ';
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT s FROM AppBundle:Store s '
@@ -128,11 +130,29 @@ class StoreRepository extends EntityRepository
                 . 'ORDER by s.name ASC'
             )
             ->setParameters([
-                'subname' => '%' . preg_replace(["/[\+]+/", "/[\s]+/", "/[-]+/", "/[%]+/"], "%", $subname) . '%',
+                'subname' => '%' . $subname . '%',
             ])
             ->setMaxResults($limit);
+        # make regex pattern: all given words must be at the beginning of string and can be divided by ()-:'& symbols or by space or be without divider
+        $pattern = '/^' . implode('[\(\)-:\'&\s\|]?', explode('%', $subname)) . '/i';
+        $res = [];
+        $stores = $query->getResult();
+        # go through results from db and add to results only stores with name or keywords which match regex pattern
+        foreach ($stores as $store) {
+            if (preg_match($pattern, $store->getName())) {
+                $res[] = $store;
+                continue;
+            }
 
-        return $query->getResult();
+            foreach (explode(', ', $store->makeStringFromText($store->getKeywords())) as $value) {
+                if (preg_match($pattern, $value)) {
+                    $res[] = $store;
+                    break;
+                }
+            }
+        }
+
+        return $res;
     }
 
     /**
