@@ -134,7 +134,7 @@ class StoreRepository extends EntityRepository
             ])
             ->setMaxResults($limit);
         # make regex pattern: all given words must be at the beginning of string and can be divided by ()-:'& symbols or by space or be without divider
-        $pattern = '/^' . implode('[\(\)-:\'&\s\|]?', explode('%', $subname)) . '/i';
+        $pattern = '/^' . implode('[\(\)-:\'&\s\|]*', explode('%', $subname)) . '/i';
         $res = [];
         $stores = $query->getResult();
         # go through results from db and add to results only stores with name or keywords which match regex pattern

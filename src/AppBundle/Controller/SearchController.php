@@ -145,7 +145,7 @@ class SearchController extends Controller
             if (strlen($needle) > 1) {
                 $items[] = [
                     'url' => $this->generateUrl('homepage', ['prefix' => $prefix]),
-                    'name' => "No results found for '" . $needle . "'",
+                    'name' => "No results found for \"" . $needle . "\"",
                     'class' => 'search-result-type disabled',
                 ];
             }

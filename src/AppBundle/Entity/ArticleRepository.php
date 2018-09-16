@@ -142,12 +142,14 @@ class ArticleRepository extends EntityRepository
 
         $search_words = explode('%', $subname);
         # make requisitons for sql-query from $search_words array
+        $params = ['type' => Article::PAGE_SUBTYPE_INFO];
         foreach ($search_words as $key => $value) {
             if ($key == 0) {
-                $query_string = "WHERE a.header LIKE '%$value%' ";
+                $query_string = "WHERE a.header LIKE :param$key ";
             } else {
-                $query_string .= "AND a.header LIKE '%$value%' ";
+                $query_string .= "AND a.header LIKE :param$key ";
             }
+            $params["param$key"] = "%$value%";
 
         }
 
@@ -159,11 +161,11 @@ class ArticleRepository extends EntityRepository
                 . 'AND a.id != 0 '
                 . 'ORDER by a.header ASC'
             )
-            ->setParameters([
-                'type' => Article::PAGE_SUBTYPE_INFO,
-            ])
+            ->setParameters($params)
             ->setMaxResults($limit);
         # make regex pattern: all given words must be in string as a separate words
+        $dividers = ['(', ')', '-', ':', '\\', "'", '&', ' ', '|'];
+        $search_words = array_diff($search_words, $dividers);
         $pattern = '/^(?=.*\b' . implode('\b)(?=.*\b', $search_words) . '\b)';
         if (count($search_words) == 1) {
             # add to regex pattern OR if only one search word existsts: it may be as a beginning part of first word in string

@@ -4,7 +4,7 @@
 
 {% block main %}
     {% if needle is defined and articles is empty and stores is empty %}
-        <div class="searched-for-alert">No results have been found for <b>'{{ needle }}'</b></div>
+        <div class="searched-for-alert">No results have been found for <b>"{{ needle }}"</b></div>
     {% endif %}
 
     {% if stores is defined and stores is not empty %}
