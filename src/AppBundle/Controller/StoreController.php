@@ -27,7 +27,8 @@ class StoreController extends Controller
             'store' => $store,
             'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
             'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition(),
-            'cur_date' => $cur_date->format('F j Y'),
+            'cur_date' => $cur_date->format('F Y'),
+            'title_discount' => $store->getMainDiscount(true),
         ];
 
         # if prefix is not set render html page

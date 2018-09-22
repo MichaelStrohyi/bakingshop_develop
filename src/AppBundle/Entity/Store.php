@@ -23,6 +23,7 @@ class Store
     const URL_POSTFIX = '/coupons'; // WARNING! Change postfix only with changing urls for store pages in page db
     const DEFAULT_ACTIVITY = true;
     const DEFAULT_USE_FEED_LINKS = false;
+    const RANDOM_DISCOUNTS = [10, 15, 20, 25, 30];
     /**
      * @var integer
      *
@@ -760,22 +761,28 @@ class Store
     }
 
     /**
-     * Return discount of first actual coupon if discount is like xx%
+     * Return discount of first actual coupon if discount is like xx%.
+     * If first coupon has no discount like xx% return null or random discount, if $random_enable param is true
      *
      * @return string
      * @author Michael Strohyi
      **/
-    public function getMainDiscount()
+    public function getMainDiscount($random_enable = false)
     {
-        foreach ($this->getCoupons()->getIterator() as $coupon) {
+        $coupons = $this->getCoupons();
+        foreach ($coupons->getIterator() as $coupon) {
             if (!$coupon->isActual()){
                 continue;
             }
 
-            return strpos($coupon->getDiscount(), '%') !== false ? $coupon->getDiscount() : null;
+            if (strpos($coupon->getDiscount(), '%') !== false) {
+                return $coupon->getDiscount();
+            }
+
+            break;
         }
 
-        return null;
+        return $random_enable ? self::RANDOM_DISCOUNTS[count($coupons) % count(self::RANDOM_DISCOUNTS)] . '%' : null;
     }
 
     /**
