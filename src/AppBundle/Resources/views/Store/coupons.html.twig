@@ -91,6 +91,28 @@
             </div>
         {% endif %}
     </div>
+{#    {% for store_comment in store.comments %}
+        {% if store_comment.isVerified %}
+            <div class="content-comments-block">
+                <div class="comments-block-item">
+                    <label>{{ store_comment.author }} says</label><br>
+                    <span>{{ store_comment.prodTimestamp }}</span></br>
+                    {{ store_comment.label }}
+                    <hr>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if comment_status is not empty %}
+        {{ comment_status }}
+    {% endif %} #}
+
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+                    {{ form_widget(form) }}
+                    <div class="actions text-right">
+                        <button type="submit" class="btn btn-danger">Add comment</button>
+                    </div>
+                    {{ form_end(form) }}
 {% endblock %}
 
 {% block stylesheets %}

@@ -144,9 +144,19 @@ class Store
      */
     private $networkError = false;
 
+    /**
+     * @var Comments[]
+     *
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="store", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"addedDate" = "asc"})
+     * @Assert\Valid
+     **/
+    private $comments;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -397,6 +407,40 @@ class Store
         $this->coupons = $coupons;
 
         return $this;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param Comment $comment
+     * @return Store
+     */
+    public function addComment(Comment $comment)
+    {
+        $comment->setStore($this);
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param Comment $comments
+     */
+    public function removeComment(Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 
     /**

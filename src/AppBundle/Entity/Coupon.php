@@ -557,7 +557,7 @@ class Coupon
     /**
      * Set feedId
      *
-     * @param integer $label
+     * @param integer $feedId
      * @return Coupon
      */
     public function setFeedId($feedId)
