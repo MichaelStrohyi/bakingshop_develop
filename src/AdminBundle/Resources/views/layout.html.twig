@@ -12,6 +12,7 @@
                     {#<li {{ 'admin_' ~ constant('AppBundle\\Entity\\Operator::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_operator_index')}}">Edit Operators</a></li>#}
                     <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Store::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_store_index')}}">Edit Stores</a></li>
                     <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Redirect::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_redirect')}}">Edit Redirects</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Comment::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_comment_index')}}">Verify Comments</a></li>
                 </ul>
             </nav>
             <div class="content">

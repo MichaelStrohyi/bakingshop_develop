@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Comment
 {
+    const PAGE_TYPE = 'comment';
+
     /**
      * @var integer
      *
@@ -256,7 +258,7 @@ class Comment
     }
 
     /**
-     * Return addedDate formatted to usi in production in comments list
+     * Return addedDate formatted to use in production in comments list
      *
      * @return void
      * @author Michael Strohyi

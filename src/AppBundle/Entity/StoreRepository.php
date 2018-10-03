@@ -272,4 +272,21 @@ class StoreRepository extends EntityRepository
 
         return [$item, $items];
     }
+
+   /**
+     * Return true if comment with given label, author, email already exists
+     *
+     * @param string $label
+     * @param string $author
+     * @param string $email
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function findAllWithUnverifiedComments()
+    {
+        $q = 'SELECT s FROM AppBundle:Store s WHERE s.id in (SELECT IDENTITY(c.store) FROM AppBundle:Comment c WHERE c.isVerified = false GROUP BY c.store)';
+        $query = $this->getEntityManager()->createQuery($q);
+        return $query->getResult();
+    }
 }

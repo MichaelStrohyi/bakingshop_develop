@@ -11,19 +11,18 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class CommentRepository extends EntityRepository
-{   
+{
     /**
-     * Return true if comment with given label, author, email already exists
+     * Return true if given comment duplicate other comment, which already exists in db for store with given store_id
      *
-     * @param string $label
-     * @param string $author
-     * @param string $email
+     * @param Comment $comment
+     * @param int $store_id
      *
      * @return boolean
      * @author Michael Strohyi
      **/
-    public function commentExists($label, $author, $email, $store_id)
+    public function commentExists($comment, $store_id)
     {
-        return !empty($this->findBy(['label' => $label, 'author' => $author, 'email' => $email, 'store' => $store_id]));
+        return !empty($this->findBy(['label' => $comment->getLabel(), 'author' => $comment->getAuthor(), 'email' => $comment->getEmail(), 'store' => $store_id]));
     }
 }
