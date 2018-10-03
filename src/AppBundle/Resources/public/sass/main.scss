@@ -1503,7 +1503,7 @@ li.active {
 }
 .content-comments-block {
     font-size: 16px;
-    padding-left: 7px;
+    padding: 0 7px;
 }
 .comments-block-author {
     font-weight: bold;
@@ -1531,6 +1531,14 @@ li.active {
     h3 {
         font-weight: bold;
         text-align: center;
+    }
+}
+.content-howtouse-block {
+    font-size: 16px;
+    padding: 0 7px;
+    img {
+        max-width: 98% !important; 
+        height: auto !important;
     }
 }
 @media screen and (min-width: 700px) {

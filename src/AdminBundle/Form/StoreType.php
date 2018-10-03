@@ -24,6 +24,7 @@ class StoreType extends AbstractType
             ->add('is_featured', null, ['label' => 'Featured store'])
             ->add('activity', null, ['label' => 'Active store'])
             ->add('useFeedLinks', null, ['label' => 'Use feed links for coupons'])
+            ->add('howToUse', 'ckeditor',['label' => 'How to use'])
         ;
     }
 

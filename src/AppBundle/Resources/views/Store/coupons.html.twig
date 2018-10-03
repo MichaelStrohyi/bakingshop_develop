@@ -91,6 +91,12 @@
             </div>
         {% endif %}
     </div>
+    {% if store.howToUse is not empty %}
+        <div class="content-howtouse-block">
+            {{ store.howToUse|raw }}
+            <hr>
+        </div>
+    {% endif %}
     <div class="content-comments-block">
         {% for store_comment in store.comments %}
             {% if store_comment.isVerified %}
@@ -140,13 +146,17 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if comment_status is not empty %}
-        <script>
+    <script>
         $(document).ready(function () {
-            $('html, body').animate({
-                scrollTop: $('#comment-status').offset().top
-            }, 'fast');
+            $('.content-howtouse-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="howtouse-images" target="_blank">';
+            });
+
+            {% if comment_status is not empty %}
+                $('html, body').animate({
+                    scrollTop: $('#comment-status').offset().top
+                }, 'fast');
+            {% endif %}
         });
-        </script>
-    {% endif %}
+    </script>
 {% endblock %}

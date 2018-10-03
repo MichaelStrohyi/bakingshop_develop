@@ -153,6 +153,13 @@ class Store
      **/
     private $comments;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="how_to_use", type="text", nullable=true)
+     */
+    private $howToUse;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -579,6 +586,29 @@ class Store
     public function getMetatags()
     {
         return $this->metatags;
+    }
+
+    /**
+     * Set howToUse
+     *
+     * @param string $howToUse
+     * @return Store
+     */
+    public function setHowToUse($howToUse)
+    {
+        $this->howToUse = $howToUse;
+
+        return $this;
+    }
+
+    /**
+     * Get howToUse
+     *
+     * @return string
+     */
+    public function getHowToUse()
+    {
+        return $this->howToUse;
     }
 
     /**
