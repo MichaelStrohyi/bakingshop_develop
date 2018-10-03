@@ -1501,6 +1501,38 @@ li.active {
         max-height: 80px;
     }
 }
+.content-comments-block {
+    font-size: 16px;
+    padding-left: 7px;
+}
+.comments-block-author {
+    font-weight: bold;
+    display: block;
+}
+.comments-block-item a {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.form-group {
+    margin: 15px 0 15px !important;
+}
+.add-comment-block {
+    textarea {
+        resize: none;
+    }
+    span {
+        font-weight: bold;
+        color: #a52a2a;
+        display: block;
+        text-align: center;
+        margin: 10px 0;
+        font-size: 18px;
+    }
+    h3 {
+        font-weight: bold;
+        text-align: center;
+    }
+}
 @media screen and (min-width: 700px) {
     .no-expand > [class*='col-'] {
         padding: {

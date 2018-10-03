@@ -91,38 +91,62 @@
             </div>
         {% endif %}
     </div>
-{#    {% for store_comment in store.comments %}
-        {% if store_comment.isVerified %}
-            <div class="content-comments-block">
-                <div class="comments-block-item">
-                    <label>{{ store_comment.author }} says</label><br>
-                    <span>{{ store_comment.prodTimestamp }}</span></br>
+    <div class="content-comments-block">
+        {% for store_comment in store.comments %}
+            {% if store_comment.isVerified %}
+                <div class="comments-block-item" id="comment-{{ store_comment.id }}">
+                    <span class="comments-block-author">{{ store_comment.author }} says</span>
+                    <span><a href="#comment-{{ store_comment.id }}">{{ store_comment.prodTimestamp }}</a></span></br>
                     {{ store_comment.label }}
                     <hr>
                 </div>
+            {% endif %}
+        {% endfor %}
+        <div class="add-comment-block" id="comment-status">
+            <h3>Leave a Reply</h3>
+            Your email address will not be published. All fields are required
+            {% if comment_status is not empty %}
+                <br><span>{{ comment_status }}</span>
+            {% endif %}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Comment</label>
+                <div>
+                    {{ form_widget(form.label) }}
+                    {{ form_errors(form.label) }}
+                </div>
             </div>
-        {% endif %}
-    {% endfor %}
-    {% if comment_status is not empty %}
-        {{ comment_status }}
-    {% endif %} #}
-
-                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
-                    {{ form_widget(form) }}
-                    <div class="actions text-right">
-                        <button type="submit" class="btn btn-danger">Add comment</button>
-                    </div>
-                    {{ form_end(form) }}
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Name</label>
+                <div>
+                    {{ form_widget(form.author) }}
+                    {{ form_errors(form.author) }}
+                </div>
+            </div>
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Email</label>
+                <div>
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+            <div class="actions text-right">
+                <button type="submit" class="btn btn-danger">Add comment</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
 
-{% block stylesheets %}
+{% block javascripts %}
     {{ parent() }}
-    <style>
-        .coupon-content {
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #ddd;
-            border-radius: 5px;
-        }
-    </style>
+    {% if comment_status is not empty %}
+        <script>
+        $(document).ready(function () {
+            $('html, body').animate({
+                scrollTop: $('#comment-status').offset().top
+            }, 'fast');
+        });
+        </script>
+    {% endif %}
 {% endblock %}
