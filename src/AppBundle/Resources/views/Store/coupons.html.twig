@@ -97,6 +97,13 @@
             <hr>
         </div>
     {% endif %}
+    {% if store.news is not empty %}
+        <div class="content-news-block">
+            <h3 class="news-block-title">{{ store.name }} News</h3>
+            {{ store.news|raw }}
+            <hr>
+        </div>
+    {% endif %}
     <div class="content-comments-block">
         {% for store_comment in store.comments %}
             {% if store_comment.isVerified %}
@@ -150,6 +157,9 @@
         $(document).ready(function () {
             $('.content-howtouse-block img').wrap(function() {
               return '<a href="' + this.src + '" class="fresco" data-fresco-group="howtouse-images" target="_blank">';
+            });
+            $('.content-news-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="news-images" target="_blank">';
             });
 
             {% if comment_status is not empty %}

@@ -160,6 +160,13 @@ class Store
      */
     private $howToUse;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="news", type="text", nullable=true)
+     */
+    private $news;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -609,6 +616,29 @@ class Store
     public function getHowToUse()
     {
         return $this->howToUse;
+    }
+
+    /**
+     * Set news
+     *
+     * @param string $news
+     * @return Store
+     */
+    public function setNews($news)
+    {
+        $this->news = $news;
+
+        return $this;
+    }
+
+    /**
+     * Get news
+     *
+     * @return string
+     */
+    public function getNews()
+    {
+        return $this->news;
     }
 
     /**

@@ -1541,6 +1541,17 @@ li.active {
         height: auto !important;
     }
 }
+.content-news-block {
+    font-size: 14px;
+    padding: 0 7px;
+    img {
+        max-width: 98% !important; 
+        height: auto !important;
+    }
+}
+.news-block-title {
+    text-align: center;
+}
 @media screen and (min-width: 700px) {
     .no-expand > [class*='col-'] {
         padding: {
