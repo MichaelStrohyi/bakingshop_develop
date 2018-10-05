@@ -25,7 +25,7 @@
         </div>
         {% for store_coupon in store.coupons %}
             {% if store_coupon.actual %}
-                <div class="coupons-block-item">
+                <div class="coupons-block-item {{ store_coupon.discount is not empty ? store_coupon.discount == 'FREE Shipping' ? 'yellow' : 'red' : '' }}">
                     <div class="coupon-block-item-left">
                         <div class="coupon-block-item-logo {{ store_coupon.discount == 'FREE Shipping' and store_coupon.logo is null ? 'shipping' : '' }}">
                             {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
