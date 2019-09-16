@@ -76,10 +76,17 @@ class AdvancedRoutingExtension extends RoutingExtension
     {
         # get url
         $url = $obj->getUrl();
+        # get url prefix from parameters
+        $prefix = '';
+        if (array_key_exists('prefix', $parameters)) {
+            $prefix = '/' . trim($parameters['prefix'], '/');
+            # delete url prefix from parameters list
+            unset($parameters['prefix']);
+        }
 
-        # add base url
+        # add base url and prefix
         if (!empty($url)) {
-            $url = $this->baseUrl . $url;
+            $url = $this->baseUrl . $prefix . $url;
         }
         
         # add parameters

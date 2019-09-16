@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Fsv\SortableCollectionTypeBundle\FsvSortableCollectionTypeBundle(),
             new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
             new USPC\PageBundle\USPCPageBundle(),
+            new Vich\UploaderBundle\VichUploaderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

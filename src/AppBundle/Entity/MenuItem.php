@@ -36,6 +36,7 @@ class MenuItem
      *
      * @ORM\Column(name="url", type="blob", nullable=false)
      * @AppAssert\LocalURL
+     * @AppAssert\LocalURLExists
      */
     private $url;
 
@@ -53,7 +54,7 @@ class MenuItem
      * @var integer
      *
      * @Gedmo\SortablePosition
-     * @ORM\Column(name="position", type="integer", nullable=false, options={"default": 10000})
+     * @ORM\Column(name="position", type="integer", nullable=false)
      * @Assert\NotNull
      */
     private $position = self::DEFAULT_POSITION;

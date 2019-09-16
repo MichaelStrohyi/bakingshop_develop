@@ -4,8 +4,20 @@
 
 {% block content %}
 
-    <a href="{{ path("admin_article_create")}}" class="btn btn-default">Create Article</a>
+    <a href="{{ path("admin_article_create")}}" class="btn btn-default">Create Article</a><br>
 
+            {% if article_list is not null %}
+                Show pages:
+                    <label class="radio-inline">
+                        <input type="radio" name="pages_filter" value="" checked>all
+                    </label>
+                        {% for article_type in article_types %}
+                            <label class="radio-inline">
+                                <input type="radio" name="pages_filter" value="{{ article_type }}">{{ article_type }}
+                            </label>
+                        {% endfor %}
+                    </select>
+            {% endif %}
     <table class="table table-hover">
         <thead>
             <tr>
@@ -17,7 +29,7 @@
         </thead>
         <tbody>
             {% for article in article_list %}
-                <tr>
+                <tr class="page-type {{ article.type }}-page">
                     <td>{{ loop.index }}</td>
                     <td>{{ article.header }}</td>
                     <td><a href="{{ path(article) }}" target="_blank">{{ article.url }}</a></td>
@@ -29,4 +41,14 @@
             {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/article.js"
+        '@AppBundle/Resources/public/coffee/admin/article.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

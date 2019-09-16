@@ -23,7 +23,9 @@
         "fsv/sortable-collection-type-bundle": "^0.1.1",
         "egeloen/ckeditor-bundle": "^5.0",
         "leafo/scssphp": "^0.6.7",
-        "patchwork/jsqueeze": "^2.0"
+        "patchwork/jsqueeze": "^2.0",
+        "lullabot/amp": "^1.0.0",
+        "vich/uploader-bundle": "^1.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

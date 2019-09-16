@@ -1,0 +1,37 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}Store | {{ parent() }}{% endblock %}
+
+{% block content %}
+
+    <header>
+        <h1>All Stores</h1>
+    </header>
+
+    <div>
+        <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for store in store_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ store.name }}</td>
+                    <td>
+                        <a href="{{ path("admin_store_edit", {id: store.id}) }}">Edit</a>
+                        <a href="{{ path("admin_store_coupons", {id: store.id}) }}">Coupons</a>
+                        <a href="{{ path("admin_store_delete", {id: store.id}) }}">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

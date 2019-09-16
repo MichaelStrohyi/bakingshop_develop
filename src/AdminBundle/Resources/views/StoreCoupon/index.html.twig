@@ -1,0 +1,95 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Store Coupons | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Coupons for &lt; {{ store.name }} &gt;</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-coupons'}}) }}
+    
+    <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
+        {% for store_coupon in form.coupons %}
+            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
+                <div class="container">
+                    <div class="coupon-content col-sm-11">
+                        <div class="col-sm-8">
+                            {{ form_row(store_coupon.label) }}
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.code) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.code)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.code) }}
+                                    {{ form_errors(store_coupon.code) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.startDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.startDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.startDate) }}
+                                    {{ form_errors(store_coupon.startDate) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.link) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.link)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.link) }}
+                                    {{ form_errors(store_coupon.link) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6{{ form_errors(store_coupon.expireDate) is not empty ? " has-error" : "" }}">
+                                {{ form_label(store_coupon.expireDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                                <div class="col-sm-8">
+                                    {{ form_widget(store_coupon.expireDate) }}
+                                    {{ form_errors(store_coupon.expireDate) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4{{ form_errors(store_coupon.logo) is not empty ? " has-error" : "" }}">
+                            {{ form_widget(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}
+                            {{ form_errors(store_coupon.logo) }}
+                            {% if store_coupon.vars.value.logo is not null and store_coupon.vars.value.logo.filename is not null %}
+                                <div class="form-group">
+                                    {{ form_label(store_coupon.logo)|replace({'col-sm-2': 'col-sm-3'})|raw }}
+                                    <div class="col-sm-9">
+                                        <a href="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.vars.value.logo.filename }}"></a>
+                                        <a href="#" class="btn btn-link" onclick="removeLogo(event, this);">Remove logo</a>
+                                        <input type="text" name="current_logo[{{ store_coupon.vars.value.id }}]" hidden>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                            {{ form_widget(store_coupon.activity) }}
+                            {{ form_widget(store_coupon.position) }}
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="couponActions firstLink">First</a></br>
+                        <a href="#" class="couponActions lastLink">Last</a></br>
+                        <a href="#" class="couponActions upLink">Up</a></br>
+                        <a href="#" class="couponActions downLink">Down</a></br>
+                        <a href="#" class="couponActions activateLink">{{ store_coupon.vars.value.activity == 0 ? 'Activate' : 'Deactivate'}}</a><br>
+                        <a href="#" class="couponActions removeLink">Remove</a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="actions text-right">
+        <button type="submit" class="btn btn-danger">Save Changes</button>
+        <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/coupons.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+        '@AppBundle/Resources/public/coffee/admin/coupon.coffee'
+        '@AppBundle/Resources/public/coffee/admin/sortable.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,11 +1,38 @@
-{% render(controller('AppBundle:Page:headerSlideshow')) %}
-<header>
-    <hr class="line-border hidden-xs" />
-    <div class="row">
-        <div class="col-sm-8 col-sm-push-4">
-        </div>
-        <div class="col-sm-4 col-sm-pull-8">
-            <a href="{{ path('homepage') }}"><img class="img-responsive" id="general-logo" src="{{ asset('/bundles/app/img/bakingshop-logo.ws.png') }}" alt="BakingShop.com"></a>
+<div class="header-logo">
+        <img src="{{ asset("bundles/app/img/header.png") }}" alt="Bakingshop.com">
+        <div class="slideshow-container hidden-xs">
+            {{ render(controller('AppBundle:Page:headerSlideshow')) }} 
+        </div>      
+</div>
+<div class="main-logo">
+    <a href="/"><img src="{{ asset("bundles/app/img/logo.png") }}" alt="Bakingshop.com"></a>
+</div>
+
+<div class="top-menu-section">
+    <div class="top-menu-pattern-top"></div>
+    <div class="top-menu-section-header">
+        <div class="top-menu-text main-page">
+            {% if article.type == 'info' %}
+                Information
+            {% else %}
+                {% if article.type == 'article' %}
+                    Articles
+                {% elseif article.type == 'recipe' %}
+                    Recipies
+                {% endif %}
+                <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
+                </div>
+            {% endif %}
         </div>
     </div>
-</header>
+
+{#        <div class="top-menu-search">
+        <div class="top-menu-search-form">
+            <form name="search" method="post">
+                <input type="text">
+                <input type="submit" value=' '>
+            </form>
+        </div>
+    </div>#}
+</div>
+<div class="top-menu-pattern-bottom"></div>

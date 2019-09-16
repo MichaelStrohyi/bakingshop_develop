@@ -9,7 +9,7 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-items'}}) }}
     
-    <ul class="menu-items list-unstyled mutable-items" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
+    <ul class="items-list list-unstyled mutable-items" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
         {% for menu_item in form.items %}
             <li class="list-item">
                 {{ form_errors(menu_item) }}
@@ -29,80 +29,11 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
-        var $collectionHolder;
-
-        // setup an "add a tag" link
-        var $addItemLink = $('<a href="#" class="add_item_link btn btn-default col-md-offset-2">Add an Item</a>');
-        var $newLinkLi = $('<li></li>').append($addItemLink);
-
-        jQuery(document).ready(function() {
-            // Get the ul that holds the collection of tags
-            $collectionHolder = $('ul.mutable-items');
-
-            // add the "add a tag" anchor and li to the tags ul
-            $collectionHolder.append($newLinkLi);
-
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(".list-item").length);
-
-            $addItemLink.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // add a new tag form (see next code block)
-                addItemLink($collectionHolder, $newLinkLi);
-            });
-
-            // add a delete link to all of the existing tag form li elements
-            $collectionHolder.find('li.list-item').each(function() {
-                addItemFormDeleteLink($(this));
-            });
-
-            // add function for updating position before submit
-            $('#edit-items').on('submit', function(event) {
-                $collectionHolder.find('li.list-item .item-position').each(function(index) {
-                    $(this).val(index);
-                });
-            });
-        });
-
-        function addItemLink($collectionHolder, $newLinkLi) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
-            var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-            var newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a tag" link li
-            var $newFormLi = $('<li class="list-item"></li>').append(newForm);
-            $newLinkLi.before($newFormLi);
-
-            // add a delete link to the new form
-            addItemFormDeleteLink($newFormLi);
-        }
-
-        function addItemFormDeleteLink($itemFormLi) {
-            var $removeFormA = $('<div class="text-right"><a href="#" class="btn btn-default">delete this item</a></div>');
-            $itemFormLi.prepend($removeFormA);
-
-            $removeFormA.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // remove the li for the tag form
-                $itemFormLi.remove();
-            });
-        }
-
-        $("ul.menu-items").sortable();
+    {% javascripts filter="?jsqueeze" output="js/admin/menu.js"
+        '@AppBundle/Resources/public/coffee/admin/menu.coffee'
+        '@AppBundle/Resources/public/coffee/admin/sortable.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     </script>
 {% endblock %}

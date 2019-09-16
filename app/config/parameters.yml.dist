@@ -17,3 +17,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # Path to nodejs and coffeescript
+    bin: '/usr/local/bin/coffee'
+    node: '/usr/local/bin/node'
+    node_paths: '/usr/local/bin/node_modules'

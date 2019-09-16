@@ -1,0 +1,44 @@
+ul.mutable-items  {
+    li.list-item {
+        margin: 10px 0;
+        border: 1px solid #aaa;
+        background: #f0f0f0;
+        border-radius: 5px;
+        padding: 5px 0 0 0;
+    }
+    li.deactivated {
+        background: #ccc;
+    }
+}
+.store-logo {
+    max-height: 100px;
+    max-width: 100px;
+    margin: 0;
+    margin-left: 8px;
+    line-height: 100px;
+    vertical-align: center;
+}
+.form-group > label {
+    padding: 5px 7px 5px 5px !important;
+}
+.form-group input, .form-group select {
+    padding: 3px 5px;
+    height: 28px;
+}
+.form-group textarea {
+    padding: 3px 5px;
+    resize: none;
+}
+.list-item div {
+    padding: 0 !important;
+    margin: 0 0 5px 0 !important;
+}
+.coupon-content > div {
+    margin-bottom: -5px !important;
+}
+.container {
+    padding: 0 !important;
+}
+.container div:last-child {
+    margin-bottom: 0 !important;
+}

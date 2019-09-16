@@ -1,0 +1,18 @@
+{% extends 'AppBundle:amp:layout.html.twig' %}
+
+{% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+
+<article class="content-article-block">
+    <amp-image-lightbox id="lightbox1" layout="nodisplay"><button on="tap:lightbox1.close">X</button></amp-image-lightbox>
+    <h1><span>{{ article.header }}</span></h1>
+    {{ article.ampBody|raw }}
+
+    {% if article.type != 'info' %}
+        <div class="content-article-block-sign">
+            {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
+        </div>
+    {% endif %}
+</article>
+{% endblock %}

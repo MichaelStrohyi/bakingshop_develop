@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="coupon-content col-sm-11">
+        <div class="col-sm-8">
+            {{ form_row(form.coupons.vars.prototype.label) }}
+            <div class="form-group col-sm-6">
+                {{ form_label(form.coupons.vars.prototype.code)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                <div class="col-sm-8">
+                    {{ form_widget(form.coupons.vars.prototype.code) }}
+                    {{ form_errors(form.coupons.vars.prototype.code) }}
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                {{ form_label(form.coupons.vars.prototype.startDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                <div class="col-sm-8">
+                    {{ form_widget(form.coupons.vars.prototype.startDate) }}
+                    {{ form_errors(form.coupons.vars.prototype.startDate) }}
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                {{ form_label(form.coupons.vars.prototype.link)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                <div class="col-sm-8">
+                    {{ form_widget(form.coupons.vars.prototype.link) }}
+                    {{ form_errors(form.coupons.vars.prototype.link) }}
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                {{ form_label(form.coupons.vars.prototype.expireDate)|replace({'col-sm-2': 'col-sm-4'})|raw }}
+                <div class="col-sm-8">
+                    {{ form_widget(form.coupons.vars.prototype.expireDate) }}
+                    {{ form_errors(form.coupons.vars.prototype.expireDate) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.coupons.vars.prototype.logo)|replace({'col-sm-2': 'col-sm-3', 'col-sm-10': 'col-sm-9'})|raw }}
+            {{ form_errors(form.coupons.vars.prototype.logo) }}
+        </div>
+            {{ form_widget(form.coupons.vars.prototype.activity) }}
+            {{ form_widget(form.coupons.vars.prototype.position) }}
+    </div>
+    <div class="col-sm-1">
+        <a href="#" class="couponActions firstLink">First</a></br>
+        <a href="#" class="couponActions lastLink">Last</a></br>
+        <a href="#" class="couponActions upLink">Up</a></br>
+        <a href="#" class="couponActions downLink">Down</a></br>
+        <a href="#" class="couponActions activateLink">Deactivate</a><br>
+        <a href="#" class="couponActions removeLink">Remove</a>
+    </div>
+</div>
