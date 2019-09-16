@@ -22,3 +22,12 @@ parameters:
     bin: '/usr/local/bin/coffee'
     node: '/usr/local/bin/node'
     node_paths: '/usr/local/bin/node_modules'
+
+    #key for getting feeds
+    feeds_key: key_for_feeds
+    feeds_timeout: timeout_for_feeds
+
+    # parameters for statistics
+    google_analytics_key: 'google_account_key'
+    statcounter_id: sc_project
+    statcounter_key: 'sc_security'

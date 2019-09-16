@@ -12,11 +12,21 @@ parameters:
         article:
             entity: 'AppBundle:Article'
             controller: 'AppBundle:Article:page'
-    store_logo_prefix: '/images/logos'
-    coupon_image_prefix: '/images/coupons'
-    all_images_prefix: '/images'
+        store:
+            entity: 'AppBundle:Store'
+            controller: 'AppBundle:Store:coupons'
+    store_logo_prefix: '%images_prefix%/logos/stores'
+    article_logo_prefix: '%images_prefix%/logos/articles'
+    coupon_image_prefix: '%images_prefix%/logos/coupons'
+    article_default_logo: 'article_logo.png'
+    recipe_default_logo: 'recipe_logo.png'
+    store_default_logo: 'store_logo.png'
+    default_logo_width: '161'
+    default_logo_height: '161'
+    images_prefix: '/images'
     amp_prefix: 'amp/'
     web_dir: "%kernel.root_dir%/../web"
+    feeds_url: "https://services.fmtc.co/v2/getDeals?key=%feeds_key%&format=CSV"
 
 framework:
     #esi:             ~
@@ -49,7 +59,16 @@ twig:
     globals:
         store_logo_prefix: '%store_logo_prefix%'
         coupon_image_prefix: '%coupon_image_prefix%'
+        article_logo_prefix: '%article_logo_prefix%'
         amp_prefix: "%amp_prefix%"
+        article_default_logo: '%article_default_logo%'
+        recipe_default_logo: '%recipe_default_logo%'
+        store_default_logo: '%store_default_logo%'
+        default_logo_width: '%default_logo_width%'
+        default_logo_height: '%default_logo_height%'
+        google_analytics_key: '%google_analytics_key%'
+        statcounter_id: '%statcounter_id%'
+        statcounter_key: '%statcounter_key%'
 
 # Assetic Configuration
 assetic:
@@ -110,10 +129,10 @@ ivory_ck_editor:
     configs:
         my_config:
             filebrowserBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=files"
-            filebrowserImageBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=images"
+            filebrowserImageBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=img"
             filebrowserFlashBrowseUrl: "/admin/kcfinder-3.20-test2/browse.php?opener=ckeditor&type=flash"
             filebrowserUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=files"
-            filebrowserImageUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=images"
+            filebrowserImageUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=img"
             filebrowserFlashUploadUrl: "/admin/kcfinder-3.20-test2/upload.php?opener=ckeditor&type=flash"
 
             templates_replaceContent: false
@@ -137,11 +156,15 @@ vich_uploader:
             uri_prefix:         '%store_logo_prefix%'
             upload_destination: '%kernel.root_dir%/../web%store_logo_prefix%'
             namer:              vich_uploader.namer_uniqid
+        article_logo:
+            uri_prefix:         '%article_logo_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%article_logo_prefix%'
+            namer:              vich_uploader.namer_uniqid
         coupon_image:
             uri_prefix:         '%coupon_image_prefix%'
             upload_destination: '%kernel.root_dir%/../web%coupon_image_prefix%'
             namer:              vich_uploader.namer_uniqid
         all_images:
-            uri_prefix:         '%all_images_prefix%'
-            upload_destination: '%kernel.root_dir%/../web%all_images_prefix%'
+            uri_prefix:         '%images_prefix%'
+            upload_destination: '%kernel.root_dir%/../web%images_prefix%'
             namer:              vich_uploader.namer_uniqid

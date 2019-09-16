@@ -12,15 +12,281 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoreRepository extends EntityRepository
 {
+    const FEATURED_LIST_LIMIT = 10;
+
     /**
-     * Return list aff all stores ordered by name
+     * Return list off all stores with activity = true (or with any activity if param with_inactive is set to true) ordered by name
      *
-     * @return void
+     * @param boolean $with_inactive
+     * @return Store
      * @author Michael Strohyi
      **/
-    public function findAllByName()
+    public function findAllByName($with_inactive = false)
     {
-        return $this->findBy([], ['name' => 'asc']);
+        return $with_inactive ? $this->findBy([], ['name' => 'asc']) : $this->findBy(['activity' => true], ['name' => 'asc']);
     }
 
+    /**
+     * Get current url for $store from db
+     *
+     * @param Store $store
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function getUrlFromDB($store)
+    {
+        if (empty($store->getId())) {
+            return;
+        }
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.name FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $store->getId(),
+            ]);
+
+        return $store->makeUrlFromName($query->getOneOrNullResult()['name']);
+    }
+
+    /**
+     * Get link from db for store with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findLinkById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.link FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $this->getEntityManager()->getRepository('USPCPageBundle:Page')->getUrlFromRes($query->getOneOrNullResult()['link']);
+    }
+
+    /**
+     * Get name from db for store with given $id
+     *
+     * @param int $id
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function findNameById($id)
+    {
+        if (empty($id)) {
+            return;
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s.name FROM AppBundle:Store s '
+                . 'WHERE s.id = :id'
+            )
+            ->setParameters([
+                'id' => $id,
+            ]);
+
+        return $query->getOneOrNullResult()['name'];
+    }
+
+    /**
+     * Return list off all stores with activity = true (or with any activity if param with_inactive is set to true), which have $subname in header
+     *
+     * @param string $subname
+     * @param int $limit
+     * @param boolean $with_inactive
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findBySubname($subname, $limit = null, $with_inactive = false)
+    {
+        # trim from subname spaces and % symbols and replace all spaces for single '%'
+        $subname = preg_replace(["/[\s]+/", "/[%]+/"], "%", trim($subname, " %"));
+        # if length of search-string (subname) is < 2 return empty result
+        if (strlen($subname) < 2) {
+            return [];
+        }
+        # add inactive stores to result if flag is set
+        $query_param = $with_inactive ? '' : 'AND s.activity = true ';
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s FROM AppBundle:Store s '
+                . 'WHERE (s.name LIKE :subname OR s.keywords LIKE :subname) '
+                . $query_param
+                . 'ORDER by s.name ASC'
+            )
+            ->setParameters([
+                'subname' => '%' . $subname . '%',
+            ])
+            ->setMaxResults($limit);
+        # make regex pattern: all given words must be at the beginning of string and can be divided by ()-:'& symbols or by space or be without divider
+        $pattern = '/^' . implode('[\(\)-:\'&\s\|]*', explode('%', $subname)) . '/i';
+        $res = [];
+        $stores = $query->getResult();
+        # go through results from db and add to results only stores with name or keywords which match regex pattern
+        foreach ($stores as $store) {
+            if (preg_match($pattern, $store->getName())) {
+                $res[] = $store;
+                continue;
+            }
+
+            foreach (explode(', ', $store->makeStringFromText($store->getKeywords())) as $value) {
+                if (preg_match($pattern, $value)) {
+                    $res[] = $store;
+                    break;
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * Return id of store with given feedId
+     *
+     * @param int $feedId
+     *
+     * @return Store
+     * @author Michael Strohyi
+     **/
+    public function getStoreByFeedId($feedId)
+    {
+        if (empty($feedId)) {
+            return;
+        }
+
+        $store = $this->findBy(['feedId' => $feedId]);
+        return empty($store) ? null : $store[0];
+    }
+
+    /**
+     * Return all stores with not null feedId if their feedIds are absent in given exclusions
+     *
+     * @param array $exclusions
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getAllFeedStores($exclusions = [])
+    {
+        $q = 'SELECT s FROM AppBundle:Store s WHERE s.feedId IS NOT NULL';
+        if (!empty($exclusions)) {
+            $exclusions = '(' . implode(', ', $exclusions) . ')';
+            $q .= ' AND s.feedId NOT IN ' . $exclusions;
+        }
+
+        $query = $this->getEntityManager()->createQuery($q);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Return list of all store's feedId, which are not null
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getAllFeedId()
+    {
+        $q = 'SELECT s.feedId FROM AppBundle:Store s WHERE s.feedId IS NOT NULL';
+        $query = $this->getEntityManager()->createQuery($q);
+        $res = [];
+        foreach ($query->getResult() as $value) {
+            $res[] = $value['feedId'];
+        };
+
+        return $res;
+    }
+
+    /**
+     * Return list off featured stores  with activity = true (or with any activity if param with_inactive is set to true) ordered randomly. List size is limited by given limit
+     *
+     * @param boolean $with_inactive
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getFeaturedStores($limit = self::FEATURED_LIST_LIMIT, $with_inactive = false)
+    {
+        $query_param = $with_inactive ? '' : 'AND s.activity = true ';
+        # get all stores with true is_featured property from db
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT s FROM AppBundle:Store s '
+                . 'WHERE s.logo is not null '
+                . 'AND s.is_featured = true '
+                . $query_param
+                . 'ORDER BY s.id ASC'
+            );
+        $stores = $query->getResult();
+        $res = [];
+        # while stores list is not empty iterations count not > given limit
+        while (!empty($stores) && $limit > 0) {
+            # cut random store from stores list
+            list($store, $stores) = $this->getRandomItem($stores);
+            # continue if current store has no actual coupons
+            if ($store->getCouponsCount() == 0) {
+                continue;
+            }
+            # add cutted store into result list
+            $res[] = $store;
+            # subtract this iteration from limit
+            $limit--;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Get random item from given list and return this item and list without this item
+     *
+     * @return array|null
+     * @author Michael Strohyi
+     **/
+
+    private function getRandomItem($items)
+    {
+        # if given items is emoty return
+        $count = count($items);
+        if ($count == 0) {
+            return;
+        }
+        # get random item from items list
+        $index = rand(0, $count-1);
+        $item = $items[$index];
+        # cut this item from items list
+        array_splice($items, $index, 1);
+
+        return [$item, $items];
+    }
+
+   /**
+     * Return true if comment with given label, author, email already exists
+     *
+     * @param string $label
+     * @param string $author
+     * @param string $email
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function findAllWithUnverifiedComments()
+    {
+        $q = 'SELECT s FROM AppBundle:Store s WHERE s.id in (SELECT IDENTITY(c.store) FROM AppBundle:Comment c WHERE c.isVerified = false GROUP BY c.store)';
+        $query = $this->getEntityManager()->createQuery($q);
+        return $query->getResult();
+    }
 }

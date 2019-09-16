@@ -7,11 +7,16 @@
         <h1>Edit Store</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_row(form.name, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.url, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.keywords, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.description, {'attr': {'autocomplete': false}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.link) }}
+    {{ form_row(form.metaKeywords) }}
+    {{ form_row(form.metaDescription) }}
+    <div class="hidden">
+        {{ form_row(form.metatags) }}
+    </div>
+    {{ form_row(form.keywords) }}
+    {{ form_row(form.description) }}
     {{ form_widget(form.logo) }}
     {% if form.vars.value.logo is not null and form.vars.value.logo.filename is not null %}
         <div class="form-group">
@@ -23,7 +28,12 @@
             </div>
         </div>
     {% endif %}
-
+    {{ form_row(form.feedId) }}
+    {{ form_row(form.useFeedLinks) }}
+    {{ form_row(form.activity) }}
+    {{ form_row(form.is_featured) }}
+    {{ form_row(form.howToUse) }}
+    {{ form_row(form.news) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Update</button>
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>

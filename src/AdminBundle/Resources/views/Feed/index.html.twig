@@ -1,0 +1,39 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Feed affiliates | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Manage Feed Affiliate</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-items'}}) }}
+    
+    <ul class="items-list list-unstyled mutable-items" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
+        {% for feed_affiliate in form.items %}
+            <li class="list-item">
+                {{ form_errors(feed_affiliate) }}
+                {{ form_widget(feed_affiliate) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="actions text-right">
+        <button type="submit" class="btn btn-danger">Save Changes</button>
+        <a href="{{ path("admin_panel_index") }}" class="btn btn-default">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/menu_item.js"
+        '@AppBundle/Resources/public/coffee/admin/menu_item.coffee'
+        '@AppBundle/Resources/public/coffee/admin/not_sortable_list.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    </script>
+{% endblock %}

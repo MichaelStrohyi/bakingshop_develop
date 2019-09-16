@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CouponRepository")
- * @ORM\HasLifecycleCallbacks 
+ * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"store" = "StoreCoupon"})
@@ -20,6 +20,9 @@ class Coupon
 {
     const DEFAULT_POSITION = 10000;
     const DEFAULT_ACTIVITY = 1;
+    const VERIVIED_TODAY = 'today';
+    const VERIVIED_YESTERDAY = 'yesterday';
+    const VERIVIED_DAYS_AGO = ' days ago';
     /**
      * @var integer
      *
@@ -34,7 +37,7 @@ class Coupon
      *
      * @ORM\Column(name="label", type="text", nullable=false)
      * @Assert\NotBlank
-     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]]*$/")
+     * @Assert\Regex(pattern="/^[\w\d\s[:punct:]£€]*$/")
      */
     private $label;
 
@@ -96,6 +99,57 @@ class Coupon
      * @Assert\Valid
      **/
     private $logo;
+
+    /**
+     * @var Operator
+     *
+     * @ORM\OneToOne(targetEntity="Operator")
+     * @ORM\JoinColumn(name="addedBy", referencedColumnName="id", nullable=true)
+     *
+     */
+    private $addedBy;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="verifiedAt", type="date", nullable=true)
+     */
+    private $verifiedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="subtype", type="string", nullable=true)
+     */
+    private $subtype;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="discount", type="string", nullable=true)
+     */
+    private $discount;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="feed_id", type="integer", nullable=true)
+     */
+    private $feedId;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="rating", type="decimal", scale=3, precision=6, nullable=true)
+     */
+    private $rating;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_updated", type="datetime", nullable=true)
+     */
+    private $lastUpdated;
 
     /**
      * Get id
@@ -184,9 +238,23 @@ class Coupon
      **/
     public function transformLoadedData()
     {
-        if (is_resource($this->link) && get_resource_type($this->link) == 'stream') {
-            $this->link = stream_get_contents($this->link, -1, 0);
+        $this->link = $this->transformData($this->link);
+    }
+
+    /**
+     * Try to ransform given $data from stream into string and return this result. If failed return original $data.
+     * @param resource $data
+     *
+     * @return mixed
+     * @author Michael Strohyi
+     **/
+    public function transformData($data)
+    {
+        if (is_resource($data) && get_resource_type($data) == 'stream') {
+            return stream_get_contents($data, -1, 0);
         }
+
+        return $data;
     }
 
     /**
@@ -314,5 +382,387 @@ class Coupon
         $this->logo = null;
 
         return $this;
+    }
+
+    /**
+     * Set verifiedAt
+     *
+     * @param \DateTime $verifiedAt
+     * @return Coupon
+     */
+    public function setVerifiedAt($verifiedAt)
+    {
+        $this->verifiedAt = $verifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get verifiedAt
+     *
+     * @return \DateTime
+     */
+    public function getVerifiedAt()
+    {
+        return $this->verifiedAt;
+    }
+
+    /**
+     * Set addedBy
+     *
+     * @param CouponImage $addedBy
+     * @return Coupon
+     */
+    public function setAddedBy($addedBy)
+    {
+        $this->addedBy = $addedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get addedBy
+     *
+     * @return CouponImage
+     */
+    public function getAddedBy()
+    {
+        return $this->addedBy;
+    }
+
+    /**
+     * Set subtype
+     *
+     * @param string $subtype
+     * @return Coupon
+     */
+    public function setSubtype($subtype)
+    {
+        $this->subtype = $subtype;
+
+        return $this;
+    }
+
+    /**
+     * Get subtype
+     *
+     * @return string
+     */
+    public function getSubtype()
+    {
+        return $this->subtype;
+    }
+
+    /**
+     * Set discount
+     *
+     * @param string $discount
+     * @return Coupon
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * Get discount
+     *
+     * @return string 
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * Return true if coupon is active and not expired
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function isActual()
+    {
+        $cur_date = new \DateTime();
+        $cur_date->setTime(0, 0, 0);
+        $start_date = $this->getStartDate();
+        $expire_date = $this->getExpireDate();
+        return !$this->isActive() || !empty($start_date) && $start_date > $cur_date || !empty($expire_date) && $expire_date < $cur_date ? false : true;
+    }
+
+    /**
+     * Get startDate for production in format yyyy-mm-dd
+     *
+     * @return string
+     */
+    public function getStartDateProd()
+    {
+        if (empty($this->startDate)) {
+            return null;
+        }
+
+        return $this->startDate->format('Y-m-d');
+    }
+
+    /**
+     * Get expireDate for production in format yyyy-mm-dd
+     *
+     * @return string
+     */
+    public function getExpireDateProd()
+    {
+        if (empty($this->expireDate)) {
+            return null;
+        }
+
+        return $this->expireDate->format('Y-m-d');
+    }
+
+    /**
+     * Set current date into VerifiedAt property
+     *
+     * @return self
+     * @author Michael Strohyi
+     **/
+    public function setJustVerified()
+    {
+        $this->setVerifiedAt(new \DateTimeImmutable());
+
+        return $this;
+    }
+
+    /**
+     * Set current date into LastUpdated property
+     *
+     * @return self
+     * @author Michael Strohyi
+     **/
+    public function setJustUpdated()
+    {
+        $this->setLastUpdated(new \DateTimeImmutable() );
+
+        return $this;
+    }
+    /**
+     * Get feedId
+     *
+     * @return integer
+     */
+    public function getFeedId()
+    {
+        return $this->feedId;
+    }
+
+    /**
+     * Set feedId
+     *
+     * @param integer $feedId
+     * @return Coupon
+     */
+    public function setFeedId($feedId)
+    {
+        $this->feedId = $feedId;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return float
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set rating
+     *
+     * @param integer $label
+     * @return Coupon
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     * @return Coupon
+     */
+    public function setLastUpdated($lastUpdated)
+    {
+        $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdated
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdated()
+    {
+        return $this->lastUpdated;
+    }
+
+    /**
+     * Get encrypted code for production
+     *
+     * @return string
+     * @author Michael Strohyi
+     **/
+    function getEncryptedCode()
+    {
+        $key = 'uspromocodes.com';
+        $code = $this->getCode();
+        if (empty($this->getCode()) || empty($key)) {
+            return;
+        }
+
+        $code_len = strlen($code);
+        $code_pos = 0;
+        $key_len = strlen($key);
+        $key_pos = -1;
+        $chars_array = str_split($code);
+
+        foreach($chars_array as &$char) {
+            $char_code = ord($char);
+            $key_pos = ++$key_pos < $key_len ? $key_pos : 0;
+            $char_key = ord($key[$key_pos]);
+            $char = chr($char_code ^ $char_key);
+            $char = strlen(dechex(ord($char))) < 2 ? '\x0' . strtoupper(dechex(ord($char))) : '\x' . strtoupper(dechex(ord($char)));
+        }
+
+        return implode('', $chars_array);
+    }
+
+    /**
+     * Return string with info when coupon was verified concerning today
+     *
+     * @return string|null
+     * @author Michael Strohyi
+     **/
+    public function getWhenVerified()
+    {
+        $verifiedAt = $this->getVerifiedAt();
+        if (empty($verifiedAt)) {
+            return null;
+        }
+
+        $interval = date_diff($this->getVerifiedAt(), new \DateTimeImmutable())->format('%a');
+        switch ($interval) {
+            case '0':
+                $interval = self::VERIVIED_TODAY;
+                break;
+
+            case '1':
+                $interval = self::VERIVIED_YESTERDAY;
+                break;
+
+            default:
+                $interval .= self::VERIVIED_DAYS_AGO;
+                break;
+        }
+
+        return $interval;
+    }
+
+    /**
+     * Find maximum discount in coupon's label and set it into discount property
+     *
+     * @return self
+     * @author Michael Strohyi
+     **/
+    public function setMaxDiscount()
+    {
+        $this->setDiscount(self::findMaxDiscount($this->getLabel()));
+
+        return $this;
+    }
+
+    /**
+     * Find maximum discount in given label
+     *
+     * @param string $label
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public static function findMaxDiscount($label)
+    {
+        preg_match_all('/[0-9]+%/', $label, $matches);
+        if (!empty($matches[0])) {
+            return(max($matches[0]));
+        }
+
+        if (preg_match('/free[\w\s]{1,20}shipping/i', $label) != 0) {
+            return 'FREE Shipping';
+        }
+
+        return null;
+    }
+
+    /**
+     * Check startDate and, if it is not null and > current date, deactivate coupon
+     * Return true if activity was changed, otherwise retirn false
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function checkStartDate()
+    {
+        $cur_date = new \DateTime();
+        $cur_date->setTime(0, 0, 0);
+        if ($this->getStartDate() > $cur_date && $this->isActive()) {
+            $this->deactivate();
+            return true;
+        }
+
+        if ($this->getStartDate() == $cur_date && !$this->isActive()) {
+            $this->activate();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Deactivate coupon
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function deactivate()
+    {
+        $this->setActivity(0);
+    }
+
+    /**
+     * Activate coupon
+     *
+     * @return void
+     * @author Michael Strohyi
+     **/
+    public function activate()
+    {
+        $this->setActivity(1);
+    }
+
+    /**
+     * Return true if coupon is active, otherwise return false
+     *
+     * @return boolean
+     * @author Michael Strohyi
+     **/
+    public function isActive()
+    {
+        return $this->getActivity() == 1;
     }
 }

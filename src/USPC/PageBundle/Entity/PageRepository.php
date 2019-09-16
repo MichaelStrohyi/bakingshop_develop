@@ -3,6 +3,7 @@
 namespace USPC\PageBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Store;
 
 /**
  * PageRepository
@@ -14,6 +15,7 @@ class PageRepository extends EntityRepository
 {
     const URL_IS_ALIAS = 'alias';
     const URL_IS_INVALID = 'invalid';
+    const ARTICLES_PER_PAGE = 20;
     /**
      * Mark all unused object urls as alias
      *
@@ -134,11 +136,12 @@ class PageRepository extends EntityRepository
             return;
         }
 
+        $em = $this->getEntityManager();
         # try to get object_id from object, if it is empty get id from arguments
         $obj_id = empty($obj->getId()) ? $obj_id : $obj->getId();
 
         # find all urls for current object with given type
-        $query = $this->getEntityManager()
+        $query = $em
             ->createQuery(
                 'SELECT p.url FROM USPCPageBundle:Page p '
                 . 'WHERE p.type = :type and p.object_id = :object_id'
@@ -156,10 +159,14 @@ class PageRepository extends EntityRepository
         }
 
         # delete all menu-items link to current object (menu-item url is in the list of object urls)
-        $item_repo = $this->getEntityManager()->getRepository('AppBundle:MenuItem');
+        $menus = [];
+        $item_repo = $em->getRepository('AppBundle:MenuItem');
         foreach ($obj_page_urls as $value) {
             if (!empty($value['url'])) {
                 $url = $this->getUrlFromRes($value['url']);
+                # save menus with menu-items which have to be deleted
+                $menus += $item_repo->getMenusByItemUrl($url);
+                # delete necessary menu-items
                 $item_repo->deleteMenuItems($url);
                 if ($obj_url === $url) {
                     $obj_url = null;
@@ -167,12 +174,21 @@ class PageRepository extends EntityRepository
             }
         }
 
-        if (empty($obj_url)) {
-            return;
+        # if object url was not in url list from Pages db, delete menu-item linked to this url
+        if (!empty($obj_url)) {
+            # save menus with menu-items which have to be deleted
+            $menus += $item_repo->getMenusByItemUrl($obj_url);
+            # delete necessary menu-items
+            $item_repo->deleteMenuItems($obj_url);
         }
 
-        # if object url was not in url list from Pages db, delete menu-item linked to this url
-        $item_repo->deleteMenuItems($obj_url);
+        foreach ($menus as $menu) {
+            $menu->actualiseItemsPosition();
+            $em->persist($menu);
+        }
+
+        $em->flush();
+
     }
 
     /**
@@ -244,5 +260,192 @@ class PageRepository extends EntityRepository
         
         # if not alias url is found return error with mesage containinig this url, else return true
         return (empty($result)) ? true : ['error' => self::URL_IS_ALIAS, 'new_url' => $this->getUrlFromRes($result['url'])];
+    }
+
+    /**
+     * Create crosslink to link apm-html page with html page for given $path as a local url
+     *
+     * @param string $prefix
+     * @param string $amp_prefix
+     * @param string path
+     * @return string
+     * @author Michael Strohyi
+     **/
+    public function createCrossLink($prefix, $amp_prefix, $path)
+    {
+        if  (!empty($prefix)) {
+            $path = substr($path, strlen($prefix));
+            $crosslink = ltrim($path, '/');
+        } else {
+            $crosslink = trim($amp_prefix, '/') . $path;
+        }
+
+        return $crosslink;
+    }
+
+    /**
+     * Return results from $items list for given $page, using $limit items per page. Also return navigation for pagination.
+     *
+     * @param array $items
+     * @param int $page
+     * @param  int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getResultsForPage($items, $page, $limit = self::ARTICLES_PER_PAGE)
+    {
+        # return if items is empty
+        if (empty($items)) {
+            return [$items, null];
+        }
+
+        if ($page == 0) {
+            return [$this->groupAlphabetically($items), null];
+        }
+
+        # create 404 exception if given page is too big and there are no items for this page
+        if (($page - 1) * $limit >= count($items)) {
+            throw $this->createNotFoundException();
+        }
+
+        $navigation = [];
+        # add given page into pagination list
+        $nav_links[] = $page;
+        $last_nav_link = ceil(count($items)/$limit);
+        $offset = 0;
+        $run = true;
+        # add pages near given page into pagintation list if they exist (maximum 5 pages)
+        while (count($nav_links) < 5 && $run) {
+            $offset++;
+            $run = false;
+            # add lower page if it exists
+            if ($page - $offset > 0) {
+                array_unshift($nav_links, $page - $offset);
+                $run = true;
+            }
+            # add higher page if it exists
+            if ($page + $offset <= $last_nav_link) {
+                $nav_links[] = $page + $offset;
+                $run = true;
+            }
+        }
+        # create pagination menu if there are more than one page in pagination list
+        if (count($nav_links) != 1) {
+            # add prev link into pagination menu if prev page exists
+            if ($page != 1) {
+                $navigation['prev'] = $page - 1;
+            }
+            # add pagination list into pagination menu
+            $navigation['pages'] = $nav_links;
+            # add next link into pagination menu if next page exists
+            if ($page != $last_nav_link) {
+                $navigation['next'] = $page + 1;
+            }
+        }
+
+        return [array_slice($items, ($page - 1) * $limit, $limit), $navigation];
+    }
+
+    /**
+     * Return results from $articles and $stores lists for given $page, using $limit items per page
+     *
+     * @param array $articles
+     * @param array $stores
+     * @param  int $limit
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function getMixedResultsForPage($articles, $stores, $limit = self::ARTICLES_PER_PAGE)
+    {
+        $articles_count = $articles_all_count = count($articles);
+        $stores_count = $stores_all_count = count($stores);
+        # if total count of stores and articles are more than limit
+        if ($articles_count + $stores_count > $limit) {
+            # remove extra results of search
+            if ($stores_count < $limit / 2) {
+                $articles_count = $limit - $stores_count;
+            } elseif ($articles_count < $limit / 2) {
+                $stores_count = $limit - $articles_count;
+            } else {
+                $articles_count = $stores_count = $limit / 2;
+            }
+
+            $articles = array_slice($articles, 0, $articles_count);
+            $stores = array_slice($stores, 0, $stores_count);
+        }
+
+        return ['articles' => $articles, 'stores' => $stores, 'articles_count' => $articles_all_count, 'stores_count' => $stores_all_count];
+    }
+
+
+    /**
+     * Return list off all articles with given $type ordered by header and grouped alphabetically if given simple_list param is 0
+     *
+     * @param array $items
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function groupAlphabetically($items)
+    {
+        $res = array_fill_keys(['#', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'], []);
+        if (empty($items)) {
+            return $res;
+        }
+        # analize type of items and set necessary variables according to item's type
+        switch (get_class($items[0])) {
+            case 'AppBundle\Entity\Article':
+                $method = 'getHeader';
+                break;
+
+            case 'AppBundle\Entity\Store':
+                $method = 'getName';
+                break;
+
+            default:
+                # return if type of items is unknown
+                return $res;
+        }
+
+        if (!method_exists($items[0], $method)) {
+            return $res;
+        }
+
+        foreach ($items as $item) {
+            $first_letter = strtolower(substr($item->$method(), 0, 1));
+            if (!ctype_alpha($first_letter)) {
+                $res['#'][] = $item;
+            } else {
+                $res[$first_letter][] = $item;
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * Search given url in Page db. Return found object and flag, if stores postfix was added to find object or not
+     *
+     * @param string $url
+     * @return array
+     * @author Michael Strohyi
+     **/
+    public function findPageByUrl($url)
+    {
+        if (empty($url)) {
+            return [null, false];
+        }
+
+        $stores_postfix = Store::URL_POSTFIX;
+        $added_postfix = false;
+        # try to find page object with given url
+        $res = $this->findOneByUrl($url);
+        # if object is not found and stores_postfix is absent at the end of given url
+        if (empty($res) && strpos($url, $stores_postfix) !== strlen($url) - strlen($stores_postfix)) {
+            # try to find page object by url with stores_postfix added to the end
+            $res = $this->findOneByUrl($url . $stores_postfix);
+            $added_postfix = true;
+        }
+
+        return [$res, $added_postfix];
     }
 }

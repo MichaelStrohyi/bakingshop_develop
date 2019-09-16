@@ -4,15 +4,34 @@
 
 {% block body %}
     <div class="container">
-        {% block navigation %}{% endblock %}
+        {% block navigation %}
+            <nav class="admin-navigation-menu">
+                <ul>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Article::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_article_index')}}">Edit Articles</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Menu::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_menu_index')}}">Edit Menus</a></li>
+                    {#<li {{ 'admin_' ~ constant('AppBundle\\Entity\\Operator::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_operator_index')}}">Edit Operators</a></li>#}
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Store::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_store_index')}}">Edit Stores</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Redirect::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_redirect')}}">Edit Redirects</a></li>
+                    <li {{ 'admin_' ~ constant('AppBundle\\Entity\\Comment::PAGE_TYPE') in app.request.get('_route') ? 'class="active"' : '' }}><a href="{{ path('admin_comment_index')}}">Verify Comments</a></li>
+                </ul>
+            </nav>
+            <div class="content">
+        {% endblock %}
         {% block content %}{% endblock %}
     </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    {% javascripts filter="?jsqueeze" output="js/admin/main.js"
+        '@AppBundle/Resources/public/coffee/admin/main.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
 
 {% block stylesheets %}

@@ -1,6 +1,15 @@
-<div class="side-menu-section">
-    {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-articles'})) }}
-</div>
-<div class="side-menu-section blue">
-    {{ render(controller('AppBundle:Page:menu', {'name': 'sidebar-recipies'})) }}
-</div>
+{% set colors_array = constant('AppBundle\\Entity\\Menu::PROD_COLORS') %}
+{% set menu_num = 0 %}
+{% for menu in menus %}
+    {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
+        <div class="side-menu-section {{ colors_array[menu_num % colors_array|length]}}">
+            <div class="menu-title"><span>{{ menu.header }}</span></div>
+            <nav class="menu-items">
+                <ul class="menu-list {{ pathInfo }}">
+                   {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': pathInfo})) }}
+                </ul>
+            </nav>
+           {% set menu_num = menu_num + 1 %}
+        </div>
+    {% endif %}
+{% endfor %}

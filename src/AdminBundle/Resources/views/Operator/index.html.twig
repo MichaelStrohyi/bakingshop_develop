@@ -1,0 +1,28 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}Operator | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <a href="{{ path("admin_operator_create")}}" class="btn btn-default">Create Operator</a>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for operator in operator_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ operator.name }}</td>
+                    <td>
+                        <a href="{{ path("admin_operator_edit", {id: operator.id}) }}">Edit</a>
+                        <a href="{{ path("admin_operator_delete", {id: operator.id}) }}">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -17,9 +17,11 @@ jQuery(document).ready(function() {
     return addAllActionLinks($(this));
   });
   return $("#edit-" + itemType + "s").on('submit', function(event) {
-    return $collectionHolder.find("li.list-item ." + itemType + "-position").each(function(index) {
+    event.preventDefault();
+    $collectionHolder.find("li.list-item ." + itemType + "-position").each(function(index) {
       return $(this).val(index);
     });
+    return $(this).unbind('submit').submit();
   });
 });
 
@@ -29,7 +31,7 @@ addItemLink = function($collectionHolder) {
   index = $collectionHolder.data('index');
   newForm = prototype.replace(/__name__/g, index);
   $collectionHolder.data('index', index + 1);
-  $newFormLi = $('<li class="list-item"></li>').append(newForm);
+  $newFormLi = $('<li class="list-item new-item"></li>').append(newForm);
   $collectionHolder.append($newFormLi);
   return addAllActionLinks($newFormLi);
 };

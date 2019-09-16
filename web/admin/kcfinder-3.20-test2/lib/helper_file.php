@@ -150,6 +150,9 @@ class file {
         return isset(self::$MIME[$ext]) ? self::$MIME[$ext] : "application/octet-stream";
     }
 
+// !!! modified
+// added allow_rename param which allow or deny to search for inexistant filename.
+
 /** Get inexistant filename based on the given filename. If you skip $dir
   * parameter the directory will be fetched from $filename and returned
   * value will be full filename path. The third parameter is optional and
@@ -169,9 +172,10 @@ class file {
   * @param string $filename
   * @param string $dir
   * @param string $tpl
+  * @param boolean $allow_rename
   * @return string */
 
-    static function getInexistantFilename($filename, $dir=null, $tpl=null) {
+    static function getInexistantFilename($filename, $dir=null, $tpl=null, $allow_rename=true) {
         if ($tpl === null)  $tpl = "{name}({sufix}){ext}";
         $fullPath = ($dir === null);
         if ($fullPath)
@@ -188,8 +192,14 @@ class file {
         $tpl = str_replace('{name}', $name, $tpl);
         $tpl = str_replace('{ext}', (strlen($ext) ? ".$ext" : ""), $tpl);
         $i = 1; $file = "$dir/$filename";
-        while (file_exists($file))
-            $file = "$dir/" . str_replace('{sufix}', $i++, $tpl);
+        while (file_exists($file)) {
+          // !!! modified
+          # if file with this name already exists return false instead of creating new name
+          if (!$allow_rename)
+            return '';
+          // endof modified
+          $file = "$dir/" . str_replace('{sufix}', $i++, $tpl);
+        }
 
         return $fullPath
             ? $file

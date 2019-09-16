@@ -1,0 +1,39 @@
+{% extends "AdminBundle::layout.html.twig" %}
+
+{% block title %}Menu | {{ parent() }}{% endblock %}
+
+{% block content %}
+
+    <header>
+        <h1>Sort Menus</h1>
+    </header>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-items'}}) }}
+        
+        <ul class="items-list list-unstyled mutable-items">
+            {% for menu in form.items %}
+                <li class="list-item menus">
+                    <label>{{ menu.vars.value.header }}</label>
+                    {{ form_errors(menu) }}
+                    {{ form_widget(menu) }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="actions text-right">
+            <button type="submit" class="btn btn-danger">Save Changes</button>
+            <a href="{{ path("admin_menu_index") }}" class="btn btn-default">Cancel</a>
+        </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/sortable_menus.js"
+        '@AppBundle/Resources/public/coffee/admin/sortable_menus.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    </script>
+{% endblock %}

@@ -3,21 +3,19 @@
 {% block title %}Article | {{ parent() }}{% endblock %}
 
 {% block content %}
-
-    <a href="{{ path("admin_article_create")}}" class="btn btn-default">Create Article</a><br>
-
-            {% if article_list is not null %}
-                Show pages:
-                    <label class="radio-inline">
-                        <input type="radio" name="pages_filter" value="" checked>all
-                    </label>
-                        {% for article_type in article_types %}
-                            <label class="radio-inline">
-                                <input type="radio" name="pages_filter" value="{{ article_type }}">{{ article_type }}
-                            </label>
-                        {% endfor %}
-                    </select>
-            {% endif %}
+    <a href="{{ path("admin_article_create")}}" class="btn btn-default">Create Article</a>
+        {% if article_list is not null %}
+            Show pages:
+                <label class="radio-inline">
+                    <input type="radio" name="pages_filter" value="" checked>all
+                </label>
+                    {% for article_type in article_types %}
+                        <label class="radio-inline">
+                            <input type="radio" name="pages_filter" value="{{ article_type }}">{{ article_type }}
+                        </label>
+                    {% endfor %}
+                </select>
+        {% endif %}
     <table class="table table-hover">
         <thead>
             <tr>
@@ -35,7 +33,9 @@
                     <td><a href="{{ path(article) }}" target="_blank">{{ article.url }}</a></td>
                     <td>
                         <a href="{{ path("admin_article_edit", {id: article.id}) }}">Edit</a>
-                        <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>
+                        {% if article.id != 0 %}
+                            <a href="{{ path("admin_article_delete", {id: article.id}) }}">Remove</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

@@ -2,6 +2,7 @@
 namespace AppBundle\AMP\Pass;
 
 use Lullabot\AMP\Pass\ImgTagTransformPass;
+use Lullabot\AMP\Validate\CssLengthAndUnit;
 use Lullabot\AMP\Validate\Scope;
 use Lullabot\AMP\Utility\ActionTakenLine;
 use Lullabot\AMP\Utility\ActionTakenType;
@@ -36,8 +37,13 @@ class AppImgTagTransformPass extends ImgTagTransformPass
             /** @var \DOMElement $dom_el */
             $dom_el = $el->get(0); 
 
-        // set isHeader flag if curent image is child of first <p>
-        $this->isHeader = $first_p_line === $dom_el->parentNode ? true : false;
+            // set isHeader flag if curent image is child of first <p>
+            $this->isHeader = false;
+            $cur_parent = $dom_el->parentNode;
+            while (!empty($cur_parent) && !$this->isHeader) {
+                $this->isHeader = $first_p_line === $cur_parent ? true : false;
+                $cur_parent = $cur_parent->parentNode;
+            }
 
             if ($this->isSvg($dom_el)) {
                 // @TODO This should be marked as a validation warning later?
@@ -86,6 +92,9 @@ class AppImgTagTransformPass extends ImgTagTransformPass
 
         // Try obtaining image size without having to download the whole image
         $size = $this->fastimage->getImageSize($img_url);
+        if ($size === false) {
+            $size = [];
+        }
 
         // Try obtaining image size from element inline styles
         if (isset($el)) {
@@ -103,7 +112,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
                   list($css_att, $css_val) = explode(':',$item, 2);
                   $css[$css_att] = trim($css_val);
                 }
-                if (array_key_exists('width', $size) && array_key_exists('height', $size) && array_key_exists('width', $css) && array_key_exists('height', $css) && !empty($css['height']) && substr($css['height'], strlen($css['height']) - 2) == 'px' && !empty($css['width']) && substr($css['width'], strlen($css['width']) - 2) == 'px') {
+                if (array_key_exists('width', $css) && array_key_exists('height', $css) && !empty($css['height']) && substr($css['height'], strlen($css['height']) - 2) == 'px' && !empty($css['width']) && substr($css['width'], strlen($css['width']) - 2) == 'px') {
                     $imageWidth = substr($css['width'], 0, strlen($css['width'] - 2));
                     $imageHeight = substr($css['height'], 0, strlen($css['height'] - 2));
                     if (!empty($imageWidth) && !empty($imageHeight)) {
@@ -114,7 +123,43 @@ class AppImgTagTransformPass extends ImgTagTransformPass
             }
         }
 
-        return $size;
+        return empty($size) ? false : $size;
+    }
+ /**
+     * @param DOMQuery $el
+     * @return bool
+     */
+    protected function setResponsiveImgHeightAndWidth(DOMQuery $el)
+    {
+        // Static cache
+        static $image_dimensions_cache = [];
+        $wcss = new CssLengthAndUnit($el->attr('width'), false);
+        $hcss = new CssLengthAndUnit($el->attr('height'), false);
+
+        if ($wcss->is_set && $wcss->is_valid && $hcss->is_set && $hcss->is_valid && $wcss->unit == $hcss->unit) {
+            return true;
+        }
+
+        $src = trim($el->attr('src'));
+        if (empty($src)) {
+            return false;
+        }
+
+        if (isset($image_dimensions_cache[$src])) {
+
+            $dimensions = $image_dimensions_cache[$src];
+        } else {
+            $dimensions = $this->getImageWidthHeight($src, $el);
+
+        }
+        if ($dimensions !== false) {
+            $image_dimensions_cache[$src] = $dimensions;
+            $el->attr('width', $dimensions['width']);
+            $el->attr('height', $dimensions['height']);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -123,7 +168,7 @@ class AppImgTagTransformPass extends ImgTagTransformPass
      * @param DOMQuery $el
      * @author Michael Strohyi
      **/
-    function setAddAttributes($el)
+    protected function setAddAttributes($el)
     {        
         if ($this->isHeader) { 
             $el->setAttribute('sizes', '(min-width: 320px) 20vw, 60px');

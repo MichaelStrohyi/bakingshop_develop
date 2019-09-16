@@ -21,6 +21,7 @@
                 <div class="col-sm-8">
                     {{ form_widget(form.coupons.vars.prototype.link) }}
                     {{ form_errors(form.coupons.vars.prototype.link) }}
+                    <a href="#" class="set-for-all-link" onclick="setLinkForAll(event, this);">Set link for all coupons</a>
                 </div>
             </div>
             <div class="form-group col-sm-6">
@@ -28,6 +29,7 @@
                 <div class="col-sm-8">
                     {{ form_widget(form.coupons.vars.prototype.expireDate) }}
                     {{ form_errors(form.coupons.vars.prototype.expireDate) }}
+                    {{ form_widget(form.coupons.vars.prototype.inStore) }}
                 </div>
             </div>
         </div>

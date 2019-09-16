@@ -3,35 +3,91 @@
 {% block title %}Store | {{ parent() }}{% endblock %}
 
 {% block content %}
-
-    <header>
-        <h1>All Stores</h1>
-    </header>
-
-    <div>
+    {% if store_list is not null %}
+        <table class="radio-panel">
+            <tr>
+                <td rowspan="2">
+                    <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
+                </td>
+                <td>
+                    Show by activity:
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="" checked>all
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="active">active
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="stores_filter" value="deactivated">deactivated
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Show by feed:
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="" checked>all
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="on">feed on
+                    </label>
+                </td>
+                <td>
+                    <label class="radio-inline">
+                        <input type="radio" name="feeds_filter" value="off">feed off
+                    </label>
+                </td>
+            </tr>
+        </table>
+    {% else %}
         <a href="{{ path("admin_store_create") }}" class="btn btn-default">Create Store</a>
-    </div>
+    {% endif %}
 
     <table class="table table-hover">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Name</th>
+                <th>Url</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for store in store_list %}
-                <tr>
+                <tr class="store-type {{store.networkError ? 'network-error' : '' }} {{ store.activity ? 'active' : 'deactivated' }}-store {{ store.feedId is not empty ? 'on' : 'off' }}-feed">
                     <td>{{ loop.index }}</td>
                     <td>{{ store.name }}</td>
+                    <td><a href="{{ path(store) }}" target="_blank">{{ store.url }}</a></td>
                     <td>
                         <a href="{{ path("admin_store_edit", {id: store.id}) }}">Edit</a>
                         <a href="{{ path("admin_store_coupons", {id: store.id}) }}">Coupons</a>
                         <a href="{{ path("admin_store_delete", {id: store.id}) }}">Remove</a>
+                        {% if store.comments is not empty %}
+                            <a href="{{ path("admin_store_comments", {id: store.id}) }}">Comments</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

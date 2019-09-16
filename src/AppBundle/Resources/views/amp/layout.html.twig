@@ -1,5 +1,9 @@
 {% extends ":amp:base.html.twig" %}
 
+{% block metatags %}
+    <link rel="canonical" href="{{ crosslink }}">
+{% endblock %}
+
 {% block body %}
     <section class="content">
         <header class="header">
@@ -28,6 +32,10 @@
       %}
           {{ fileGetContents(asset_url)|raw }}
       {% endstylesheets %}
+
+      {% if app.environment == 'prod' %}
+        statcounter {width: 1px;height:1px;}
+      {% endif %}
     </style>
 {% endblock %}
 

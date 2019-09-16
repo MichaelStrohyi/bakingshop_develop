@@ -1,0 +1,50 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %} Our {{ type_title|capitalize }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+    {% if needle is defined and articles is empty and stores is empty %}
+        <div class="searched-for-alert">No results have been found for <b>"{{ needle }}"</b></div>
+    {% endif %}
+
+    {% if stores is defined and stores is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ articles is defined and articles is not empty ? ' in Stores' : '' }}:</div>
+        {% endif %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+    {% endif %}
+
+    {% if articles is defined and articles is not empty %}
+        {% if needle is defined and needle is not empty %}
+            <div class="searched-for-alert">Search results for <b>'{{ needle }}'</b>{{ stores is defined and stores is not empty ? ' in Articles' : '' }}:</div>
+        {% endif %}
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
+    {% endif %}
+
+    {% if navigation is defined and navigation is not empty %}
+        <div class="list-pagination-links">
+            {% if needle is defined and needle is not empty %}
+                {% set q = {"q": needle, "slug": slug} %}
+                {% set target = "search_page" %}
+            {% else %}
+                {% set q = {"slug": type} %}
+                {% set target = "list_page" %}
+            {% endif %}
+            Page:
+            {% if navigation.prev is defined %}
+                <a href="{{ path(target, q|merge({"page": page - 1})) }}">prev</a>
+            {% endif %}
+            {% for nav_page in navigation.pages %}
+                {% if nav_page == page %}
+                    <u>{{ nav_page }}</u>
+                {% else %}
+                    <a href="{{ path(target, q|merge({"page": nav_page})) }}">{{ nav_page }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if navigation.next is defined %}
+                <a href="{{ path(target, q|merge({"page": page + 1})) }}">next</a>
+            {% endif %}
+            <a href="{{ path(target, q|merge({"page": "all"})) }}">all</a>
+        </div>
+    {% endif %}
+{% endblock %}

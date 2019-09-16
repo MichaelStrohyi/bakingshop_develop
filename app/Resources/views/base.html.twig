@@ -4,10 +4,23 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{% block title %}Bakingshop.com{% endblock %}</title>
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicons/android-chrome-192x192.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicons/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('favicons/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ asset('favicons/safari-pinned-tab.svg') }}" color="#ec7b7d">
+        <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}">
+        <meta name="msapplication-TileColor" content="#ec7b7d">
+        <meta name="msapplication-TileImage" content="{{ asset('favicons/mstile-144x144.png') }}">
+        <meta name="msapplication-config" content="{{ asset('favicons/browserconfig.xml') }}">
+        <meta name="theme-color" content="#ec7b7d">
         <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
-        {% block crosslink %}{% endblock %}
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        {% block metatags %}{% endblock %}
+        <meta name="robots" content="index, follow, nocache, noarchive">
+        <meta name="referrer" content="always">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -18,14 +31,37 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         {% block stylesheets %}{% endblock %}
+        {% if app.environment == 'prod' %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122956438-1"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ google_analytics_key }}');
+            </script>
+        {% endif %}
     </head>
     <body onunload="">
         {% block body %}{% endblock %}
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-            <script type="text/javascript" src="{{ asset("bundles/app/plugins/fresco/fresco.js") }}"></script>
+            <script src="{{ asset("bundles/app/plugins/fresco/fresco.js") }}"></script>
 
         {% block javascripts %}{% endblock %}
+        {% if app.environment == 'prod' %}
+            <script type="text/javascript">
+                var sc_project={{ statcounter_id }};
+                var sc_invisible=1;
+                var sc_security="{{ statcounter_key }}";
+                var sc_https=1;
+            </script>
+            <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+            <noscript>
+                <div class="statcounter">
+                    <a title="Web Analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="//c.statcounter.com/{{ statcounter_id }}/0/{{ statcounter_key }}/1/" alt="Web Analytics"></a>
+                </div>
+            </noscript>
+        {% endif %}
     </body>
 </html>

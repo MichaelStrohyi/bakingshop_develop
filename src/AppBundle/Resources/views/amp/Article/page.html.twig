@@ -2,6 +2,24 @@
 
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
+{% block metatags %}
+    {{ parent() }}
+    {% if homepage is defined %}
+        {% set item = homepage %}
+    {% else %}
+        {% set item = article %}
+    {% endif %}
+    {% if item is not empty %}
+        {{ item.metatags|raw }}
+        {% if item.metaDescriptionString is not empty %}
+            <meta name="description" content="{{ item.metaDescriptionString }}">
+        {% endif %}
+        {% if item.metaKeywordsString is not empty %}
+            <meta name="keywords" content="{{ item.metaKeywordsString }}">
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
 {% block main %}
 
 <article class="content-article-block">
@@ -9,10 +27,22 @@
     <h1><span>{{ article.header }}</span></h1>
     {{ article.ampBody|raw }}
 
-    {% if article.type != 'info' %}
+    {% if article.type != constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
         <div class="content-article-block-sign">
             {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
         </div>
     {% endif %}
 </article>
+{% if homepage is defined and featured_stores is defined and featured_stores is not empty%}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">Featured Stores</div>
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+    </div>
+{% endif %}
+{% if homepage is not defined and featured_articles is defined and featured_articles is not empty%}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">You may also enjoy</div>
+        {% include 'AppBundle:amp/layout:_list_pattern.html.twig' with {'items': featured_articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
+    </div>
+{% endif %}
 {% endblock %}

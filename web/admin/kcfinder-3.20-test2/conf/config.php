@@ -22,7 +22,7 @@ return array(
 // GENERAL SETTINGS
 
     'disabled' => false,
-    'uploadURL' => "/articles",
+    'uploadURL' => "/bc",
     'uploadDir' => "",
     'theme' => "default",
 
@@ -31,7 +31,7 @@ return array(
     // (F)CKEditor types
         'files'   =>  "",
         'flash'   =>  "swf",
-        'images'  =>  "*img",
+        'img'  =>  "*img",
 
     // TinyMCE types
         'file'    =>  "",
@@ -52,7 +52,7 @@ return array(
     'thumbWidth' => 100,
     'thumbHeight' => 100,
 
-    'watermark' => "",
+    'watermark' => "watermark.png",
 
 
 // DISABLE / ENABLE SETTINGS
@@ -104,6 +104,9 @@ return array(
     'cookieDomain' => "",
     'cookiePath' => "",
     'cookiePrefix' => 'KCFINDER_',
+    // !!! modified
+    // settings to allow or deny creating new name for uploaded file, if another file with this name already exists
+    'searchInexistantName' => false,
 
 
 // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION SETTINGS

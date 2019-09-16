@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Menu;
+use AppBundle\Entity\Article;
+use AppBundle\Entity\Store;
 
 class PageController extends Controller
 {
@@ -16,17 +18,22 @@ class PageController extends Controller
      *     defaults={"prefix": ""},
      * )
      */
-    public function homepageAction(Request $request)
+    public function homepageAction($prefix, Request $request)
     {
+        #g find article with is_homepage flag
         $article_repo = $this->getDoctrine()->getRepository('AppBundle:Article');
-
         $article = $article_repo->getHomepage();
+        # return error 404 if article is not fond
         if (!$article) {
             throw $this->createNotFoundException();
         }
 
-        $parameters['request'] = $request;
-        $parameters['article'] = $article;
+        $parameters = [
+            'request' => $request,
+            'article' => $article,
+            'prefix' => $prefix,
+            'is_homepage' => true,
+        ];
 
         return $this->forward('AppBundle:Article:page', $parameters);
     }
@@ -34,12 +41,13 @@ class PageController extends Controller
     /**
      * @Template()
      */
-    public function sidebarAction()
+    public function sidebarAction($pathInfo = null)
     {
-        $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAll();
+        $menus = $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllbyPosition();
 
         return [
             'menus' => $menus,
+            'pathInfo' => $pathInfo,
         ];
     }
 
@@ -59,17 +67,18 @@ class PageController extends Controller
      * @param string $type
      *
      */
-    public function menuAction($name, $prefix = null, $type = null)
+    public function menuAction($name, $prefix = null, $pathInfo = null)
     {
         if (is_string($name)) {
             $menu = $this->getDoctrine()->getRepository('AppBundle:Menu')->findOneByName($name);
         } elseif ($name instanceof Menu) {
             $menu = $name;
         } else {
-            $menu = null;
+            return;
         }
+        
         $parameters['menu'] = $menu;
-        $parameters['menu_type'] = $type;
+        $parameters['pathInfo'] = $pathInfo;
 
         # if prefix is not set render menu for html page
         if (empty($prefix)) {
@@ -80,4 +89,90 @@ class PageController extends Controller
         $parameters['prefix'] = $prefix;
         return $this->render('AppBundle:amp/Page:menu.html.twig', $parameters);
     }
+
+    /**
+     * @Route("/{prefix}{slug}/list/{page}", name="list_page",
+     *     requirements={"slug": ".+", "prefix": "amp/|", "page": "\d+|all"},
+     *     defaults={"prefix": "", "page": 1},
+     * )
+     *
+     * @Template()
+     */
+    public function listAction($slug, $prefix = null, $page, Request $request)
+    {
+        if ($page == "all") {
+            $page = 0;
+        }
+
+        if ($slug == Store::PAGE_TYPE && $page != 0) {
+            return $this->redirectToRoute("list_page", ["slug" => $slug, "prefix" => $prefix, "page" => "all"]);
+        }
+
+        if ($page == 0 && $slug == Article::PAGE_SUBTYPE_ARTICLE) {
+            return $this->redirectToRoute("sitemap_page", ["prefix" => $prefix]);
+        }
+
+        if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
+            throw $this->createNotFoundException();
+        }
+
+        $parameters = $this->getData($slug, $prefix , $page, $request);
+
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("/{prefix}sitemap", name="sitemap_page",
+     *     requirements={"prefix": "amp/|"},
+     *     defaults={"prefix": ""},
+     * )
+     *
+     * @Template()
+     */
+    public function sitemapAction($prefix = null, $parameters = [], Request $request)
+    {
+        $page = 0;
+        $slug = Article::PAGE_SUBTYPE_ARTICLE;
+        $parameters = $this->getData($slug, $prefix , $page, $request);
+        $parameters['type_title'] = 'Site Map';
+
+        return empty($prefix) ? $this->render('AppBundle:Page:list.html.twig', $parameters) : $this->render('AppBundle:amp/Page:list.html.twig', $parameters);
+    }
+
+    /**
+     * Get data for twig template for list/sitemap page according to given parameters
+     *
+     * @return array
+     * @author Michael Strohyi
+     **/
+    private function getData($slug, $prefix = null, $page, Request $request)
+    {
+        if (!in_array($slug, Article::getTypes()) && $slug != Store::PAGE_TYPE) {
+            throw $this->createNotFoundException();
+        }
+
+        $page_repo = $this->getDoctrine()->getRepository("USPCPageBundle:Page");
+        $parameters = [
+            'crosslink' => $this->generateUrl('homepage', [], true)  . $this->getDoctrine()->getRepository("USPCPageBundle:Page")->createCrossLink($prefix, $this->container->getParameter('amp_prefix'), $request->getPathInfo()),
+            'menus' => $this->getDoctrine()->getRepository('AppBundle:Menu')->findAllByPosition(),
+            'page' => $page,
+            'type' => $slug,
+            ];
+
+        # get pagination links and articles or stores list according to type
+        if ($slug == Store::PAGE_TYPE) {
+            list($parameters['stores'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository('AppBundle:Store')->findAllByName(), $page);
+            $parameters['type_title'] = 'Stores';
+            if ($page == 0) {
+                $parameters['featured_stores'] = $this->getDoctrine()->getRepository("AppBundle:Store")->getFeaturedStores();
+            }
+        }
+        else {
+            list($parameters['articles'], $parameters['navigation']) = $page_repo->getResultsForPage($this->getDoctrine()->getRepository("AppBundle:Article")->findAllByType($slug), $page);
+            $parameters['type_title'] = Article::getTypeTitle($slug);
+        }
+
+        return $parameters;
+    }
+
 }

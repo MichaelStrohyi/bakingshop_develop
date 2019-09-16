@@ -1,0 +1,49 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Store Comments | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Comments for &lt; {{ store.name }} &gt;</h1>
+    </header>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-items'}}) }}
+    
+    <ul class="comments-list list-unstyled mutable-items">
+        {% for store_comment in form.comments %}
+            <li class="list-item {{ store_comment.vars.value.isVerified ? '' : 'deactivated' }}">
+                <div class="container">
+                    <div class="comment-content">
+                        <div class="col-sm-6">
+                            {{ form_row(store_comment.label) }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_row(store_comment.author) }}
+                            {{ form_row(store_comment.email) }}
+                            {{ form_row(store_comment.addedDate) }}
+                            {{ form_row(store_comment.isVerified) }}                    
+                        </div>       
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="actions text-right">
+        {% if form.comments is not empty %}
+            <button type="submit" class="btn btn-danger">Save Changes</button>
+        {% endif %}
+        <a href="{{ path("admin_comment_index") }}" class="btn btn-default">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/comment.js"
+        '@AppBundle/Resources/public/coffee/admin/comment.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

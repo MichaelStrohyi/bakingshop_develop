@@ -1,64 +1,233 @@
-$site-width: 800px;
-$main-red-color: #ff6666;
+$site-width: 760px;
+$main-red-color: #ff6562;
 $article-block-red-color: #ec7b7d;
 $main-blue-color: #617dda;
+$main-green-color: #669999;
 $background-color: #fff;
 $headers-text-color: #fff;
 $coupons-block-item-bg: #fff4ef;
-$additional-text-color: #663333;
+$additional-text-color: #673332;
 $menu-hover-bg: #f3e1d9;
+$menu-pattern-height: 21px;
 body {
-    background-color: #f2f2f2;
+    background: #f2f2f2 url("/bundles/app/img/amp-main-bg.png");
+}
+a {
+    &:hover {
+        opacity: 0.7;
+    }
+    &.disabled, &.disabled:hover {
+       pointer-events: none;
+    }
 }
 .content {
     max-width: $site-width;
+    min-width: 296px;
     margin: 0 auto;
     font-family: 'Rokkitt', serif;
     color: #000;
-    background-color: $background-color;
 }
 .main-content-block {
-    padding: 0 5px;
+    padding: 5px 5px 0 5px;
+    background-color: $background-color;
 }
 .header-logo-line {        
     text-align: center;
-    font-size: 20px;
-    font-family: 'Rokkitt', serif;
-    padding: 5px 55px 5px 80px;
-    background-color: #ccc;
+    font: {
+        size: 14px;
+        family: 'Rokkitt', serif;
+        weight: bold;
+    }
+    padding: 1px 55px 1px 95px;
     position: relative;
+    background-color: #f2f2f2;
     amp-img {
-      vertical-align: middle;
-      }
+        vertical-align: middle;
+    }
     a {
-        color: $headers-text-color;
+        color: $main-red-color;
         text-decoration: none;
         &:focus {
             outline: none;
         }
     }
 }
-a:hover {
-    opacity: 0.7;
-}
-#search-link {
+.main-menu-search {
+    z-index: 10;
     position: absolute;
-    top: 50%;
-    right: 10px;
-    margin-top: -25px;
-    padding: 10px;
+    top: 0;
+    right: 0;
+    padding: 14px 10px 0 0;
+    width: 44px;
+    box-sizing: border-box;
+    &:hover {
+        padding-left: 100px;
+        width: 100%;
+    }
+    form {
+        width: 100%;
+        text-align: right;
+        position: relative;
+    }
+    input[type=submit] {
+        z-index: 9;
+        position: relative;
+        box-sizing: content-box;
+        padding: 0;
+        background: #dfd3d5 url("/bundles/app/img/search-icon.png") bottom center no-repeat;
+        border-radius: 4px;
+        border: none;
+        width: 34px;
+        height: 30px;
+        &:hover {
+            cursor: pointer;
+            & ~ .main-menu-search-form {
+                visibility: visible;
+                transition: opacity .9s ease;
+                opacity: 1;
+            }
+        }
+    }
+}
+.main-menu-search-form {
+    z-index: 8;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 34px 0 0;
+    margin: 0;
+    input {
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+        border: 2px solid #dfd3d5;
+        outline: none;
+        color: #633;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+        }
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.main-menu-search-result {
+    position: absolute;
+    width: 100%;
+    background-color: $background-color;
+    text-align: left;
+    display: none;
+    a {
+        border: {
+            left: 2px solid #dfd3d5;
+            right: 2px solid #dfd3d5;
+        }
+        &:last-of-type {
+            border-bottom: 2px solid #dfd3d5;
+        }
+        display: block;
+        font-weight: normal;
+        white-space: nowrap;
+        font: {
+            size: 18px;
+            family: 'Rokkitt', serif;
+            weight: normal;
+        }
+        line-height: 18px;
+        padding: 4px 4px 4px 12px;
+        color: #633;
+        &.search-result-more, &.search-result-type {
+            font-size: 14px;
+            padding: 4px 4px 4px 16px;
+            text-transform: none;
+        }
+        &.search-result-type {
+            padding-left: 4px;
+        }
+        &:hover {
+            background-color: $menu-hover-bg;
+            opacity: 1;
+        }
+    }
 }
 #menu-link {
+    z-index: 11;
     position: absolute;
-    top: 50%;
+    top: 15px;
     left: 10px;
-    margin-top: -20px;
     padding: 5px 10px;
     border-radius: 4px;
-    background-color: #f0f0f0;
+    background-color: #dfd3d5;
     color: #000;
+    text-transform: uppercase;
+    font: {
+        size: 16px;
+        weight: bold;
+    }
+    &:before {
+        font: normal normal normal 14px/1 FontAwesome;
+        content: "\f0c9\f0c9";
+        margin-right: 12px;
+        color: $headers-text-color;
+        letter-spacing: -0.6em;
+    }
 }
-.top-menu, .footer-menu {
+.has-submenu:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f0c9\f0c9";
+    margin-right: 12px;
+    color: #000;
+    letter-spacing: -0.6em;
+}
+.header-menu-line {
+    background-color: $background-color;
+}
+.main-menu-block, .main-submenu-block {
+    position: absolute;
+    left: 0;
+    top: 43px;
+    padding: 10px;
+    visibility: hidden;
+    opacity: 0;
+    background-color: $background-color;
+    box-sizing: border-box;
+    z-index: 10;
+    #menu-link:hover ~ & {
+        transition: opacity 0.5s ease;
+        visibility: visible;
+        opacity: 1;
+    }
+    &:hover {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.main-submenu-block {
+    left: 20px;
+    top: 0;
+    background-color: #f8f8f8;
+    min-width: 260px;
+    &:hover ~ a {
+        background-color: $menu-hover-bg;
+    }
+    .main-menu-block li:hover > & {
+        transition: opacity 0.5s ease;
+        visibility: visible;
+        opacity: 1;
+    }
+}
+@media screen and (min-width: 460px) {
+    .main-submenu-block {
+        min-width: 400px;
+    }
+}
+.top-menu, .top-menu-submenu, .footer-menu, .main-menu, .main-menu-submenu {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -67,54 +236,92 @@ a:hover {
 }
 .top-menu {
     display: table;
-    z-index: 10;
+    z-index: 9;
     position: relative;
-
+    padding: 5px 0;
+    border-spacing: 5px;
     & > li {
         display: table-cell;
         width: 1%;
         box-sizing: border-box;
-        text-align: center;
-        text-transform: capitalize;
+        vertical-align: middle;
+        text: {
+            align: center;
+            transform: capitalize;
+        }
         position: relative;
+        border: 2px solid $main-red-color;
+        background-color: $coupons-block-item-bg;
+        padding: 0;
+        &:hover {
+            background-color: $menu-hover-bg;
+        }
     }
     a {
         color: $main-red-color;
         text-decoration: none;
+        font: {
+            weight: bold;
+            size: 18px;
+        }
         display: block;
-        background-color: $coupons-block-item-bg;
-        padding: 10px 5px;
+        padding: 4px;
         &:hover {
             background-color: $menu-hover-bg;
             opacity: 1;
         }
     }
-    li + li {
-        border-left: 2px solid transparent;
-    }
 }
 .top-menu-submenu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     position: absolute;
-    left: 0px;
+    left: -2px;
     top: 100%;
-    width: 100%;
-    color: $main-red-color;
     visibility: hidden;
     opacity: 0;
+    border: 2px solid $main-red-color;
     .top-menu-item:hover > & {
         transition: opacity 0.5s ease;
         visibility: visible;
-        opacity: 0.9;
+        opacity: 1;
     }
+    a {
+        border: none;
+        background-color: $background-color;
+    }
+}
+.main-menu, .main-menu-submenu {
+    border: 2px solid $main-red-color;
+    box-sizing: border-box;
+    text-align: left;
+    & > li {
+        position: relative;
+    }
+    a {
+        color: #000;
+        text-decoration: none;
+        font-size: 20px;
+        display: block;
+        padding: 8px;
+        &:hover {
+            background-color: $menu-hover-bg;
+            opacity: 1;
+        }
+    }
+}
+.top-menu-pattern-bottom {
+    height: $menu-pattern-height;
+    margin-top: -$menu-pattern-height * 0.5;
+    width: 100%;
+    background: url("/bundles/app/img/amp-top-menu-pattern-rotated.png") top center repeat;
 }
 .footer {        
     text-align: center;
-    padding: 12px 0;
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 9px;
+    padding: 18px 0;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        size: 8px;
+    }
+    letter-spacing: -0.03em;
     background-color: #f2f2f2;
 }
 .footer-menu {
@@ -127,25 +334,21 @@ a:hover {
     a {
         text-decoration: none;
         color: #000;
+        white-space: nowrap;
     }
 }
-.content-article-block {
-    overflow: hidden;
-    position: relative;
-    padding: 5px 5px 62px 8px;
-    border: 2px solid $article-block-red-color;
-    background-color: $background-color;
-    line-height: 1.43em;
+.content-article-block, .article-preview {
     h1, h2 {
         position: relative;
         text-align: center;
         letter-spacing: -.025em;
-        text-transform: uppercase;
-        line-height: 28px;
+        line-height: 30px;
         display: block;
         font-weight: bold;
-        text-transform: none;
         padding: 0 12px;
+        span {
+            vertical-align: -4px;
+        }
         &:after, &:before {
             position: absolute;
             content:'';
@@ -153,19 +356,19 @@ a:hover {
             height: 100%;
             width: 8px;
             box-sizing: border-box;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-        }
-        &:after {
             right: 0;
-            border-right: 8px solid $background-color;
-        }
+            border: {
+                top: 15px solid transparent;
+                bottom: 15px solid transparent;
+                right: 8px solid $background-color;
+            }
+        }            
         &:before {
             left: 0;
-            border-left: 8px solid $background-color;
-        }
-        span {
-            vertical-align: -4px;
+            border: {
+                right: none;
+                left: 8px solid $background-color;
+            }
         }
     }
     h1 {
@@ -174,15 +377,36 @@ a:hover {
         margin: 0 0 5px;
         font-size: 24px;
         letter-spacing: 0.025em;
-        & + p > amp-img {
-            max-width: 132px;
-            margin-left: 0;
-            &:first-of-type {
-                max-width: 200px;
+    }
+}
+.content-article-block, .content-coupons-block {
+    overflow: hidden;
+    position: relative;
+    padding: 5px;
+    border: 2px solid $article-block-red-color;
+    background-color: $background-color;
+    line-height: 1.15em;
+}
+.content-article-block {
+   padding-bottom: 50px;
+    h1 {
+        & + p {
+            amp-img {
+                max-width: 132px;
+                margin-left: 0;
+                margin-top: 0;
+                &:last-of-type {
+                    margin-right: 0;
+                    float: none;
+                }
+                &:first-of-type {
+                    max-width: 200px;
+                    float: left;
+                    margin-right: 5px;
+                }
             }
-            &:last-of-type {
-                margin-right: 0;
-                float: none;
+            & + p + p {
+                clear: left;
             }
         }
     }
@@ -194,46 +418,61 @@ a:hover {
         letter-spacing: 0.015em;
         color: #000;
         margin: 7px 0;
-        & ~ p {
-            font-size: 13px;
-            font-family: 'Rokkitt', serif;
-            font-weight: 500;
-            line-height: 23px;
-            letter-spacing: -0.005em;
-            padding: 4px 0;
+        & ~ p, & ~ ul, & ~ ol {
+            font: {
+                size: 13px;
+                family: 'Rokkitt', serif;
+                weight: 500;
+            }
+            line-height: 20px;
+            letter-spacing: -0.02em;
             background-color: $coupons-block-item-bg;
+        }
+        & ~ p {
+            padding: 4px;
+        }
+        & ~ ul, & ~ ol {
+            margin: 0;
         }
     }
     amp-img {
         float: left;
-        margin: 0 5px 5px;
+        margin: 5px;
         vertical-align: top;
         max-width: 98%; 
         height: auto;
         cursor: pointer;
+    }
+    ol amp-img {
+        margin-right: 20px;
     }
     p {
         padding-bottom: 5px;
         background-color: $background-color;
         color: $additional-text-color;
         margin: 0;
-        font-family: 'Droid Sans', sans-serif;
-        font-weight: normal;
-        font-size: 14px;
+        font: {
+            family: 'Droid Sans', sans-serif;
+            weight: normal;
+            size: 14px;
+        }
     }
     table {
         display: block;
         position: relative;
-        border: 0;
         background-color: #eee8e9;
         color: $additional-text-color;
         line-height: 24px;
         width: 100%;
+        border: 0;
         border-radius: 15px;
         padding: 6px 0 16px 0;
-        margin-top: 5px;
-        font-size: 14px;
-        font-family: 'Droid Sans', sans-serif;
+        box-sizing: border-box;
+        margin: 7px 0;
+        font: {
+            size: 14px;
+            family: 'Droid Sans', sans-serif;
+        }
         overflow: hidden;
         p {
             background-color: #eee8e9;
@@ -242,6 +481,7 @@ a:hover {
         }
         td, th {
             width: 1%;
+            box-sizing: border-box;
             padding: 0 5px;
             text-align: left;
             &:first-of-type {
@@ -256,38 +496,136 @@ a:hover {
     }
 }
 .content-article-block-sign {
-    bottom: 16px;
-    left: 50px;
+    bottom: 14px;
+    left: 60px;
     position: absolute;
     text-transform: none;
     color: #000;
     margin-top: -4px;
     line-height: 24px;
-    font-size: 17px;
-    font-weight: bold;
+    font: {
+        size: 17px;
+        weight: bold;
+    }
+    letter-spacing: 0.06em;
     span {
+        color: $main-red-color;
         text-decoration: underline;
     }
     &:after {
         content: '';
         position: absolute;
-        width: 36px;
-        height: 56px;
-        left: -42px;
-        top: -20px;
-        background-image: url("/bundles/app/img/article-sign-logo.png");
-        background-repeat: no-repeat;
-        background-position: bottom center;
+        width: 25px;
+        height: 40px;
+        left: -30px;
+        top: -8px;
+        background: url("/bundles/app/img/amp-article-sign-logo.png") bottom center no-repeat
     }
 }
 .content-article-block-enjoy {
-    position: absolute;
     right: 0;
     bottom: 14px;
-    font-family: 'Droid Sans', sans-serif;
-    font-weight: bold;
+}
+.article-preview-item, .list-all-item {
+    float: left;
+    width: 50%;
+    padding: 1px;
+    box-sizing: border-box;
+}
+.article-preview {
+    margin: 3px auto;
+    border: 2px solid $main-red-color;
+    padding: 5px;
+    box-sizing: border-box;
+    h1 {
+        height: 56px;
+        padding: 0 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $main-red-color;
+        &:after, &:before {            
+            right: 0;
+            border: {
+                top: 28px solid transparent;
+                bottom: 28px solid transparent;
+                right: 14px solid $background-color;
+            }
+        }
+        &:before {
+            left: 0;
+            border: {
+                right: none;
+                left: 14px solid $background-color;
+            }
+        }
+        span {
+            max-height: 100%;
+            overflow: hidden;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}
+.article-preview-image {
+    height: 130px;
+    width: 130px;
+    max-width: 40%;
+    margin-right: 6px;
+    box-sizing: border-box;
+    amp-img {
+        border-radius: 8px;
+    }
+    float: left;
+    display: table;
+}
+.main-content-block:after, .article-preview-content:after,.coupons-block-header:after, .coupons-block-footer:after, .article-previews:after, .row:after {
+    content:'';
+    clear: both;
+    display: block;
+    height: 0;
+}
+.article-preview-content {
+    height: 130px;
+    overflow: hidden;
+    p {
+        margin: 6px 0;
+        color: #663333;
+        font: {
+            family: 'Droid Sans', sans-serif;
+            size: 13px;
+        }
+        line-height: 20px;
+        letter-spacing: 0.02em;
+    }
+}
+.show-recipe-block {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin: 5px 0 5px 7px;
+    padding-left: 18px;
+    display: block;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        weight: bold;
+        size: 17px;
+    }
     letter-spacing: .03em;
-    font-size: 18px;
+    line-height: 28px;
+    text: {
+        decoration: none;
+        align: center;
+    }
+    color: $background-color;
+    box-sizing: border-box;
+    background-color: #669999;
+    span {
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
     &:after{
         position: absolute;
         content:'';
@@ -295,21 +633,523 @@ a:hover {
         top: 0;
         height: 0;
         width: 0;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
-        border-left: 8px solid $background-color;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            left: 8px solid $background-color;
+        }
+    }
+}
+
+
+.content-coupons-block > div:last-child {
+    margin-bottom: 0;
+}
+.coupons-block-footer, .coupons-block-header {
+    overflow: hidden;
+}
+.coupons-block-footer-logo, .coupon-block-item-logo {
+    margin: {
+        right: 15px;
+        bottom: 10px;
+    }
+}
+.coupons-block-footer-logo {
+    width: 100px;
+    height: 100px;
+    float: left;
+    display: table;
+}
+.logo-wraper {
+    display: table-cell;
+    vertical-align: middle;
+}
+.coupons-block-footer-descr {
+    padding: 0 10px;
+    letter-spacing: -.002em;
+    font-size: 14px;
+    line-height: 1.43em;
+}
+.coupons-block-header {
+    display: table;
+    width: 100%;
+    line-height: normal;
+    padding: 10px 0;
+    min-height: 80px;
+}
+.coupons-block-header-logo {
+    width: 100px;
+    min-height: 100px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.coupons-block-header-title {
+    padding-left: 10px;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    h1 {
+        margin: 0;
+        font: {
+            size: 34px;
+            weight: bold;
+        }
+    }
+}
+.descr-details-open {
+    display: inline;
+    cursor: pointer;
+    color: blue;
+    font-weight: normal;
+}
+.descr-details-close {
+    display: block;
+    cursor: pointer;
+    color: blue;
+    font-weight: normal;
+    text-align: right;
+}
+.descr-details-text {
+    display: inline;
+}
+.coupons-block-footer-descr input[type=checkbox] {
+    display: none;
+}
+.coupons-block-footer-descr input[type=checkbox] + .descr-details-open + .descr-details-text {
+    display: none;
+}
+.coupons-block-footer-descr input[type=checkbox]:checked + .descr-details-open {
+    display: none;
+}
+.coupons-block-footer-descr input[type=checkbox]:checked + .descr-details-open + .descr-details-text {
+    display: inline;
+}
+.coupons-block-item {
+    position: relative;
+    width: 100%;
+    background-color: $coupons-block-item-bg;
+    color: $main-red-color;
+    margin: {
+        top: 2px;
+        bottom: 14px;
+    }
+    &:after {
+        content:'';
+        clear: both;
+        display: block;
+        height: 0;
+    }
+}
+.coupon-block-item-left {
+    float: left;
+    text-align: center;
+    margin-right: 10px;
+}
+.coupon-block-item-right {
+    padding: 1px;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        size: 14px;
+    }
+    line-height: 21px;
+    min-height: 75px;
+    overflow: hidden;
+}
+.coupon-block-item-title {
+    letter-spacing: .02em;
+    margin: 12px 0 0 0;
+    text-transform: capitalize;
+
+}
+.coupon-block-item-logo {
+    text-transform: uppercase;
+    display: table-cell;
+    vertical-align: middle;
+    letter-spacing: -.025em;
+    line-height: 30px;
+    padding: 5px 3px;
+    font-size: 40px;
+    height: 110px;
+    width: 110px;
+    span {
+        font-size: 48px;
+    }
+    &.shipping {
+        font-size: 26px;
+    }
+    &.empty {
+        height: 65px;
+    }
+}
+.coupon-block-item-details {
+    letter-spacing: .02em;
+    text-transform: capitalize;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        size: 14px;
+    }
+    padding: {
+        left: 12px;
+        bottom: 4px;
+    }
+}
+.coupon-block-item-descr {
+    min-height: 30px;
+    color: #000;
+    margin-top: 17px;
+    position: relative;
+}
+.coupon-block-item-label {
+    font-size: 20px;
+    line-height: 28px;
+}
+.coupon-block-item-verify {
+    padding-top: 6px;
+    color: $additional-text-color;
+    letter-spacing: .01em;
+
+}
+.coupon-block-item-code, .content-article-block-enjoy {
+    position: absolute;
+    letter-spacing: .03em;
+    font: {
+        family: 'Droid Sans', sans-serif;
+        size: 18px;
+    }
+    &:after{
+        position: absolute;
+        content:'';
+        left: 0;
+        top: 0;
+        height: 0;
+        width: 0;
+        border: {
+            top: 15px solid transparent;
+            bottom: 15px solid transparent;
+            left: 8px solid $coupons-block-item-bg;
+        }
     }
     span {
-            vertical-align: -2px;
+        vertical-align: -4px;
     }
     a {
-        padding-left: 22px;
-        padding-right: 18px;
+        font-size: 18px;
+        padding: 0 15px;
         height: 30px;
-        text-decoration: none;
-        color: $headers-text-color;;
+        color: $headers-text-color;
         display: block;
         box-sizing: border-box;
         background-color: $main-blue-color;
+        text-decoration: none;
+    }
+}
+.coupon-block-item-code {
+    width: 200px;
+    right: -6px;
+    top: 0;
+    letter-spacing: .02em;
+    text-align: center;
+}
+.coupon-block-item-expire {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 2px;
+}
+.searched-for-alert {
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid $article-block-red-color;
+    padding: 4px;
+    margin: 10px;
+    background-color: #ffffe6;
+}
+.list-pagination-links {
+    text-align: center;
+    font-size: 16px;
+}
+.list-all-item {
+    padding: 5px 30px;
+    a {
+        font-size: 16px;
+        font-family: 'Verdana', sans-serif;
+        margin: 0;
+        text-decoration: underline;
+    }
+}
+.list-all-header {
+    font: {
+        size: 24px;
+        style: italic;
+    }
+    color: $main-red-color;
+    text-transform: uppercase;
+    border-bottom: 1px solid $main-red-color
+}
+.list-all-navigation {
+    font-size: 16px;
+    color: $main-green-color;
+    text-align:
+    center;
+    ul {
+        list-style: none;
+        display: inline;
+        padding-left: 0px;
+    }
+    li {
+        display: inline;
+    }
+    a {
+        font-size: 16px;
+        color: $main-green-color;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+    & > a {
+        text-transform: none;
+    }
+}
+.featured-stores-list {
+    padding: 10px 10px 0 10px;
+    font-size: 20px;
+    font-family: 'Verdana', sans-serif;
+    ul {
+        display: block;
+        list-style: none;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        display: inline-block;
+        text-align: center;
+        font-size: 16px;
+        margin: 5px;
+        span {
+            color: #ed9035;
+        }
+    }
+    a {
+        color: #000;
+    }
+}
+.featured-stores-item-logo {
+    height: 100px;
+    width: 100px;
+    display: table-cell;
+    vertical-align: middle;
+    box-sizing: border-box;
+    amp-img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+    a {
+        display: block;
+    }
+}
+.featured-stores-previews-title {
+    font-size: 20px;
+    font-family: 'Verdana', sans-serif;
+    margin-top: 10px;
+}
+@media screen and (min-width: 800px) {
+    .content {
+        padding: 24px;
+    }
+}
+@media screen and (min-width: 700px) {
+    .article-preview {
+        margin: 10px;
+    }
+    .article-preview-image {
+        height: 150px;
+        width: 150px;
+    }
+    .article-preview-content {
+        height: 150px;
+    }
+    .coupon-block-item-descr {
+        padding-right: 199px;
+    }
+    .featured-stores-previews {
+        margin: 0 -10px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 10px;
+    }
+}
+@media screen and (min-width: 620px) and (max-width: 699px) {
+    .article-preview {
+        margin: 10px;
+    }
+    .coupon-block-item-descr {
+        padding-right: 199px;
+    }
+    .featured-stores-previews {
+        margin: 0 -10px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 10px;
+    }
+}
+@media screen and (min-width: 540px) and (max-width: 619px) {
+    .article-preview {
+        margin: 3px;
+        p {
+            margin: 3px 0;
+        }
+    }
+    .article-preview-image {
+        height: 105px;
+        width: 105px;
+    }
+    .article-preview-content {
+        height: 105px;
+    }
+    .coupon-block-item-descr {
+        padding-right: 180px;
+    }
+    .coupon-block-item-left {
+        margin-right: 6px;
+    }
+    .coupon-block-item-code {
+        width: 182px;
+        a {
+            font-size: 16px;
+        }
+    }
+    .searched-for-alert {
+        margin: {
+            left: 3px;
+            right: 3px;
+        }
+    }
+    .featured-stores-previews {
+        margin: 0 -3px;
+    }
+    .featured-stores-previews-title {
+        margin-left: 3px;
+    }
+}
+@media screen and (min-width: 340px) and (max-width: 539px) {
+    .article-preview {
+        margin: 5px auto;
+    }
+    .article-preview-image {
+        height: 150px;
+        width: 150px;
+    }
+    .article-preview-content {
+        height: 150px;
+    }
+    .article-preview-item {
+        float: none;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .list-all-item {
+        float: none;
+        width: 100%;
+    }
+    .coupons-block-footer-logo {
+        width: 80px;
+        height: 80px;
+    }
+    .coupons-block-header-logo {
+        width: 80px;
+    }
+    .coupons-block-header-title h1 {
+        font-size: 30px;
+    }
+    .coupon-block-item-logo {
+        width: 90px;
+        height: 90px;
+        &.shipping {
+            font-size: 22px;
+        }
+    }
+    .coupon-block-item-right {
+        min-height: none;
+        padding: 1px;
+    }
+    .coupon-block-item-code {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        right: 0;
+        margin: {
+            right: -10px;
+            top: 10px;
+        }
+    }
+    .coupon-block-item-verify {
+        color: #B37372;
+        font-size: 12px;
+        padding: 6px 0;
+        margin-bottom: -10px;
+    }
+    .content-article-block-sign {
+        left: 50px;
+    }
+    .searched-for-alert {
+        margin: {
+            left: 2px;
+            right: 2px;
+        }
+    }
+    .featured-stores-previews-title {
+        text-align: center;
+    }
+}
+@media screen and (max-width: 339px) {
+    .coupons-block-footer-logo {
+        width: 80px;
+        height: 80px;
+        margin: 0 11px 5px 0;
+    }
+    .coupon-block-item-logo, .coupons-block-header-logo {
+        display: none;
+    }
+    .coupons-block-header-title {
+        padding-left: 0;
+        h1 {
+            font-size: 30px;
+        }
+    }
+    .coupon-block-item-right {
+        min-height: none;
+        padding: 1px 10px;
+    }
+    .coupon-block-item-code {
+        position: relative;
+        right: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .coupon-block-item-verify {
+        color: #B37372;
+        font-size: 12px;
+        padding: 6px 0;
+        margin-bottom: -10px;
+    }
+    .content-article-block-sign {
+        left: 40px;
+    }
+    .article-preview-item, .list-all-item {
+        float: none;
+        width: 100%;
+    }
+    .searched-for-alert {
+        margin: {
+            left: 2px;
+            right: 2px;
+        }
+    }
+    .featured-stores-previews-title {
+        text-align: center;
     }
 }

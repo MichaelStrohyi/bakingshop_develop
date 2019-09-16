@@ -1,0 +1,172 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ title_discount }} Off {{ store.name }} Coupon - {{ cur_date }} | {{ parent() }}{% endblock %}
+
+{% block metatags %}
+    {{ parent() }}
+    {{ store.metatags|raw }}
+    {% if store.metaDescriptionString is not empty %}
+        <meta name="description" content="{{ store.metaDescriptionString }}">
+    {% endif %}
+    <meta name="keywords" content="{{ store.name }}, coupon codes, code, discounts, coupons, promotional, promo, promotion, deal{{ store.metaKeywordsString is not empty ? ', '~ store.metaKeywordsString : '' }}">
+{% endblock %}
+
+{% block main %}
+    <div class="content-coupons-block">
+        <div class="coupons-block-header">
+            {% if store.logo is not null and store.logo.filename is not null %}
+                <div class="coupons-block-header-logo">
+                    <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="{{ store.name }} logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                </div>
+            {% endif %}
+            <div class="coupons-block-header-title">
+                <h1>{{ store.name }} Coupons 2018</h1>
+            </div>
+        </div>
+        {% for store_coupon in store.coupons %}
+            {% if store_coupon.actual %}
+                <div class="coupons-block-item {{ store_coupon.discount is not empty ? store_coupon.discount == 'FREE Shipping' ? 'yellow' : 'red' : '' }}">
+                    <div class="coupon-block-item-left">
+                        <div class="coupon-block-item-logo {{ store_coupon.discount == 'FREE Shipping' and store_coupon.logo is null ? 'shipping' : '' }}">
+                            {% if store_coupon.logo is not null and store_coupon.logo.filename is not null %}
+                                <a href="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ coupon_image_prefix }}/{{ store_coupon.logo.filename }}"></a>
+                            {% elseif store_coupon.discount == 'FREE Shipping' %}
+                                    FREE Shipping
+                            {% elseif store_coupon.discount is not empty %}
+                                    <span>{{ store_coupon.discount }}</span> OFF
+                            {% elseif store.logo is not null and store.logo.filename is not null %}
+                                <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="coupon-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="coupon-block-item-right">
+                        {% if store_coupon.inStore %}
+                            <div class="coupon-block-item-title">In store coupon</div>
+                        {% endif %}
+                        <div class="coupon-block-item-descr">
+                            <div class="coupon-block-item-label">{{ store_coupon.label }}</div>
+{#                            <div class="coupon-block-item-verify">
+                                {% if store_coupon.whenVerified is not empty %}
+                                   Verified {{ store_coupon.whenVerified }}.
+                                {% endif %}
+                                {% if store_coupon.addedBy is not empty and store_coupon.addedBy.name is not empty %}
+                                   Added by {{ store_coupon.addedBy.name }}
+                                {% endif %}
+                            </div> #}
+                            <div class="coupon-block-item-code">
+                                {% if store_coupon.encryptedCode is not empty %}
+                                    <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" hc="{{ store_coupon.encryptedCode }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>Show Coupon CODE</span></a>
+                                {% else %}
+                                        <a href="{{ path('out_link', {'store_name': store.convertNameToUrl, 'type': 'cp', 'id': store_coupon.id}) }}" id="cp{{ store_coupon.id }}" rel="nofollow" onclick="return ShowCode(this);"><span>Show Coupon</span></a>
+                                {% endif %}
+                                {% if store_coupon.expireDate is not empty %}
+                                    <span class="coupon-block-item-expire">expires: {{ store_coupon.expireDateProd }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>                                    
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if store.description is not empty %}
+            <div class="coupons-block-footer">
+                <div class="coupons-block-footer-logo">
+                    <div class="logo-wraper">
+                        {% if store.logo is not null and store.logo.filename is not null %}
+                            <a href="{{ store_logo_prefix }}/{{ store.logo.filename }}" class="fresco" target="_blank"><img class="store-logo" alt="store-logo" src="{{ store_logo_prefix }}/{{ store.logo.filename }}"></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="coupons-block-footer-descr">
+                    {{ store.shortDescription }}
+                    {% if store.shortDescription|length < store.description|length %}
+                        <input type="checkbox" id="descr-details">
+                        <label class="descr-details-open" for="descr-details">... more</label>
+                        <span class="descr-details-text">
+                            {{ store.restDescription }}
+                            <label class="descr-details-close" for="descr-details">less</label>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% if store.howToUse is not empty %}
+        <div class="content-howtouse-block">
+            {{ store.howToUse|raw }}
+            <hr>
+        </div>
+    {% endif %}
+    {% if store.news is not empty %}
+        <div class="content-news-block">
+            <h3 class="news-block-title">{{ store.name }} News</h3>
+            {{ store.news|raw }}
+            <hr>
+        </div>
+    {% endif %}
+    <div class="content-comments-block">
+        {% for store_comment in store.comments %}
+            {% if store_comment.isVerified %}
+                <div class="comments-block-item" id="comment-{{ store_comment.id }}">
+                    <span class="comments-block-author">{{ store_comment.author }} says</span>
+                    <span><a href="#comment-{{ store_comment.id }}">{{ store_comment.prodTimestamp }}</a></span></br>
+                    {{ store_comment.label }}
+                    <hr>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="add-comment-block" id="comment-status">
+            <h3>Leave a Reply</h3>
+            Your email address will not be published. All fields are required
+            {% if comment_status is not empty %}
+                <br><span>{{ comment_status }}</span>
+            {% endif %}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Comment</label>
+                <div>
+                    {{ form_widget(form.label) }}
+                    {{ form_errors(form.label) }}
+                </div>
+            </div>
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Name</label>
+                <div>
+                    {{ form_widget(form.author) }}
+                    {{ form_errors(form.author) }}
+                </div>
+            </div>
+            <div class="form-group {{ form_errors(form.label) is not empty ? " has-error" : "" }}">
+                <label>Email</label>
+                <div>
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+            <div class="actions text-right">
+                <button type="submit" class="btn btn-danger">Add comment</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.content-howtouse-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="howtouse-images" target="_blank">';
+            });
+            $('.content-news-block img').wrap(function() {
+              return '<a href="' + this.src + '" class="fresco" data-fresco-group="news-images" target="_blank">';
+            });
+
+            {% if comment_status is not empty %}
+                $('html, body').animate({
+                    scrollTop: $('#comment-status').offset().top
+                }, 'fast');
+            {% endif %}
+        });
+    </script>
+{% endblock %}

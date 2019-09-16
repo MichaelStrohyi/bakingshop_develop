@@ -1,0 +1,9 @@
+{% if stores is not empty %}
+    {% include 'AppBundle:layout:_search_pattern.html.twig' with {'items': stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName', 'single_type': articles is not empty ? false : true} %}
+{% endif %}
+{% if articles is not empty %}
+    {% include 'AppBundle:layout:_search_pattern.html.twig' with {'items': articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader', 'single_type': stores is not empty ? false : true} %}
+{% endif %}
+{% if stores is empty and  articles is empty %}
+    <li class="search-result-type">No results found for "{{ needle }}" </li>
+{% endif %}

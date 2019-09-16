@@ -1,38 +1,72 @@
-<div class="header-logo">
-        <img src="{{ asset("bundles/app/img/header.png") }}" alt="Bakingshop.com">
-        <div class="slideshow-container hidden-xs">
-            {{ render(controller('AppBundle:Page:headerSlideshow')) }} 
-        </div>      
-</div>
-<div class="main-logo">
-    <a href="/"><img src="{{ asset("bundles/app/img/logo.png") }}" alt="Bakingshop.com"></a>
-</div>
-
-<div class="top-menu-section">
-    <div class="top-menu-pattern-top"></div>
-    <div class="top-menu-section-header">
-        <div class="top-menu-text main-page">
-            {% if article.type == 'info' %}
-                Information
-            {% else %}
-                {% if article.type == 'article' %}
-                    Articles
-                {% elseif article.type == 'recipe' %}
-                    Recipies
-                {% endif %}
-                <div class="top-menu-text-sign">{{ article.type|capitalize }} by: <span>{{ article.author }}</span>
-                </div>
-            {% endif %}
+{% if type is defined %}
+    <div class="main-logo">
+        <img src="{{ asset("bundles/app/img/logo-bg.png") }}" alt="Bakingshop.com">
+        <div class="main-logo-img">
+            <a href="{{ path('homepage') }}"><img src="{{ asset("bundles/app/img/logo.png") }}" alt="Bakingshop.com"></a>
         </div>
     </div>
 
-{#        <div class="top-menu-search">
+    <div class="top-menu-section">
+        <div class="top-menu-pattern-top"></div>
+        <div class="top-menu-section-header">
+            <div class="top-menu-text{{ type ==  constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') ? ' information' : ''}}">
+                {% if type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_ARTICLE') and page is defined and page == 0 %}
+                    <span>{{ type_title }}</span>
+                {% else %}
+                    <a href='{{ path('list_page', {'slug': type}) }}'><span>{{ type_title }}</span></a>
+                {% endif %}
+            </div>
+            {# <div class="top-menu-text coupons-page">
+                <span>500,000+ Coupons for 50,000 Stores</span>
+            </div> #}
+        </div>
+        <div class="top-menu-pattern-bottom"></div>
+        <div class="top-menu">
+            <ul class="top-menu-list">
+                {% for menu in menus %}
+                    {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
+                           {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="top-menu-search">
+            <div class="top-menu-search-form">
+                <form name="search" method="get" action="{{ path('search_page', {'slug': 'all', 'page': 1}) }}">
+                    <div class="top-menu-search-image"></div>
+                    <div class="top-menu-search-loading"></div>
+                    <input type="text" class="search-input" name="q" autocomplete="off" placeholder="Search Coupons or Recipes">
+                    <input type="submit" value=' '>
+                </form>
+                <ul class="main-menu top-menu-search-result">
+                </ul>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="header-logo-line">
+        <a href="{{ path('homepage') }}"><img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com">
+        <span>BAKINGSHOP.com</span></a>
+    </div>
+    <div class="top-menu">
+        <ul class="top-menu-list">
+            {% for menu in menus %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
+                       {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'pathInfo': app.request.pathInfo})) }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="top-menu-search">
         <div class="top-menu-search-form">
-            <form name="search" method="post">
-                <input type="text">
+            <form name="search" method="get" action="{{ path('search_page', {'slug': 'all', 'page': 1}) }}">
+                <div class="top-menu-search-image"></div>
+                <div class="top-menu-search-loading"></div>
+                <input type="text" class="search-input" name="q" autocomplete="off" placeholder="Search Coupons or Recipes">
                 <input type="submit" value=' '>
             </form>
+            <ul class="main-menu top-menu-search-result">
+            </ul>
         </div>
-    </div>#}
-</div>
-<div class="top-menu-pattern-bottom"></div>
+    </div>
+{% endif %}

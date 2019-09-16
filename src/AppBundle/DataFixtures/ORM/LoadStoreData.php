@@ -16,7 +16,7 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("First coupon")
             ->setLink("http://first.coupon.link")
             ->setPosition(1)
-            ->setActivity(1)
+            ->activate()
         ;
         $manager->persist($coupon1);
 
@@ -25,7 +25,7 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("Second coupon")
             ->setLink("http://second.coupon/link")
             ->setPosition(2)
-            ->setActivity(0)
+            ->deactivate()
         ;
         $manager->persist($coupon2);
 
@@ -34,14 +34,14 @@ class LoadMenuData implements FixtureInterface
             ->setLabel("Third coupon label")
             ->setLink("http://second.coupon/link")
             ->setPosition(0)
-            ->setActivity(1)
+            ->activate()
             ->setCode("3rd")
         ;
         $manager->persist($coupon3);
 
         $store1 = new Store;
         $store1
-            ->setUrl("http://walmart.com")
+            ->setLink("http://walmart.com")
             ->setName("Walmart")
             ->addCoupon($coupon1)
             ->addCoupon($coupon2)
@@ -51,7 +51,7 @@ class LoadMenuData implements FixtureInterface
 
         $store2 = new Store;
         $store2
-            ->setUrl("http://amazon.com")
+            ->setLink("http://amazon.com")
             ->setName("Amazon")
             ->setDescription("Amazon - the great store")
         ;
@@ -59,7 +59,7 @@ class LoadMenuData implements FixtureInterface
 
         $store3 = new Store;
         $store3
-            ->setUrl("https://aliexpress.com")
+            ->setLink("https://aliexpress.com")
             ->setName("Aliexpress")
             ->setKeywords("aliexpress china market")
         ;

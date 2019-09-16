@@ -11,7 +11,7 @@
     
     <ul class="coupons-list list-unstyled mutable-items" data-prototype="{{ include('AdminBundle:StoreCoupon:_coupon_prototype.html.twig')|e('html_attr') }}">
         {% for store_coupon in form.coupons %}
-            <li class="list-item {{ store_coupon.vars.value.activity == 0 ? 'deactivated' : '' }}">
+            <li class="list-item {{ store_coupon.vars.value.isActive ? '' : 'deactivated' }} {{ store_coupon.vars.value.feedId is empty ? '' : 'auto-item' }}  {{ store_coupon.vars.value.id is empty ? 'new-item' : '' }}">
                 <div class="container">
                     <div class="coupon-content col-sm-11">
                         <div class="col-sm-8">
@@ -35,6 +35,7 @@
                                 <div class="col-sm-8">
                                     {{ form_widget(store_coupon.link) }}
                                     {{ form_errors(store_coupon.link) }}
+                                    <a href="#" class="set-for-all-link" onclick="setLinkForAll(event, this);">Set link for all coupons</a>
                                 </div>
                             </div>
                             <div class="form-group col-sm-6{{ form_errors(store_coupon.expireDate) is not empty ? " has-error" : "" }}">
@@ -42,6 +43,7 @@
                                 <div class="col-sm-8">
                                     {{ form_widget(store_coupon.expireDate) }}
                                     {{ form_errors(store_coupon.expireDate) }}
+                                    {{ form_widget(store_coupon.inStore) }}
                                 </div>
                             </div>
                         </div>
@@ -67,7 +69,7 @@
                         <a href="#" class="couponActions lastLink">Last</a></br>
                         <a href="#" class="couponActions upLink">Up</a></br>
                         <a href="#" class="couponActions downLink">Down</a></br>
-                        <a href="#" class="couponActions activateLink">{{ store_coupon.vars.value.activity == 0 ? 'Activate' : 'Deactivate'}}</a><br>
+                        <a href="#" class="couponActions activateLink">{{ store_coupon.vars.value.isActive ? 'Deactivate' : 'Activate'}}</a><br>
                         <a href="#" class="couponActions removeLink">Remove</a>
                     </div>
                 </div>

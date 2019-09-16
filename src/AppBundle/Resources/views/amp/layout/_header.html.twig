@@ -1,7 +1,57 @@
 <div class="header-logo-line">
-  <a href="{{ path('homepage', {"prefix": amp_prefix}) }}" id="menu-link">Menu</a>
-  <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="{{ asset("bundles/app/img/amp-logo.png") }}" alt="Bakingshop.com" width="50px" height="50px" layout="fixed"></amp-img>
-  <span>Bakingshop</span></a>
-  <a href="{{ path('homepage') }}" id="search-link"><amp-img src="{{ asset("bundles/app/img/search-icon.png") }}" alt="Bakingshop.com" width="31px" height="30px" layout="fixed"></amp-img></a>
+    <a href="{{ path('homepage', {"prefix": amp_prefix}) }}" id="menu-link">Menu</a>
+    <div class="main-menu-block">
+        <ul class="main-menu">
+            {% for menu in menus %}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_TOP') and menu.items is not empty %}
+                    {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
+                {% endif %}
+            {% endfor %}
+            {% set i = 0 %}
+            {% for menu in menus%}
+                {% if menu.type == constant('AppBundle\\Entity\\Menu::TYPE_SIDE') and menu.items is not empty %}
+                    {% set i = i + 1 %}
+                    {% if i > 2  %}
+                        <li>
+                            <a class="has-submenu disabled">{{ menu.header }}</a>
+                            <div class="main-submenu-block">
+                                <ul class="main-menu-submenu">
+                                    {{ render(controller('AppBundle:Page:menu', {'name': menu.name, 'prefix': amp_prefix})) }}
+                                </ul>
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <a href="{{ path('homepage', {"prefix": amp_prefix}) }}"><amp-img src="/bundles/app/img/amp-logo.png" alt="Bakingshop.com" width="56px" height="56px" layout="fixed"></amp-img>
+    <span>BAKINGSHOP.com</span></a>
+    <div class="main-menu-search">
+        <amp-state id="searchResult" [src]="'{{ path('search_ajax', {"prefix": amp_prefix}) }}?search-ajax=' + searchString">
+            <script type="application/json">
+                {"items":[]}
+            </script>
+        </amp-state>
+        <form action="{{ path('search_page', {'prefix': amp_prefix, 'slug': 'all', 'page': 1}) }}" target="_top">
+            <input type="submit" value=" ">
+            <div class="main-menu-search-form">
+                <input name="q" type="search" placeholder="Search Coupons or Recipes" autocomplete="off" on="input-debounced:AMP.setState({searchString: event.value})">
+                <amp-list width="auto"
+                    height="0"
+                    layout="fixed-height"
+                    src="{{ path('search_ajax', {"prefix": amp_prefix}) }}"
+                    [src]="searchResult.items" 
+                    [height]="searchResult.items.length * 26 + 2"
+                    class="main-menu-search-result">
+                    <template type="amp-mustache">
+                        <a href="{{ "{{url}}" }}" class="{{ "{{class}}" }}">{{ "{{name}}" }}</a>
+                    </template>
+                </amp-list>
+            </div>
+        </form>
+    </div>
 </div>
-{% include 'AppBundle:amp/layout:_top_menu.html.twig' ignore missing %}
+<div class="header-menu-line">
+    {% include 'AppBundle:amp/layout:_top_menu.html.twig' ignore missing %}
+</div>

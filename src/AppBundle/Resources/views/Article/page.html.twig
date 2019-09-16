@@ -1,14 +1,62 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {% if homepage is defined and featured_articles is defined and featured_articles is not empty %}
+        <link rel="stylesheet" type="text/css" href="{{ asset("bundles/app/plugins/slick/slick.css") }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset("bundles/app/plugins/slick/slick-theme.css") }}">
+    {% endif %}
+{% endblock %}
+
 {% block title %}{{ article.header }} | {{ parent() }}{% endblock %}
 
-{% block main %}
+{% block metatags %}
+    {{ parent() }}
+    {% if homepage is defined %}
+        {% set item = homepage %}
+    {% else %}
+        {% set item = article %}
+    {% endif %}
+    {% if item is not empty %}
+        {{ item.metatags|raw }}
+        {% if item.metaDescriptionString is not empty %}
+            <meta name="description" content="{{ item.metaDescriptionString }}">
+        {% endif %}
+        {% if item.metaKeywordsString is not empty %}
+            <meta name="keywords" content="{{ item.metaKeywordsString }}">
+        {% endif %}
+    {% endif %}
+{% endblock %}
 
+{% block carousel %}
+    {% if homepage is defined and featured_articles is defined and featured_articles is not empty %}
+        <div class="featured-articles-carousel">
+            <ul class="articles-carousel-items">
+                {% for item in featured_articles %}
+                    <li>
+                        <a href="{{ path(item) }}">
+                            <div class="featured-articles-logo">
+                                {% if item.logo is not null and item.logo.filename is not null %}
+                                    <img alt src="{{ article_logo_prefix }}/{{ item.logo.filename }}">
+                                {% else %}
+                                    <img alt src="{{ article_logo_prefix }}/{{ item.type == constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_RECIPE') ? recipe_default_logo : article_default_logo }}">
+                                {% endif %}
+                            </div>
+                            <span>{{ item.header }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
 <article class="content-article-block">
     <h1><span>{{ article.header }}</span></h1>
-    {{ article.body|raw }}
+    {{ article.prodBody|raw }}
 
-    {% if article.type != 'info' %}
+    {% if article.type != constant('AppBundle\\Entity\\Article::PAGE_SUBTYPE_INFO') %}
         <div class="content-article-block-sign">
             {{ article.type|capitalize }} by: <span>{{ article.author }}</span>
         </div>
@@ -19,15 +67,62 @@
     </div>
 #}
 </article>
+{% if homepage is defined and featured_stores is defined and featured_stores is not empty %}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">Featured Stores</div>
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_stores, 'items_type': constant('AppBundle\\Entity\\Store::PAGE_TYPE'), 'method': 'getName'} %}
+    </div>
+{% endif %}
+{% if homepage is not defined and featured_articles is defined and featured_articles is not empty %}
+    <div class="featured-stores-previews">
+        <div class="featured-stores-previews-title">You may also enjoy</div>
+        {% include 'AppBundle:layout:_list_pattern.html.twig' with {'items': featured_articles, 'items_type': constant('AppBundle\\Entity\\Article::PAGE_TYPE'), 'method': 'getHeader'} %}
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    {% if homepage is defined and featured_articles is defined and featured_articles is not empty %}
+        <script src="{{ asset("bundles/app/plugins/slick/slick.min.js") }}"></script>
+    {% endif %}
     <script>
         $(document).ready(function(){
             $('.content-article-block img').wrap(function() {
               return '<a href="' + this.src + '" class="fresco" data-fresco-group="article-images" target="_blank">';
             });
         });
+
+        {% if homepage is defined and featured_articles is defined and featured_articles is not empty %}
+            $('.articles-carousel-items').slick({
+                slidesToShow: 6,
+                responsive: [
+                    {
+                        breakpoint: 920,
+                        settings: {
+                          slidesToShow: 5,
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                          slidesToShow: 4,
+                        }
+                    },
+                    {
+                        breakpoint: 620,
+                        settings: {
+                          slidesToShow: 3,
+                        }
+                    },
+                        {
+                        breakpoint: 410,
+                        settings: {
+                          slidesToShow: 2,
+                        }
+                    }
+                ]
+            });
+        {% endif %}
     </script>
 {% endblock %}

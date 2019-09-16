@@ -7,15 +7,36 @@
         <h1>New Store</h1>
     </header>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_row(form.name, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.url, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.keywords, {'attr': {'autocomplete': false}}) }}
-    {{ form_row(form.description, {'attr': {'autocomplete': false}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'edit-form'}}) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.link) }}
+    {{ form_row(form.metaKeywords) }}
+    {{ form_row(form.metaDescription) }}
+    <div class="hidden">
+        {{ form_row(form.metatags) }}
+    </div>
+    {{ form_row(form.keywords) }}
+    {{ form_row(form.description) }}
     {{ form_widget(form.logo) }}
+    {{ form_row(form.feedId) }}
+    {{ form_row(form.useFeedLinks) }}
+    {{ form_row(form.activity) }}
+    {{ form_row(form.is_featured) }}
+    {{ form_row(form.howToUse) }}
+    {{ form_row(form.news) }}
         <div class="actions text-right">
             <button type="submit" class="btn btn-danger">Create</button>
             <a href="{{ path("admin_store_index") }}" class="btn btn-default">Cancel</a>
         </div>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts filter="?jsqueeze" output="js/admin/store.js"
+        '@AppBundle/Resources/public/coffee/admin/store.coffee'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
